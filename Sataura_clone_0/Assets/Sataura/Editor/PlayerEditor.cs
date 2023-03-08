@@ -18,6 +18,7 @@ namespace Sataura
 
         
         private SerializedProperty playerInventoryProperty;
+        private SerializedProperty playerInGameInventoryProperty;
         private SerializedProperty itemInHandyProperty;
         private SerializedProperty playerMovementyProperty;
         private SerializedProperty playerInputHandleryProperty;
@@ -36,6 +37,7 @@ namespace Sataura
 
             
             playerInventoryProperty = serializedObject.FindProperty("playerInventory");
+            playerInGameInventoryProperty = serializedObject.FindProperty("playerInGameInventory");
             itemInHandyProperty = serializedObject.FindProperty("itemInHand");
             playerMovementyProperty = serializedObject.FindProperty("playerMovement");
             playerInputHandleryProperty = serializedObject.FindProperty("playerInputHandler");
@@ -61,6 +63,11 @@ namespace Sataura
                 GUILayout.BeginHorizontal();
                 GUILayout.Space(15);
                 EditorGUILayout.PropertyField(playerInventoryProperty);
+                GUILayout.EndHorizontal();
+
+                GUILayout.BeginHorizontal();
+                GUILayout.Space(15);
+                EditorGUILayout.PropertyField(playerInGameInventoryProperty);
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();

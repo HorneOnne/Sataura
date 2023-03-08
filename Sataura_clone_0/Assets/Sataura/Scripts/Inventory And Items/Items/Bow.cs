@@ -6,7 +6,7 @@ namespace Sataura
     public class Bow : Item
     {
         [Header("References")]
-        private PlayerInventory playerInventory;
+        private PlayerInGameInventory inGameInventory;
         public List<Transform> shootingPoints;
 
 
@@ -35,8 +35,8 @@ namespace Sataura
 
         public override bool Use(Player player)
         {
-            playerInventory = player.PlayerInventory;
-            arrowSlotIndex = playerInventory.FindArrowSlotIndex();
+            inGameInventory = player.PlayerInGameInventory;
+            arrowSlotIndex = inGameInventory.FindArrowSlotIndex();
 
             if (arrowSlotIndex == null) return false;
             if (arrowProjectilePrefab == null) return false;
@@ -68,7 +68,7 @@ namespace Sataura
             arrowProjectileObject = ArrowProjectileSpawner.Instance.Pool.Get().GetComponent<ArrowProjectile_001>();
             arrowProjectileObject.transform.position = shootingPoints[0].position;
             arrowProjectileObject.transform.rotation = transform.rotation;
-            arrowSlotInPlayerInventory = playerInventory.inventory[(int)arrowSlotIndex];
+            arrowSlotInPlayerInventory = inGameInventory.inGameInventory[(int)arrowSlotIndex];
             arrowItemData = (ArrowData)arrowSlotInPlayerInventory.ItemData;                               
             arrowProjectileObject.SetData(arrowItemData);           
             arrowProjectileObject.Shoot(bowItemData, arrowItemData);
@@ -82,7 +82,7 @@ namespace Sataura
                 arrowProjectileObject = ArrowProjectileSpawner.Instance.Pool.Get().GetComponent<ArrowProjectile_001>();
                 arrowProjectileObject.transform.position = shootingPoints[i].position;
                 arrowProjectileObject.transform.rotation = transform.rotation;
-                arrowSlotInPlayerInventory = playerInventory.inventory[(int)arrowSlotIndex];
+                arrowSlotInPlayerInventory = inGameInventory.inGameInventory[(int)arrowSlotIndex];
                 arrowItemData = (ArrowData)arrowSlotInPlayerInventory.ItemData;
                 arrowProjectileObject.SetData(arrowItemData);
                 arrowProjectileObject.Shoot(bowItemData, arrowItemData);
@@ -96,7 +96,7 @@ namespace Sataura
                 arrowProjectileObject = ArrowProjectileSpawner.Instance.Pool.Get().GetComponent<ArrowProjectile_001>();
                 arrowProjectileObject.transform.position = shootingPoints[i].position;
                 arrowProjectileObject.transform.rotation = transform.rotation;
-                arrowSlotInPlayerInventory = playerInventory.inventory[(int)arrowSlotIndex];
+                arrowSlotInPlayerInventory = inGameInventory.inGameInventory[(int)arrowSlotIndex];
                 arrowItemData = (ArrowData)arrowSlotInPlayerInventory.ItemData;
                 arrowProjectileObject.SetData(arrowItemData);
                 arrowProjectileObject.Shoot(bowItemData, arrowItemData);
@@ -111,7 +111,7 @@ namespace Sataura
         private void ConsumeArrow()
         {
             arrowSlotInPlayerInventory.RemoveItem();
-            UIPlayerInventory.Instance.UpdateInventoryUIAt((int)arrowSlotIndex);
+            UIPlayerInGameInventory.Instance.UpdateInventoryUIAt((int)arrowSlotIndex);
         }
     }
 }

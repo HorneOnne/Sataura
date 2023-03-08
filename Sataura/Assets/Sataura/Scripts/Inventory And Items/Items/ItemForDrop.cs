@@ -11,7 +11,7 @@ namespace Sataura
 
         public override void Collect(Player player)
         {
-            var returnSlot = player.PlayerInventory.AddItem(ItemSlot);
+            var returnSlot = player.PlayerInGameInventory.AddItem(ItemSlot);
 
 
             if (returnSlot.HasItem() == true)

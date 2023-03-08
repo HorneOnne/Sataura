@@ -67,7 +67,7 @@ namespace Sataura
 
             CreateItemObject();
             CreateChestObject();
-            UIPlayerInventory.Instance.UpdateInventoryUI();
+            UIPlayerInGameInventory.Instance.UpdateInventoryUI();
         }
 
 

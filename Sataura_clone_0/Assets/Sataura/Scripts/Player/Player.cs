@@ -15,6 +15,7 @@ namespace Sataura
         [Header("CHARACTER DATA")]
         public PlayerData playerData;
         [SerializeField] private PlayerInventory playerInventory;
+        [SerializeField] private PlayerInGameInventory playerInGameInventory;
         [SerializeField] private ItemInHand itemInHand;
         [SerializeField] private PlayerMovement playerMovement;
         [SerializeField] private PlayerInputHandler playerInputHandler;
@@ -39,6 +40,7 @@ namespace Sataura
 
         #region Properties
         [HideInInspector] public PlayerInventory PlayerInventory { get => playerInventory; }
+        [HideInInspector] public PlayerInGameInventory PlayerInGameInventory { get => playerInGameInventory; }
         [HideInInspector] public ItemInHand ItemInHand { get => itemInHand; }
         [HideInInspector] public PlayerMovement PlayerMovement { get => playerMovement; }
         [HideInInspector] public PlayerInputHandler PlayerInputHandler { get => playerInputHandler; }

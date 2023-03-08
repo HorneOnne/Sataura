@@ -7,7 +7,7 @@ namespace Sataura
     /// </summary>
     public class UIManager : Singleton<UIManager>
     {
-        [field: SerializeField] public GameObject PlayerInventoryCanvas { get; private set; }
+        [field: SerializeField] public GameObject PlayerInGameInventoryCanvas { get; private set; }
         [field: SerializeField] public GameObject CreativeInventoryCanvas { get; private set; }
         [field: SerializeField] public GameObject CraftingTableCanvas { get; private set; }
         [field: SerializeField] public GameObject PlayerInformationCanvas { get; private set; }
@@ -21,15 +21,32 @@ namespace Sataura
         private void Awake()
         {
             // Activate all UI canvases on awake.
-            PlayerInventoryCanvas.SetActive(true);
-            CreativeInventoryCanvas.SetActive(true);
-            CraftingTableCanvas.SetActive(true);
-            PlayerInformationCanvas.SetActive(true);
-            PlayerEquipmentCanvas.SetActive(true);
-            ChestInventoryCanvas.SetActive(true);
-            AnvilCanvas.SetActive(true);
-            ItemDescCanvas.SetActive(true);
-            MenuCanvas.SetActive(true);
+            if(PlayerInGameInventoryCanvas != null)
+                PlayerInGameInventoryCanvas.SetActive(true);
+
+            if(CreativeInventoryCanvas != null)
+                CreativeInventoryCanvas.SetActive(true);
+
+            if (CraftingTableCanvas != null)
+                CraftingTableCanvas.SetActive(true);
+
+            if (PlayerInformationCanvas != null)
+                PlayerInformationCanvas.SetActive(true);
+
+            if (PlayerEquipmentCanvas != null)
+                PlayerEquipmentCanvas.SetActive(true);
+
+            if (ChestInventoryCanvas != null)
+                ChestInventoryCanvas.SetActive(true);
+
+            if (AnvilCanvas != null)
+                AnvilCanvas.SetActive(true);
+
+            if (ItemDescCanvas != null)
+                ItemDescCanvas.SetActive(true);
+
+            if (MenuCanvas != null)
+                MenuCanvas.SetActive(true);
         }
     }
 }

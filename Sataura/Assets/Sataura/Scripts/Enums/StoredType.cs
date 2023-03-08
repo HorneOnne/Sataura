@@ -8,6 +8,7 @@
         PlayerInventory,
         ChestInventory,
         CraftingTable,
+        PlayerInGameInventory,
 
         /// <summary>
         /// Another type of storage container.

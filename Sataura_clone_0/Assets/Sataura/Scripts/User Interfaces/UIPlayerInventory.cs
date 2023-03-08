@@ -19,6 +19,7 @@ namespace Sataura
 
         [Header("UI PREFAB")]
         public GameObject itemSlotPrefab;
+        [SerializeField] private float scaleUI = 1.0f;
 
 
         [Header("UI Event Properties")]
@@ -60,6 +61,7 @@ namespace Sataura
             for (int i = 0; i < playerInventory.Capacity; i++)
             {
                 GameObject slotObject = Instantiate(itemSlotPrefab, this.transform);
+                slotObject.transform.localScale = Vector3.one * scaleUI;
                 slotObject.GetComponent<UIItemSlot>().SetIndex(i);
                 slotObject.GetComponent<UIItemSlot>().SetData(null);
                 Utilities.AddEvent(slotObject, EventTriggerType.PointerClick, (baseEvent) => OnClick(baseEvent, slotObject));

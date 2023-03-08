@@ -12,6 +12,7 @@ namespace Sataura
         [Header("REFERENCES")]
         private Player player;
         private PlayerInventory playerInventory;
+        private PlayerInGameInventory playerInGameInventory;
         private PlayerEquipment playerEquipment;
         private ItemInHand itemInHand;
         private PlayerMovement playerMovement;
@@ -141,6 +142,7 @@ namespace Sataura
             if(player.handleItem)
             {
                 playerInventory = player.PlayerInventory;
+                playerInGameInventory = player.PlayerInGameInventory;
                 playerEquipment = player.PlayerEquipment;
                 itemInHand = player.ItemInHand;
             }
@@ -299,6 +301,9 @@ namespace Sataura
                     break;
                 case StoredType.CraftingTable:
                     CraftingTable.Instance.StackItem();
+                    break;
+                case StoredType.PlayerInGameInventory:
+                    playerInGameInventory.StackItem();
                     break;
 
                 default: break;

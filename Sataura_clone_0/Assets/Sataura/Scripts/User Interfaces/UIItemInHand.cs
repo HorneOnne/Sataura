@@ -10,6 +10,7 @@ namespace Sataura
         private ItemInHand itemInHand;
         [SerializeField] GameObject uiSlotPrefab;
         [HideInInspector] public GameObject uiSlotDisplay;
+        [SerializeField] private float scaleUI = 1.0f;
 
 
         public Image UISlotImage { get; private set; }
@@ -73,6 +74,7 @@ namespace Sataura
             else
             {
                 uiSlotDisplay = Instantiate(uiSlotPrefab, this.transform.parent.transform);
+                uiSlotDisplay.transform.localScale = Vector3.one * scaleUI;
                 UISlotImage = uiSlotDisplay.GetComponent<UIItemSlot>().mainImage;
                 UISlotImage.sprite = itemInHand.GetItemData().icon;
                 SetItemQuantityText();

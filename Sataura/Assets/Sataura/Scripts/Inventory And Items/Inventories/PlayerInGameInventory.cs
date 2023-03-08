@@ -1,13 +1,10 @@
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace Sataura
 {
-    /// <summary>
-    /// Manages the player's inventory.
-    /// </summary>
-    public class PlayerInventory : MonoBehaviour
+    public class PlayerInGameInventory : MonoBehaviour
     {
         [Header("REFERENCES")]
         [SerializeField] private Player player;
@@ -16,11 +13,11 @@ namespace Sataura
 
         [Header("INVENTORY SETTINGS")]
         // The list of all item slots in the inventory.
-        [HideInInspector] public List<ItemSlot> inventory;
-        [SerializeField] private InventoryData inventoryData;
+        [HideInInspector] public List<ItemSlot> inGameInventory;
+        [SerializeField] private InventoryData inGameInventoryData;
 
         #region Properties
-        public int Capacity { get { return inventoryData.itemSlots.Count; } }
+        public int Capacity { get { return inGameInventoryData.itemSlots.Count; } }
 
         #endregion
 
@@ -29,7 +26,7 @@ namespace Sataura
         private void Start()
         {
             itemInHand = player.ItemInHand;
-            inventory = inventoryData.itemSlots;
+            inGameInventory = inGameInventoryData.itemSlots;
         }
 
         /// <summary>
@@ -42,7 +39,7 @@ namespace Sataura
         {
             if (HasSlot(slotIndex))
             {
-                return inventory[slotIndex].ItemData;
+                return inGameInventory[slotIndex].ItemData;
             }
             return null;
         }
@@ -57,19 +54,19 @@ namespace Sataura
         {
             bool canAddItem = false;
 
-            for (int i = 0; i < inventory.Count; i++)
+            for (int i = 0; i < inGameInventory.Count; i++)
             {
-                if (inventory[i].HasItem() == false)
+                if (inGameInventory[i].HasItem() == false)
                 {
-                    inventory[i].AddNewItem(itemData);
+                    inGameInventory[i].AddNewItem(itemData);
                     canAddItem = true;
                     break;
                 }
                 else
                 {
-                    if (inventory[i].ItemData == itemData)
+                    if (inGameInventory[i].ItemData == itemData)
                     {
-                        bool canAdd = inventory[i].AddItem();
+                        bool canAdd = inGameInventory[i].AddItem();
 
                         if (canAdd == true)
                         {
@@ -94,9 +91,9 @@ namespace Sataura
             ItemSlot copyItemSlot = new ItemSlot(itemSlot);
             ItemSlot returnItemSlot = new ItemSlot(itemSlot);
 
-            for (int i = 0; i < inventory.Count; i++)
+            for (int i = 0; i < inGameInventory.Count; i++)
             {
-                returnItemSlot = inventory[i].AddItemsFromAnotherSlot(copyItemSlot);
+                returnItemSlot = inGameInventory[i].AddItemsFromAnotherSlot(copyItemSlot);
 
                 if (returnItemSlot.HasItem() == false)
                 {
@@ -115,7 +112,7 @@ namespace Sataura
         /// <returns>True if the inventory slot is not full after adding the item, false otherwise</returns>
         public bool AddItemAt(int index)
         {
-            bool isSlotNotFull = inventory[index].AddItem();
+            bool isSlotNotFull = inGameInventory[index].AddItem();
             EventManager.TriggerInventoryUpdatedEvent();
 
             return isSlotNotFull;
@@ -129,7 +126,7 @@ namespace Sataura
         /// <param name="item">The item data for the new item to be added</param>
         public void AddNewItemAt(int index, ItemData item)
         {
-            inventory[index].AddNewItem(item);
+            inGameInventory[index].AddNewItem(item);
             EventManager.TriggerInventoryUpdatedEvent();
         }
 
@@ -140,7 +137,7 @@ namespace Sataura
         /// <param name="index">The index of the inventory slot where the item should be removed</param>
         public void RemoveItemAt(int index)
         {
-            inventory[index].RemoveItem();
+            inGameInventory[index].RemoveItem();
             EventManager.TriggerInventoryUpdatedEvent();
         }
 
@@ -154,7 +151,7 @@ namespace Sataura
         {
             try
             {
-                inventory[slotIndex].HasItem();
+                inGameInventory[slotIndex].HasItem();
             }
             catch
             {
@@ -174,7 +171,7 @@ namespace Sataura
         {
             if (HasSlot(slotIndex))
             {
-                return inventory[slotIndex].HasItem();
+                return inGameInventory[slotIndex].HasItem();
             }
             return false;
         }
@@ -186,9 +183,9 @@ namespace Sataura
         /// <returns>The index of the inventory slot containing the item slot, or null if it is not found</returns>
         public int? GetSlotIndex(ItemSlot itemSlot)
         {
-            for (int i = 0; i < inventory.Count; i++)
+            for (int i = 0; i < inGameInventory.Count; i++)
             {
-                if (inventory[i].Equals(itemSlot))
+                if (inGameInventory[i].Equals(itemSlot))
                 {
                     return i;
                 }
@@ -207,11 +204,11 @@ namespace Sataura
             Dictionary<int, int> dict = new Dictionary<int, int>();
             Dictionary<int, int> sortedDict = new Dictionary<int, int>();
 
-            for (int i = 0; i < inventory.Count; i++)
+            for (int i = 0; i < inGameInventory.Count; i++)
             {
-                if (inventory[i].ItemData == itemInHand.GetItemData())
+                if (inGameInventory[i].ItemData == itemInHand.GetItemData())
                 {
-                    dict.Add(i, inventory[i].ItemQuantity);
+                    dict.Add(i, inGameInventory[i].ItemQuantity);
                 }
             }
 
@@ -221,9 +218,9 @@ namespace Sataura
 
             foreach (var e in sortedDict)
             {
-                itemInHand.GetSlot().AddItemsFromAnotherSlot(inventory[e.Key]);
+                itemInHand.GetSlot().AddItemsFromAnotherSlot(inGameInventory[e.Key]);
                 UIItemInHand.Instance.UpdateItemInHandUI();
-                UIPlayerInventory.Instance.UpdateInventoryUIAt(e.Key);
+                UIPlayerInGameInventory.Instance.UpdateInventoryUIAt(e.Key);
             }
         }
 
@@ -234,16 +231,17 @@ namespace Sataura
         /// <returns>The index of the arrow slot, or null if no arrow slot exists.</returns>
         public int? FindArrowSlotIndex()
         {
-            for (int i = 0; i < inventory.Count; i++)
+            for (int i = 0; i < inGameInventory.Count; i++)
             {
-                if (inventory[i].HasItem() == false)
+                if (inGameInventory[i].HasItem() == false)
                     continue;
 
-                if (inventory[i].GetItemType() == ItemType.Arrow)
+                if (inGameInventory[i].GetItemType() == ItemType.Arrow)
                     return i;
             }
 
             return null;
         }
     }
+
 }

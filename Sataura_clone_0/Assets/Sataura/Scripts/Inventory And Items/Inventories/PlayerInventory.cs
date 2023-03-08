@@ -9,15 +9,8 @@ namespace Sataura
     /// </summary>
     public class PlayerInventory : MonoBehaviour
     {
-        [Header("CONST VALUE")]
-        // The number of slots in a row.
-        private const int INVENTORY_WIDTH = 9;
-
-        // The number of rows in the inventory.
-        private const int INVENTORY_HEIGHT = 5;
-
         [Header("REFERENCES")]
-        private Player player;
+        [SerializeField] private Player player;
         private ItemInHand itemInHand;
 
 
@@ -28,8 +21,6 @@ namespace Sataura
 
         #region Properties
         public int Capacity { get { return inventoryData.itemSlots.Count; } }
-        public int WidthSize { get { return INVENTORY_WIDTH; } }
-        public int HeightSize { get { return INVENTORY_HEIGHT; } }
 
         #endregion
 
@@ -37,7 +28,6 @@ namespace Sataura
 
         private void Start()
         {
-            player = GetComponent<Player>();
             itemInHand = player.ItemInHand;
             inventory = inventoryData.itemSlots;
         }

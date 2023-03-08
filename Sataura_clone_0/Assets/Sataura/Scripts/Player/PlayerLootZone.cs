@@ -15,12 +15,12 @@ namespace Sataura
         // Cached
         private Player player;
         private ICollectible collectibleObject;
-        private UIPlayerInventory uiPlayerInventory;
+        private UIPlayerInGameInventory uiInGameInventory;
 
         private void Start()
         {
             player = playerGameObject.GetComponent<Player>();
-            uiPlayerInventory = UIPlayerInventory.Instance;
+            uiInGameInventory = UIPlayerInGameInventory.Instance;
         }
 
 
@@ -31,7 +31,7 @@ namespace Sataura
             if (collectibleObject != null)
             {
                 collectibleObject.Collect(player);
-                uiPlayerInventory.UpdateInventoryUI();
+                uiInGameInventory.UpdateInventoryUI();
             }
         }
     }
