@@ -10,7 +10,7 @@ namespace Sataura
     public class UIChestInventory : Singleton<UIChestInventory>
     {
         [Header("REFERENCES")]
-        public Player player;
+        [SerializeField] private Player player;
         private ItemInHand itemInHand;
         private PlayerInputHandler playerInputHandler;
         [SerializeField] private ChestInventory chestInventory;
@@ -47,6 +47,9 @@ namespace Sataura
 
         #endregion
 
+
+        private bool AlreadyLoadReferences;
+
         private void Awake()
         {
             EventManager.OnChestInventoryUpdated += UpdateInventoryUI;
@@ -57,12 +60,15 @@ namespace Sataura
             EventManager.OnChestInventoryUpdated -= UpdateInventoryUI;
         }
 
-
+        public void SetPlayer(Player player)
+        {
+            this.player = player;
+        }
 
         /// <summary>
         /// Initializes the chest inventory UI by creating UIItemSlot objects for each chest inventory slot.
         /// </summary>
-        private void Start()
+        /*private void Start()
         {
             dragType = DragType.Swap;
 
@@ -84,6 +90,32 @@ namespace Sataura
             // Update Inventory UI at the first time when start game.
             Invoke("UpdateInventoryUI", .1f);
             UIManager.Instance.ChestInventoryCanvas.SetActive(false);
+        }*/
+
+        public void LoadReferences()
+        {           
+            dragType = DragType.Swap;
+
+            for (int i = 0; i < MAX_NORMAL_CHEST_SLOT; i++)
+            {
+                GameObject slotObject = Instantiate(itemSlotPrefab, this.transform);
+                slotObject.GetComponent<UIItemSlot>().SetIndex(i);
+                slotObject.GetComponent<UIItemSlot>().SetData(null);
+
+                Utilities.AddEvent(slotObject, EventTriggerType.PointerClick, (baseEvent) => OnClick(baseEvent, slotObject));
+                Utilities.AddEvent(slotObject, EventTriggerType.PointerEnter, delegate { OnEnter(slotObject); });
+                Utilities.AddEvent(slotObject, EventTriggerType.PointerExit, delegate { OnExit(slotObject); });
+                Utilities.AddEvent(slotObject, EventTriggerType.BeginDrag, (baseEvent) => OnBeginDrag(baseEvent, slotObject));
+                Utilities.AddEvent(slotObject, EventTriggerType.EndDrag, (baseEvent) => OnEndDrag(baseEvent, slotObject));
+
+                itemSlots.Add(slotObject);
+            }
+
+            // Update Inventory UI at the first time when start game.
+            Invoke("UpdateInventoryUI", .1f);
+            UIManager.Instance.ChestInventoryCanvas.SetActive(false);
+
+            AlreadyLoadReferences = true;
         }
 
 
@@ -119,6 +151,8 @@ namespace Sataura
 
         private void Update()
         {
+            if (AlreadyLoadReferences == false) return;
+
             if (itemInHand.HasItemData())
             {
                 if (playerInputHandler.CurrentMouseState == PointerState.RightPressAfterWait)

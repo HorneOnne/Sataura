@@ -43,8 +43,7 @@ namespace Sataura
         /// <param name="eventData">The PointerEventData associated with the pointer down event.</param>
         public void OnPointerDown(PointerEventData eventData)
         {
-            if (eventData.button == PointerEventData.InputButton.Right
-                && itemInHand.HasItemData() == false)
+            if (eventData.button == PointerEventData.InputButton.Right)
             {
                 rt.transform.SetAsLastSibling();
             }

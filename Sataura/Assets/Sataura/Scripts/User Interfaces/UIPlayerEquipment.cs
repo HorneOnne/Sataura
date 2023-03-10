@@ -6,7 +6,7 @@ namespace Sataura
     public class UIPlayerEquipment : Singleton<UIPlayerEquipment>
     {
         [Header("References")]
-        public Player player;
+        [SerializeField] private Player player;
         private ItemInHand itemInHand;
         private PlayerEquipment playerEquipment;
 
@@ -17,7 +17,7 @@ namespace Sataura
 
 
 
-        private void Start()
+        /*private void Start()
         {
             playerEquipment = player.PlayerEquipment;
             itemInHand = player.ItemInHand;
@@ -25,6 +25,26 @@ namespace Sataura
             AddUIItemSLotEvent(uiHelmSlot);
             AddUIItemSLotEvent(uiChestSlot);
             AddUIItemSLotEvent(uiShieldSlot);
+        }*/
+
+        private bool AlreadyLoadReferences;
+
+        public void LoadReferences()
+        {
+            playerEquipment = player.PlayerEquipment;
+            itemInHand = player.ItemInHand;
+
+            AddUIItemSLotEvent(uiHelmSlot);
+            AddUIItemSLotEvent(uiChestSlot);
+            AddUIItemSLotEvent(uiShieldSlot);
+
+            AlreadyLoadReferences = true;
+        }
+
+
+        public void SetPlayer(Player player)
+        {
+            this.player = player;
         }
 
 

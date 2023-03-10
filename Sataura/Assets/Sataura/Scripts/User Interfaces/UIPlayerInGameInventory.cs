@@ -7,7 +7,7 @@ namespace Sataura
     public class UIPlayerInGameInventory : Singleton<UIPlayerInGameInventory>
     {
         [Header("REFERENCES")]
-        public Player player;
+        [SerializeField] private Player player;
         private PlayerInGameInventory playerInGameInventory;
         private PlayerInputHandler playerInputHandler;
         private ItemInHand itemInHand;
@@ -50,7 +50,7 @@ namespace Sataura
         }
 
 
-        private void Start()
+        /*private void Start()
         {
             itemInHand = player.ItemInHand;
             playerInGameInventory = player.PlayerInGameInventory;
@@ -75,12 +75,48 @@ namespace Sataura
 
             // Update Inventory UI at the first time when start game.
             Invoke("UpdateInventoryUI", .1f);
+        }*/
+
+        private bool AlreadyLoadReferences;
+        public void LoadReferences()
+        {
+            itemInHand = player.ItemInHand;
+            playerInGameInventory = player.PlayerInGameInventory;
+            playerInputHandler = player.PlayerInputHandler;
+            dragType = DragType.Swap;
+
+
+            for (int i = 0; i < playerInGameInventory.Capacity; i++)
+            {
+                GameObject slotObject = Instantiate(itemSlotPrefab, this.transform);
+                slotObject.transform.localScale = Vector3.one * scaleUI;
+                slotObject.GetComponent<UIItemSlot>().SetIndex(i);
+                slotObject.GetComponent<UIItemSlot>().SetData(null);
+                Utilities.AddEvent(slotObject, EventTriggerType.PointerClick, (baseEvent) => OnClick(baseEvent, slotObject));
+                Utilities.AddEvent(slotObject, EventTriggerType.PointerEnter, delegate { OnEnter(slotObject); });
+                Utilities.AddEvent(slotObject, EventTriggerType.PointerExit, delegate { OnExit(slotObject); });
+                Utilities.AddEvent(slotObject, EventTriggerType.BeginDrag, (baseEvent) => OnBeginDrag(baseEvent, slotObject));
+                Utilities.AddEvent(slotObject, EventTriggerType.EndDrag, (baseEvent) => OnEndDrag(baseEvent, slotObject));
+
+                itemSlotList.Add(slotObject);
+
+                AlreadyLoadReferences = true;
+            }
+
+            // Update Inventory UI at the first time when start game.
+            Invoke("UpdateInventoryUI", .1f);
         }
 
-
+        public void SetPlayer(Player player)
+        {
+            this.player = player;
+        }
 
         private void Update()
         {
+            if (AlreadyLoadReferences == false) return;
+
+
             if (itemInHand.HasItemData())
             {
                 if (playerInputHandler.CurrentMouseState == PointerState.RightPressAfterWait)

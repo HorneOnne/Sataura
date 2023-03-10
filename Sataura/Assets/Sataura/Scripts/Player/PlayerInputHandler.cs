@@ -1,4 +1,6 @@
 using UnityEngine;
+using Unity.Netcode;
+using UnityEditor;
 using UnityEngine.InputSystem;
 
 namespace Sataura
@@ -6,11 +8,10 @@ namespace Sataura
     /// <summary>
     /// Handles player input and sends events to other components.
     /// </summary>
-    [RequireComponent(typeof(Player))]
-    public class PlayerInputHandler : MonoBehaviour
+    public class PlayerInputHandler : NetworkBehaviour
     {
         [Header("REFERENCES")]
-        private Player player;
+        [SerializeField] private Player player;
         private PlayerInventory playerInventory;
         private PlayerInGameInventory playerInGameInventory;
         private PlayerEquipment playerEquipment;
@@ -34,7 +35,6 @@ namespace Sataura
 
         #region Properties
         public Vector2 MovementInput { get; private set; }
-        public bool TriggerJump { get; private set; }
         public bool PressUtilityKeyInput { get; private set; }
         public float JumpInput { get; private set; }
 
@@ -79,7 +79,7 @@ namespace Sataura
         /// <summary>
         /// Whether the current item being used is being used for the first time.
         /// </summary>
-        private bool firstUseItem = true;   
+        private bool firstUseItem = true;
 
 
         // Cached
@@ -99,38 +99,39 @@ namespace Sataura
         public KeyCode dropItemKey = KeyCode.T;
 
         PlayerInputAction playerInputAction;
+        private InputAction jump;
 
 
         #region Events handler
         private void OnEnable()
         {
-            if(player.canUseItem)
+            if (player.canUseItem)
             {
-                EventManager.OnItemInHandChanged += ReInstantiateItem;
+                //EventManager.OnItemInHandChanged += ReInstantiateItem;
                 EventManager.OnItemInHandChanged += FastEquipItem;
             }
-            
+
         }
 
         private void OnDisable()
         {
-            if(player.canUseItem)
+            if (player.canUseItem)
             {
-                EventManager.OnItemInHandChanged -= ReInstantiateItem;
+                //EventManager.OnItemInHandChanged -= ReInstantiateItem;
                 EventManager.OnItemInHandChanged -= FastEquipItem;
-            }          
+            }
         }
         #endregion
 
-        private void Awake()
-        {
-            player = GetComponent<Player>();
-        }
 
-        private void Start()
+
+        /*private void Start()
         {          
-            playerInputAction = new PlayerInputAction();
+            playerInputAction = new PlayerInputAction();         
             playerInputAction.Player.Enable();
+            jump = playerInputAction.Player.Jump;
+            jump.Enable();
+            jump.performed += SettingsJump;
 
 
             if (player.handleMovement)
@@ -146,48 +147,67 @@ namespace Sataura
                 playerEquipment = player.PlayerEquipment;
                 itemInHand = player.ItemInHand;
             }
+        }*/
+
+        public override void OnNetworkSpawn()
+        {
+            playerInputAction = new PlayerInputAction();
+            playerInputAction.Player.Enable();
+            jump = playerInputAction.Player.Jump;
+            jump.Enable();
+            jump.performed += SettingsJump;
+
+
+            if (player.handleMovement)
+            {
+                playerMovement = player.PlayerMovement;
+            }
+
+
+            if (player.handleItem)
+            {
+                playerInventory = player.PlayerInventory;
+                playerInGameInventory = player.PlayerInGameInventory;
+                playerEquipment = player.PlayerEquipment;
+                itemInHand = player.ItemInHand;
+            }
         }
 
 
-     
+        private void FixedUpdate()
+        {
+            if (!IsOwner) return;
+
+            if (player.handleItem)
+            {
+                if (Input.GetKeyDown(KeyCode.C))
+                {
+                    Debug.Log(itemInHand.HasItem());
+                }
+
+                if (itemInHand.currentItemID.Value != -1)
+                {
+                    Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    RotateHoldItemServerRpc(mousePosition);
+                }
+
+            }
+        }
 
         private void Update()
         {
-            elapsedTime += Time.deltaTime;
+            if (!IsOwner) return;
 
+            elapsedTime += Time.deltaTime;
 
             if (player.handleMovement)
             {
                 JumpInput = playerInputAction.Player.Jump.ReadValue<float>();
                 MovementInput = playerInputAction.Player.Movement.ReadValue<Vector2>();
-
-
-                // Calculate hang time (Time leave ground)
-                if (playerMovement.IsGrounded())
-                    hangCounter = player.playerData.hangTime;
-                else
-                    hangCounter -= Time.deltaTime;
-
-
-                // calculate Jump Buffer
-                if (JumpInput == 1)
-                {
-                    jumpBufferCount = player.playerData.jumpBufferLength;
-                }
-                else
-                {
-                    jumpBufferCount -= Time.deltaTime;
-                }
-
-                if (jumpBufferCount > 0 && hangCounter > 0)
-                {
-                    TriggerJump = true;
-                    jumpBufferCount = 0;
-                }
             }
 
 
-            if(player.handleItem)
+            if (player.handleItem)
             {
                 PressUtilityKeyInput = Input.GetKey(utilityKeyBinding);
 
@@ -202,10 +222,12 @@ namespace Sataura
                 }
 
 
-                if(player.handleItem)
+                if (player.handleItem)
                 {
-                    if (itemInHand.HasItem() && itemInHand.GetICurrenttem().showIconWhenHoldByHand == true)
-                        RotateHoldItem();
+                    /*if (itemInHand.currentItemID.Value != -1)
+                    {
+                        RotateHoldItemServerRpc();
+                    }*/
 
 
 
@@ -226,13 +248,37 @@ namespace Sataura
                         UseItem();
                     }
                 }
-                
-            }    
+
+            }
         }
 
 
-       
 
+
+        private void SettingsJump(InputAction.CallbackContext context)
+        {
+            // Calculate hang time (Time leave ground)
+            if (playerMovement.isGrounded)
+                hangCounter = player.playerData.hangTime;
+            else
+                hangCounter -= Time.deltaTime;
+
+
+            // calculate Jump Buffer
+            if (JumpInput == 1)
+            {
+                jumpBufferCount = player.playerData.jumpBufferLength;
+            }
+            else
+            {
+                jumpBufferCount -= Time.deltaTime;
+            }
+
+            if (jumpBufferCount > 0 && hangCounter > 0)
+            {
+                jumpBufferCount = 0;
+            }
+        }
 
         //// <summary>
         /// Handles mouse events and updates the current mouse state.
@@ -256,7 +302,7 @@ namespace Sataura
                 {
                     // first click
                     lastClickTime = Time.time;
-                    isLeftClicking = true;                  
+                    isLeftClicking = true;
                 }
             }
             else if (Input.GetMouseButtonUp(0) && isLeftClicking)
@@ -316,45 +362,53 @@ namespace Sataura
         /// <summary>
         /// Rotate hold item if it can be shown
         /// </summary>
-        private void RotateHoldItem()
+        [ServerRpc]
+        private void RotateHoldItemServerRpc(Vector3 mousePosition)
         {
-            Utilities.RotateObjectTowardMouse2D(player.HandHoldItem, 0);
-        }
-
-
- 
-        /// <summary>
-        /// Handles the re-instantiation of the item in the player's hand. Destroys any existing items in the player's hand and
-        /// creates a new item object in the hand if the item inventory slot is not empty.
-        /// </summary>
-        private void ReInstantiateItem()
-        {
-            firstUseItem = true;
-
-            if (player.HandHoldItem.childCount != 0)
+            if (itemInHand.GetICurrenttem() == null) return;
+            if (itemInHand.GetICurrenttem().showIconWhenHoldByHand == true)
             {
-                for (int i = 0; i < player.HandHoldItem.childCount; i++)
-                {
-                    Destroy(player.HandHoldItem.GetChild(i).gameObject);
-                }
-            }
-            itemInHand.SetICurrentItem(null);
-
-
-            if (itemInHand.HasItemData())
-            {
-                var itemObject = Utilities.InstantiateItemObject(itemInHand.GetSlot(), player.HandHoldItem);
-                itemInHand.SetICurrentItem(itemObject.GetComponent<Item>());
-                if (itemObject.showIconWhenHoldByHand)
-                {
-                    itemObject.spriteRenderer.enabled = true;
-                }
-                else
-                    itemObject.spriteRenderer.enabled = false;
-
+                Utilities.RotateObjectTowardMouse2D(mousePosition, player.HandHoldItem, 0);
             }
         }
 
+
+        /*
+                /// <summary>
+                /// Handles the re-instantiation of the item in the player's hand. Destroys any existing items in the player's hand and
+                /// creates a new item object in the hand if the item inventory slot is not empty.
+                /// </summary>
+                private void ReInstantiateItem()
+                {
+                    firstUseItem = true;
+
+                    if (player.HandHoldItem.childCount != 0)
+                    {
+                        for (int i = 0; i < player.HandHoldItem.childCount; i++)
+                        {
+                            Destroy(player.HandHoldItem.GetChild(i).gameObject);
+                        }
+                    }
+                    itemInHand.SetICurrentItem(null);
+
+
+                    if (itemInHand.HasItemData())
+                    {
+                        var itemObject = Utilities.InstantiateItemObject(itemInHand.GetSlot(), player.HandHoldItem);
+                        itemObject.GetComponent<NetworkObject>().Spawn(true);
+                        bool b = itemObject.GetComponent<NetworkObject>().TrySetParent(player.HandHoldItem);
+                        Debug.Log($"can transform parent: {b}");
+                        itemInHand.SetICurrentItem(itemObject.GetComponent<Item>());
+                        if (itemObject.showIconWhenHoldByHand)
+                        {
+                            itemObject.spriteRenderer.enabled = true;
+                        }
+                        else
+                            itemObject.spriteRenderer.enabled = false;
+
+                    }
+                }
+        */
 
         /// <summary>
         /// Handles fast equipment of items with a utility key press.
@@ -413,7 +467,6 @@ namespace Sataura
         /// </summary>
         private void UseItem()
         {
-
             if (itemInHand.HasItemData() && itemInHand.GetICurrenttem() != null)
             {
                 // Check if it's time to attack
@@ -463,9 +516,6 @@ namespace Sataura
         }
 
 
-
-
-        public void ResetJumpInput() => TriggerJump = false;
 
         public float GetTimeLeftGround()
         {

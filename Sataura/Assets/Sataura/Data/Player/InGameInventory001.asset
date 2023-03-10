@@ -10,9 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d7578a1d3c187ec4ba49be031b63deb2, type: 3}
-  m_Name: Character InGame Inventory
+  m_Name: InGameInventory001
   m_EditorClassIdentifier: 
   itemSlots:
+  - <ItemData>k__BackingField: {fileID: 11400000, guid: 8f3ed8e6f97f1024ea2ecd3c8dd300e9, type: 2}
+    <ItemQuantity>k__BackingField: 1
+  - <ItemData>k__BackingField: {fileID: 11400000, guid: 1734df0a86039ca4691141046297b6fc, type: 2}
+    <ItemQuantity>k__BackingField: 30
   - <ItemData>k__BackingField: {fileID: 0}
     <ItemQuantity>k__BackingField: 0
   - <ItemData>k__BackingField: {fileID: 0}
@@ -21,9 +25,5 @@ MonoBehaviour:
     <ItemQuantity>k__BackingField: 0
   - <ItemData>k__BackingField: {fileID: 0}
     <ItemQuantity>k__BackingField: 0
-  - <ItemData>k__BackingField: {fileID: 0}
-    <ItemQuantity>k__BackingField: 0
-  - <ItemData>k__BackingField: {fileID: 0}
-    <ItemQuantity>k__BackingField: 0
-  - <ItemData>k__BackingField: {fileID: 0}
-    <ItemQuantity>k__BackingField: 0
+  - <ItemData>k__BackingField: {fileID: 11400000, guid: 179ff1d8cb2aa1e49959fa7da48cde05, type: 2}
+    <ItemQuantity>k__BackingField: 1

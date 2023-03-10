@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using Unity.Netcode;
 
 namespace Sataura
 {
-    public class PlayerInGameInventory : MonoBehaviour
+    public class PlayerInGameInventory : NetworkBehaviour
     {
         [Header("REFERENCES")]
         [SerializeField] private Player player;
@@ -14,19 +15,40 @@ namespace Sataura
         [Header("INVENTORY SETTINGS")]
         // The list of all item slots in the inventory.
         [HideInInspector] public List<ItemSlot> inGameInventory;
-        [SerializeField] private InventoryData inGameInventoryData;
+        //[SerializeField] private InventoryData inGameInventoryData;
+        public InventoryData inGameInventoryData;
 
         #region Properties
-        public int Capacity { get { return inGameInventoryData.itemSlots.Count; } }
+        //public int Capacity { get { return inGameInventoryData.itemSlots.Count; } }
+        public int Capacity 
+        { 
+            get 
+            {
+                if (inGameInventoryData == null)
+                    return 0;
+                else
+                    return inGameInventoryData.itemSlots.Count; 
+            } 
+        }
 
         #endregion
 
         // Initializes the inventory with empty item slots.
 
-        private void Start()
+        /*private void Start()
         {
             itemInHand = player.ItemInHand;
             inGameInventory = inGameInventoryData.itemSlots;
+        }*/
+
+        public override void OnNetworkSpawn()
+        {
+            if(IsOwner)
+            {
+                itemInHand = player.ItemInHand;
+                inGameInventory = inGameInventoryData.itemSlots;
+            }
+           
         }
 
         /// <summary>

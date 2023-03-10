@@ -5,11 +5,10 @@ namespace Sataura
     /// <summary>
     /// Manages the player's equipment, including equipping and unequipping items, and updating the player's appearance based on their equipment.
     /// </summary>
-    [RequireComponent(typeof(Player))]
     public class PlayerEquipment : MonoBehaviour
     {
         [Header("REFERENCES")]
-        private Player player;
+        [SerializeField] private Player player;
 
         /// <summary>
         /// The sprite renderer for the helmet.
@@ -43,7 +42,6 @@ namespace Sataura
 
         private void Awake()
         {
-            player = GetComponent<Player>();
             Helm = new ItemSlot();
             Chest = new ItemSlot();
             Shield = new ItemSlot();

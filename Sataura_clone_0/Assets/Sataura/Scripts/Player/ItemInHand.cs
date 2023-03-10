@@ -1,25 +1,28 @@
-using System;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using static UnityEditor.Progress;
 
 namespace Sataura
 {
     /// <summary>
     /// Represents an item that is currently held in the player's hand.
     /// </summary>
-    public class ItemInHand : MonoBehaviour
+    public class ItemInHand : NetworkBehaviour
     {
+        [Header("References")]
+        /// <summary>
+        /// The player who is holding this item.
+        /// </summary>
+        [SerializeField] private Player player;
+
+
         /// <summary>
         /// The item slot that contains the item data and item quantity in this hand.
         /// </summary>
         [SerializeField] private ItemSlot itemSlot;
 
-        [Header("References")]
-        /// <summary>
-        /// The player who is holding this item.
-        /// </summary>
-        private Player player;
 
         /// <summary>
         /// The UI element that displays the item in this hand.
@@ -29,7 +32,8 @@ namespace Sataura
         /// <summary>
         /// The current item that is held in this hand.
         /// </summary>
-        private Item currentItem;
+        [SerializeField] private Item currentItem;
+        public NetworkVariable<int> currentItemID = new NetworkVariable<int>(-1);
 
 
         /// <summary>
@@ -47,9 +51,29 @@ namespace Sataura
 
         #endregion
 
+        private void OnEnable()
+        {
+            if (player.canUseItem)
+            {
+                EventManager.OnItemInHandChanged += ReInstantiateItem;
+
+                currentItemID.OnValueChanged += OnItemIDChanged;
+            }
+
+        }
+
+        private void OnDisable()
+        {
+            if (player.canUseItem)
+            {
+                EventManager.OnItemInHandChanged -= ReInstantiateItem;
+
+                currentItemID.OnValueChanged -= OnItemIDChanged;
+            }
+        }
+
         private void Start()
         {
-            player = GetComponent<Player>();
             uiItemInHand = UIItemInHand.Instance;
         }
 
@@ -209,9 +233,11 @@ namespace Sataura
         /// Sets the current item to the specified item.
         /// </summary>
         /// <param name="item">The item to set as the current item.</param>
-        public void SetICurrentItem(Item item)
+
+        [ServerRpc]
+        public void SetCurrentItemIDServerRpc(int itemID)
         {
-            currentItem = item;
+            currentItemID.Value = itemID;          
         }
 
 
@@ -365,6 +391,103 @@ namespace Sataura
                 return false;
             }
         }
+
+
+        /// <summary>
+        /// Handles the re-instantiation of the item in the player's hand. Destroys any existing items in the player's hand and
+        /// creates a new item object in the hand if the item inventory slot is not empty.
+        /// </summary>
+        private void ReInstantiateItem()
+        {
+            //firstUseItem = true;
+
+            /*if (player.HandHoldItem.childCount != 0)
+            {
+                for (int i = 0; i < player.HandHoldItem.childCount; i++)
+                {
+                    Destroy(player.HandHoldItem.GetChild(i).gameObject);
+                }
+            }
+            SetICurrentItem(null);
+
+
+            if (HasItemData())
+            {
+                var itemObject = Utilities.InstantiateItemObject(GetSlot(), player.HandHoldItem);
+                itemObject.GetComponent<NetworkObject>().Spawn(true);
+                itemObject.GetComponent<NetworkObject>().TrySetParent(player.HandHoldItem);
+                SetICurrentItem(itemObject.GetComponent<Item>());
+                
+                if (itemObject.showIconWhenHoldByHand)
+                {
+                    itemObject.spriteRenderer.enabled = true;
+                }
+                else
+                    itemObject.spriteRenderer.enabled = false;
+            }*/
+
+            if (!IsOwner) return;
+            
+            DespawnCurrentInHandNetworkObjectServerRpc();
+            bool hasItemData = HasItemData();
+            if (hasItemData)
+            {
+                int itemID = GameDataManager.Instance.GetItemID(itemSlot.ItemData);
+                int itemQuantity = itemSlot.ItemQuantity;
+                SetCurrentItemIDServerRpc(itemID);  
+            }
+
+
+        }
+
+        [ServerRpc]
+        private void DespawnCurrentInHandNetworkObjectServerRpc()
+        {
+            if (currentItem == null) 
+            {
+                SetCurrentItemIDServerRpc(-1);
+                return;
+            }
+      
+
+            NetworkObject networkObject = currentItem.GetComponent<NetworkObject>();
+            if (networkObject != null && networkObject.IsSpawned && IsServer)
+            {
+                networkObject.Despawn();
+                Debug.Log("Despawn network object.");
+            }
+            SetCurrentItemIDServerRpc(-1);
+        }
+
+
+        [ServerRpc]
+        private void InstantitateNetworkObjectServerRpc(int itemID, int itemQuantity)
+        {
+            currentItem = Utilities.InstantiateItemNetworkObject(itemID, itemQuantity, player.HandHoldItem);
+            currentItem.GetComponent<NetworkObject>().Spawn(true);
+            currentItem.GetComponent<NetworkObject>().TrySetParent(player.HandHoldItem);
+            currentItem.transform.localPosition = Vector3.zero;
+            currentItem.transform.localScale = Vector3.one;
+       
+
+            if (currentItem.showIconWhenHoldByHand)
+            {
+                currentItem.spriteRenderer.enabled = true;
+            }
+            else
+                currentItem.spriteRenderer.enabled = false;
+        }
+
+        private void OnItemIDChanged(int oldID, int newID)
+        {
+            Debug.Log("OnItemIDChanged");
+            if (!IsOwner) return;
+            if (newID == -1) return;
+
+            InstantitateNetworkObjectServerRpc(newID, 1);
+        }
+
+
     }
 }
 

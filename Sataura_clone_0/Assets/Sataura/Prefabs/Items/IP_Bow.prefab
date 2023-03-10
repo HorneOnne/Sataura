@@ -71,7 +71,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1804832047
-  m_SortingLayer: 1
+  m_SortingLayer: 0
   m_SortingOrder: 10
   m_Sprite: {fileID: 907304249, guid: d4d04b54f146fc9499ef61e7951f0861, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -159,6 +159,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2349573720829118874}
   - component: {fileID: 2349573720829118873}
+  - component: {fileID: 1706659015833893685}
+  - component: {fileID: 7246867179661540205}
   m_Layer: 30
   m_Name: IP_Bow
   m_TagString: Item
@@ -203,6 +205,48 @@ MonoBehaviour:
   - {fileID: 5324487877288481257}
   - {fileID: 976841328162000962}
   consumeArrow: 1
+--- !u!114 &1706659015833893685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2349573720829118872}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 951099334
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+--- !u!114 &7246867179661540205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2349573720829118872}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5616a43cd529d804cbd9c16703249aef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 0
+  SyncRotAngleX: 0
+  SyncRotAngleY: 0
+  SyncRotAngleZ: 1
+  SyncScaleX: 1
+  SyncScaleY: 1
+  SyncScaleZ: 0
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  InLocalSpace: 1
+  Interpolate: 0
 --- !u!1 &3450024166916156680
 GameObject:
   m_ObjectHideFlags: 0

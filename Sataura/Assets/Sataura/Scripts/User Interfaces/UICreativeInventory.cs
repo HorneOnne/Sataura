@@ -23,7 +23,7 @@ namespace Sataura
         public GameObject itemSlotPrefab;
 
         [Header("REFERENCES")]
-        public Player player;
+        [SerializeField] private Player player;
         private ItemInHand itemInHand;
         private GameDataManager itemDataManager;
         [SerializeField] Transform contentPanel;
@@ -43,7 +43,7 @@ namespace Sataura
         [SerializeField] private bool useCraftingSuggestion;
 
 
-        private void Start()
+        /*private void Start()
         {
             itemInHand = player.ItemInHand;         
             itemDataManager = GameDataManager.Instance;
@@ -51,9 +51,27 @@ namespace Sataura
 
             if(useCraftingSuggestion)
                 uiCraftingTableCanvas = UIManager.Instance.CraftingTableCanvas;
+        }*/
+
+        private bool AlreadyLoadReferences;
+
+        public void LoadReferences()
+        {
+            itemInHand = player.ItemInHand;
+            itemDataManager = GameDataManager.Instance;
+            LoadAllItems();
+
+            if (useCraftingSuggestion)
+                uiCraftingTableCanvas = UIManager.Instance.CraftingTableCanvas;
+
+            AlreadyLoadReferences = true;
         }
 
 
+        public void SetPlayer(Player player)
+        {
+            this.player = player;
+        }
 
         public void LoadAllItem()
         {

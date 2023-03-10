@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
@@ -202,7 +201,8 @@ namespace Sataura
                 return itemPrefabByNameDict[name];
             else
             {
-                throw new System.Exception($"Not found item prefab name {name} in GameDataManager.cs.");
+                return null;
+                //throw new System.Exception($"Not found item prefab name {name} in GameDataManager.cs.");
             }
         }
 

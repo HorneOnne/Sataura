@@ -56,7 +56,9 @@ namespace Sataura
             var swordProjectile002 = SworldProjectile002Spawner.Instance.Pool.Get().GetComponent<SwordProjectile_002>();
             swordProjectile002.SetData(swordData);
             swordProjectile002.Shoot(this.transform.position);
-            Utilities.RotateObjectTowardMouse2D(swordProjectile002.transform, -45f);
+            
+            Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Utilities.RotateObjectTowardMouse2D(mousePosition,swordProjectile002.transform, -45f);
         }
 
     }

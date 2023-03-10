@@ -33,15 +33,33 @@ namespace Sataura
                 throw new System.Exception($"Not found prefab name {itemSlot.ItemData.itemType} in GameDataManager.cs");
             }
 
+            return returnGameObject.GetComponent<Item>();
+        }
+
+        public static Item InstantiateItemNetworkObject(int itemID, int itemQuantity, Transform parent = null)
+        {
+            GameObject returnGameObject = null;
+            var itemData = GameDataManager.Instance.GetItemData(itemID);
+            
+            var itemPrefab = GameDataManager.Instance.GetItemPrefab($"IP_{itemData.itemType}");
+            if (itemPrefab != null)
+            {
+                returnGameObject = MonoBehaviour.Instantiate(itemPrefab, parent);
+                returnGameObject.GetComponent<Item>().SetData(new ItemSlot(itemData, itemQuantity));
+
+            }
+            else
+            {
+                throw new System.Exception($"Not found prefab name {itemData.itemType} in GameDataManager.cs");
+            }
 
             return returnGameObject.GetComponent<Item>();
         }
 
-
-        public static void RotateObjectTowardMouse2D(Transform objectTransform, float offsetZAngle)
+        public static void RotateObjectTowardMouse2D(Vector3 mousePos, Transform objectTransform, float offsetZAngle)
         {
             Vector3 spritePos = objectTransform.position;
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            //Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             mousePos.z = 0f; // Ensure the z-coordinate is 0 to keep the mouse and sprite on the same plane
 
             // Calculate the difference between the sprite's position and the mouse position

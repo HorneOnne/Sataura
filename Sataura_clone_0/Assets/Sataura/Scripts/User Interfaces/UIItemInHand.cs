@@ -6,7 +6,7 @@ namespace Sataura
     public class UIItemInHand : Singleton<UIItemInHand>
     {
         [Header("References")]
-        public Player player;
+        [SerializeField] private Player player;
         private ItemInHand itemInHand;
         [SerializeField] GameObject uiSlotPrefab;
         [HideInInspector] public GameObject uiSlotDisplay;
@@ -31,15 +31,32 @@ namespace Sataura
         }
 
 
-        private void Start()
+        /*private void Start()
         {
             mainCamera = Camera.main;
             itemInHand = player.ItemInHand;
+        }*/
+
+        private bool AlreadyLoadReferences;
+        public void LoadReferences()
+        {
+            mainCamera = Camera.main;
+            itemInHand = player.ItemInHand;
+
+            AlreadyLoadReferences = true;
         }
 
 
+        public void SetPlayer(Player player)
+        {
+            this.player = player;
+        }
+
         private void Update()
         {
+            if (AlreadyLoadReferences == false) return;
+
+
             if (player.ItemInHand.HasItemData() && uiSlotDisplay != null)
             {
                 mainCameraPosition = (Vector2)mainCamera.ScreenToWorldPoint(Input.mousePosition);

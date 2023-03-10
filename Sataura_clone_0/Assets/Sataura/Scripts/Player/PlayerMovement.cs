@@ -1,3 +1,5 @@
+using System.Collections;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Sataura
@@ -5,15 +7,16 @@ namespace Sataura
     /// <summary>
     /// Handles player movement, jumping and flipping in both grounded and aerial states.
     /// </summary>
-    [RequireComponent(typeof(Player))]
-    public class PlayerMovement : MonoBehaviour
+    public class PlayerMovement : NetworkBehaviour
     {
         [Header("REFERENCES")]
-        private Player player;
-        private PlayerData playerData;
-        private PlayerInputHandler playerInputHandler;
-        private Rigidbody2D rb;
+        [SerializeField] private Player player;
+        [SerializeField] private Rigidbody2D rb;
         [SerializeField] Transform groundCheckPoint;
+        private PlayerData playerData;
+
+        [SerializeField] private PlayerInputHandler playerInputHandler;
+        
 
 
         #region Properties
@@ -25,42 +28,51 @@ namespace Sataura
         #endregion Properties   
 
         public Vector2 CurrentVelocity { get { return rb.velocity; } }
-        
 
+        public bool isGrounded;
 
-        private void Start()
+        /*private void Start()
         {
-            player = GetComponent<Player>();
             playerInputHandler = player.PlayerInputHandler;
             playerData = player.playerData;
-
-            rb = GetComponent<Rigidbody2D>();
             FacingDirection = 1;
+        }*/
 
-            
+        public override void OnNetworkSpawn()
+        {
+            playerInputHandler = player.PlayerInputHandler;
+            playerData = player.playerData;
+            FacingDirection = 1;
         }
-
-
 
         private void FixedUpdate()
         {
+            if (!IsOwner) return;
+
             // Movement 
             // =========================================================================
-            MoveOnGround();
+            if(player.handleMovement)
+            {
+                isGrounded = IsGrounded();
 
-            // Movement in AIR
-            MoveInAir();
+                HandleMovementOnGround(player.PlayerInputHandler.MovementInput);
 
-            // Jump 
-            // =========================================================================
-            Jump();
+                // Movement in AIR
+                HandleMoveInAir(player.PlayerInputHandler.MovementInput, isGrounded);
+
+                // Jump 
+                // =========================================================================
+                HandleJump(playerInputHandler.JumpInput == 1, isGrounded);
+
+                // Pre-Calculate Physics
+                HandleAddGravityMultiplier();
 
 
-            // Pre-Calculate Physics
-            AddGravityMultiplier();
-            SetMaxVelocity();
+                //SetMaxVelocity();
+                HandleSetMaxVelocity();
 
-            FlipCharacterFace(playerInputHandler.MovementInput.x);
+                FlipCharacterFace(playerInputHandler.MovementInput.x);
+            }         
         }
 
 
@@ -74,11 +86,13 @@ namespace Sataura
         }
 
 
-        private void MoveOnGround()
+
+        //[ServerRpc]
+        private void HandleMovementOnGround(Vector2 movementInputVector)
         {
-            if (playerInputHandler.MovementInput.x != 0)
+            if (movementInputVector.x != 0)
             {
-                rb.velocity = new Vector2(playerInputHandler.MovementInput.x * playerData.movementSpeed * Time.deltaTime, rb.velocity.y);
+                rb.velocity = new Vector2(movementInputVector.x * playerData.movementSpeed, rb.velocity.y);
             }
             else
             {
@@ -86,41 +100,44 @@ namespace Sataura
             }
         }
 
-        private void MoveInAir()
+
+        //[ServerRpc]
+        private void HandleMoveInAir(Vector2 movementInputVector, bool isOnGrounded)
         {
-            if (IsGrounded() == false && playerInputHandler.MovementInput.x != 0)
+            if (isOnGrounded == false && movementInputVector.x != 0)
             {
-                if (playerInputHandler.MovementInput.x == 0)
+                if (movementInputVector.x == 0)
                 {
                     rb.velocity = new Vector2(rb.velocity.x * playerData.airDragMultiplier, rb.velocity.y);
                 }
                 else
                 {
-                    Vector2 forceToAdd = new Vector2(playerData.movementForceInAir * playerInputHandler.MovementInput.x, rb.velocity.y);
+                    Vector2 forceToAdd = new Vector2(playerData.movementForceInAir * movementInputVector.x, rb.velocity.y);
                     rb.velocity = forceToAdd;
 
                     if (Mathf.Abs(rb.velocity.x) > playerData.maxMovementSpeed)
                     {
-                        rb.velocity = new Vector2(playerData.maxMovementSpeed * playerInputHandler.MovementInput.x, rb.velocity.y);
+                        rb.velocity = new Vector2(playerData.maxMovementSpeed * movementInputVector.x, rb.velocity.y);
                     }
                 }
             }
-
-
         }
 
-        private void Jump()
+
+
+        //[ServerRpc]
+        private void HandleJump(bool triggerJump, bool isOnGrounded)
         {
-            if (playerInputHandler.TriggerJump)
+            if(isOnGrounded && triggerJump)
             {
-                rb.velocity = new Vector2(rb.velocity.x, playerData.jumpForce * Time.fixedDeltaTime);
-                playerInputHandler.ResetJumpInput();
+                rb.velocity = new Vector2(rb.velocity.x, playerData.jumpForce);
             }
         }
 
 
 
-        private void SetMaxVelocity()
+        //[ServerRpc]
+        private void HandleSetMaxVelocity()
         {
             if (rb.velocity.y > playerData.maxJumpVelocity)
                 rb.velocity = new Vector2(rb.velocity.x, playerData.maxJumpVelocity);
@@ -128,12 +145,14 @@ namespace Sataura
                 rb.velocity = new Vector2(rb.velocity.x, playerData.maxFallVelocity);
         }
 
-        private void AddGravityMultiplier()
+
+        //[ServerRpc]
+        private void HandleAddGravityMultiplier()
         {
             if (rb.velocity.y < 0)
-                rb.velocity += Vector2.up * Physics2D.gravity * playerData.fallMultiplier * Time.deltaTime;
-            else if (rb.velocity.y > 0 && !playerInputHandler.TriggerJump)
-                rb.velocity += Vector2.up * Physics2D.gravity * playerData.lowMultiplier * Time.deltaTime;
+                rb.velocity += Vector2.up * Physics2D.gravity * playerData.fallMultiplier;
+            else if (rb.velocity.y > 0)
+                rb.velocity += Vector2.up * Physics2D.gravity * playerData.lowMultiplier;
         }
 
         public void FlipCharacterFace(float XInput)

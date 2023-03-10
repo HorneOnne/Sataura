@@ -33,7 +33,7 @@ namespace Sataura
 
             playerDataProperty = serializedObject.FindProperty("playerData");
             canUseItemProperty = serializedObject.FindProperty("canUseItem");
-            handHoldItemProperty = serializedObject.FindProperty("handHoldItem");
+            handHoldItemProperty = serializedObject.FindProperty("handHoldItemToSpawn");
 
             
             playerInventoryProperty = serializedObject.FindProperty("playerInventory");
@@ -56,8 +56,12 @@ namespace Sataura
 
 
 
+            
+
             EditorGUILayout.PropertyField(playerDataProperty);
-            EditorGUILayout.PropertyField(handleItemProperty);
+            EditorGUILayout.PropertyField(playerInputHandleryProperty);
+
+            EditorGUILayout.PropertyField(handleItemProperty);          
             if (handleItemProperty.boolValue)
             {
                 GUILayout.BeginHorizontal();
@@ -68,11 +72,6 @@ namespace Sataura
                 GUILayout.BeginHorizontal();
                 GUILayout.Space(15);
                 EditorGUILayout.PropertyField(playerInGameInventoryProperty);
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Space(15);
-                EditorGUILayout.PropertyField(playerInputHandleryProperty);
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
