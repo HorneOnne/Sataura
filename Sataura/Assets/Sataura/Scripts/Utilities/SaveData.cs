@@ -9,14 +9,14 @@ namespace Sataura
     public class SaveData
     {
         public string path = Application.dataPath + "/UltimateItemSystem/Saves/";
-        public PlayerInventorySaveData playerInventoryData;
+        public PlayerInventoryStruct playerInventoryData;
         public ItemOnGroundSaveData itemOnGroundData;
         public WorldChest worldChest;
 
 
         public SaveData(PlayerInventory playerInventory, List<Item> itemsOnGround, List<Chest> chestObjects)
         {
-            playerInventoryData = new PlayerInventorySaveData(playerInventory);
+            playerInventoryData = new PlayerInventoryStruct(playerInventory);
             itemOnGroundData = new ItemOnGroundSaveData(itemsOnGround);
             worldChest = new WorldChest(chestObjects);            
         }
@@ -30,7 +30,7 @@ namespace Sataura
 
         public void LoadAllData()
         {
-            playerInventoryData = Load<PlayerInventorySaveData>("playerInventory");
+            playerInventoryData = Load<PlayerInventoryStruct>("playerInventory");
             itemOnGroundData = Load<ItemOnGroundSaveData>("itemsOnGround");
             worldChest = Load<WorldChest>("chestInventory");
         }
@@ -70,109 +70,6 @@ namespace Sataura
             return returnValue;
         }
 
-
-
-    }
-
-    [System.Serializable]
-    public struct PlayerInventorySaveData
-    {
-        public List<ItemSlotSaveData> itemDatas;
-
-        public PlayerInventorySaveData(PlayerInventory playerInventory)
-        {
-            itemDatas = new List<ItemSlotSaveData>();
-            for (int i = 0; i < playerInventory.inventory.Count; i++)
-            {
-                var itemSlot = playerInventory.inventory[i];
-                itemDatas.Add(new ItemSlotSaveData(GameDataManager.Instance.GetItemID(itemSlot.ItemData), itemSlot.ItemQuantity));
-            }
-        }
-    }
-
-    [System.Serializable]
-    public struct ItemSlotSaveData
-    {
-        public int itemID;
-        public int itemQuantity;
-
-        public ItemSlotSaveData(int itemID, int itemQuantity)
-        {
-            this.itemID = itemID;
-            this.itemQuantity = itemQuantity;
-        }
-    }
-
-    [System.Serializable]
-    public struct ItemOnGroundSaveData
-    {
-        public List<ItemObjectData> itemDatas;
-
-        public ItemOnGroundSaveData(List<Item> itemsOnGround)
-        {
-            itemDatas = new List<ItemObjectData>();
-            for (int i = 0; i < itemsOnGround.Count; i++)
-            {
-                int itemID = GameDataManager.Instance.GetItemID(itemsOnGround[i].ItemData);
-
-                itemDatas.Add(new ItemObjectData(itemID, itemsOnGround[i].transform.position, itemsOnGround[i].transform.eulerAngles));
-            }
-
-        }
-
-        [System.Serializable]
-        public struct ItemObjectData
-        {
-            public int itemID;
-            public Vector2 position;
-            public Vector3 rotation;
-
-            public ItemObjectData(int itemID, Vector2 position, Vector3 rotation)
-            {
-                this.itemID = itemID;
-                this.position = position;
-                this.rotation = rotation;
-            }
-        }
-    }
-
-
-    [System.Serializable]
-    public struct WorldChest
-    {
-        public List<ChestInventorySaveData> allChests;
-
-        public WorldChest(List<Chest> chests)
-        {
-            allChests = new List<ChestInventorySaveData>();
-            for (int i = 0; i < chests.Count; i++)
-            {
-                allChests.Add(new ChestInventorySaveData(chests[i].Inventory, chests[i].transform.position, chests[i].transform.rotation.eulerAngles));
-            }
-        }
-
-
-
-        [System.Serializable]
-        public struct ChestInventorySaveData
-        {
-            public List<ItemSlotSaveData> itemSlotData;
-            public Vector2 position;
-            public Vector3 rotation;
-
-            public ChestInventorySaveData(ChestInventory chestInventory, Vector2 position, Vector3 rotation)
-            {
-                this.itemSlotData = new List<ItemSlotSaveData>();
-                this.position = position;
-                this.rotation = rotation;
-
-                for (int i = 0; i < 36; i++)
-                {
-                    var itemSlot = chestInventory.inventory[i];
-                    itemSlotData.Add(new ItemSlotSaveData(GameDataManager.Instance.GetItemID(itemSlot.ItemData), itemSlot.ItemQuantity));
-                }
-            }
-        }
     }
 }
 

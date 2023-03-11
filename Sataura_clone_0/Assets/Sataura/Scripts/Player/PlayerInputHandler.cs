@@ -174,25 +174,7 @@ namespace Sataura
         }
 
 
-        private void FixedUpdate()
-        {
-            if (!IsOwner) return;
-
-            if (player.handleItem)
-            {
-                if (Input.GetKeyDown(KeyCode.C))
-                {
-                    Debug.Log(itemInHand.HasItem());
-                }
-
-                if (itemInHand.currentItemID.Value != -1)
-                {
-                    Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                    RotateHoldItemServerRpc(mousePosition);
-                }
-
-            }
-        }
+  
 
         private void Update()
         {
@@ -358,57 +340,6 @@ namespace Sataura
         }
 
 
-
-        /// <summary>
-        /// Rotate hold item if it can be shown
-        /// </summary>
-        [ServerRpc]
-        private void RotateHoldItemServerRpc(Vector3 mousePosition)
-        {
-            if (itemInHand.GetICurrenttem() == null) return;
-            if (itemInHand.GetICurrenttem().showIconWhenHoldByHand == true)
-            {
-                Utilities.RotateObjectTowardMouse2D(mousePosition, player.HandHoldItem, 0);
-            }
-        }
-
-
-        /*
-                /// <summary>
-                /// Handles the re-instantiation of the item in the player's hand. Destroys any existing items in the player's hand and
-                /// creates a new item object in the hand if the item inventory slot is not empty.
-                /// </summary>
-                private void ReInstantiateItem()
-                {
-                    firstUseItem = true;
-
-                    if (player.HandHoldItem.childCount != 0)
-                    {
-                        for (int i = 0; i < player.HandHoldItem.childCount; i++)
-                        {
-                            Destroy(player.HandHoldItem.GetChild(i).gameObject);
-                        }
-                    }
-                    itemInHand.SetICurrentItem(null);
-
-
-                    if (itemInHand.HasItemData())
-                    {
-                        var itemObject = Utilities.InstantiateItemObject(itemInHand.GetSlot(), player.HandHoldItem);
-                        itemObject.GetComponent<NetworkObject>().Spawn(true);
-                        bool b = itemObject.GetComponent<NetworkObject>().TrySetParent(player.HandHoldItem);
-                        Debug.Log($"can transform parent: {b}");
-                        itemInHand.SetICurrentItem(itemObject.GetComponent<Item>());
-                        if (itemObject.showIconWhenHoldByHand)
-                        {
-                            itemObject.spriteRenderer.enabled = true;
-                        }
-                        else
-                            itemObject.spriteRenderer.enabled = false;
-
-                    }
-                }
-        */
 
         /// <summary>
         /// Handles fast equipment of items with a utility key press.

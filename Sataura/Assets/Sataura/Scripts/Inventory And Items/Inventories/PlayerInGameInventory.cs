@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.Linq;
 using Unity.Netcode;
+using UnityEditor.PackageManager;
 
 namespace Sataura
 {
@@ -14,7 +15,7 @@ namespace Sataura
 
         [Header("INVENTORY SETTINGS")]
         // The list of all item slots in the inventory.
-        [HideInInspector] public List<ItemSlot> inGameInventory;
+        public List<ItemSlot> inGameInventory;
         //[SerializeField] private InventoryData inGameInventoryData;
         public InventoryData inGameInventoryData;
 
@@ -43,12 +44,38 @@ namespace Sataura
 
         public override void OnNetworkSpawn()
         {
-            if(IsOwner)
+            if(IsOwner || IsServer)
             {
                 itemInHand = player.ItemInHand;
                 inGameInventory = inGameInventoryData.itemSlots;
-            }
-           
+            }    
+        }
+
+        [ServerRpc]
+        public void AddInHandItemSlotAtServerRpc(ulong clientId, int index)
+        {
+            ItemSlot remainItems = inGameInventory[index].AddItemsFromAnotherSlot(itemInHand.GetSlot());
+            itemInHand.SetItem(remainItems, index, StoredType.PlayerInGameInventory, true);
+
+            ClientRpcParams clientRpcParams = new ClientRpcParams
+            {
+                Send = new ClientRpcSendParams
+                {
+                    TargetClientIds = new ulong[] { clientId }
+                }
+            };
+            AddInHandItemSlotAtClientRpc(index, clientRpcParams);
+        }
+
+        [ClientRpc]
+        private void AddInHandItemSlotAtClientRpc(int index, ClientRpcParams clientRpcParams = default)
+        {
+            if (!IsOwner || IsServer) return;
+
+            ItemSlot remainItems = inGameInventory[index].AddItemsFromAnotherSlot(itemInHand.GetSlot());
+            itemInHand.SetItem(remainItems, index, StoredType.PlayerInGameInventory, true);
+
+            UIPlayerInGameInventory.Instance.UpdateInventoryUI();
         }
 
         /// <summary>

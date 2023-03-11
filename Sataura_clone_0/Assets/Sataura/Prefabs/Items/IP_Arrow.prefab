@@ -71,7 +71,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1804832047
-  m_SortingLayer: 1
+  m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -94,6 +94,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7603960275652137568}
   - component: {fileID: 5194316476616076612}
+  - component: {fileID: -1107238257752427845}
   m_Layer: 30
   m_Name: IP_Arrow
   m_TagString: Item
@@ -132,3 +133,19 @@ MonoBehaviour:
   <ItemData>k__BackingField: {fileID: 0}
   spriteRenderer: {fileID: 0}
   showIconWhenHoldByHand: 0
+--- !u!114 &-1107238257752427845
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7603960275652137570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 951099334
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1

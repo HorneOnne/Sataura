@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: InGameInventory002
   m_EditorClassIdentifier: 
   itemSlots:
+  - <ItemData>k__BackingField: {fileID: 11400000, guid: af6e501b9d4bcf04a9518d379c5be9a5, type: 2}
+    <ItemQuantity>k__BackingField: 1
   - <ItemData>k__BackingField: {fileID: 0}
     <ItemQuantity>k__BackingField: 0
-  - <ItemData>k__BackingField: {fileID: 11400000, guid: 1734df0a86039ca4691141046297b6fc, type: 2}
-    <ItemQuantity>k__BackingField: 30
-  - <ItemData>k__BackingField: {fileID: 0}
-    <ItemQuantity>k__BackingField: 0
+  - <ItemData>k__BackingField: {fileID: 11400000, guid: af35a522cd21d764fabe95092e687b5f, type: 2}
+    <ItemQuantity>k__BackingField: 121
   - <ItemData>k__BackingField: {fileID: 0}
     <ItemQuantity>k__BackingField: 0
   - <ItemData>k__BackingField: {fileID: 0}

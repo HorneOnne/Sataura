@@ -22,6 +22,7 @@ namespace Sataura
         /// The item slot that contains the item data and item quantity in this hand.
         /// </summary>
         [SerializeField] private ItemSlot itemSlot;
+        [SerializeField] private ItemSlotStruct itemSlotStruct;
 
 
         /// <summary>
@@ -78,6 +79,39 @@ namespace Sataura
         }
 
 
+        private void Update()
+        {
+            if (!IsOwner) return;
+
+            if (player.handleItem)
+            {
+                if (Input.GetKeyDown(KeyCode.C))
+                {
+                    Debug.Log(HasItem());
+                }
+
+                if (currentItemID.Value != -1)
+                {
+                    Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    RotateHoldItemServerRpc(mousePosition);
+                }
+
+            }
+        }
+
+        /// <summary>
+        /// Rotate hold item if it can be shown
+        /// </summary>
+        [ServerRpc]
+        private void RotateHoldItemServerRpc(Vector3 mousePosition)
+        {
+            if (GetICurrenttem() == null) return;
+            if (GetICurrenttem().showIconWhenHoldByHand == true)
+            {
+                Utilities.RotateObjectTowardMouse2D(mousePosition, player.HandHoldItem, 0);
+            }
+        }
+
         /// <summary>
         /// Gets the item data for the item in this hand.
         /// </summary>
@@ -98,6 +132,8 @@ namespace Sataura
         /// <param name="parent">The parent transform of the item.</param>
         public void SetItem(ItemSlot takenSlot, int slotIndex = -1, StoredType storageType = StoredType.Another, bool forceUpdateUI = false, Transform parent = null)
         {
+            Debug.Log("SetItem");
+
             itemSlot = new ItemSlot(takenSlot);
             ItemGetFrom = new ItemSlotData
             {
@@ -114,6 +150,29 @@ namespace Sataura
             }
         }
 
+        /*[ServerRpc]
+        public void SetItemServerRpc(ItemSlotStruct itemSlotStruct, int slotIndex = -1, StoredType storageType = StoredType.Another, bool forceUpdateUI = false)
+        {
+            Debug.Log("SetItem");
+            var itemData = GameDataManager.Instance.GetItemData(itemSlotStruct.itemID);
+
+            itemSlot = new ItemSlot(itemData, itemSlotStruct.itemQuantity);
+            ItemGetFrom = new ItemSlotData
+            {
+                slotIndex = slotIndex,
+                slotStoredType = storageType
+            };
+
+            isFirstTimeUsingItem = true;
+            EventManager.TriggerItemInHandChangedEvent();
+
+            if (forceUpdateUI)
+            {
+                uiItemInHand.UpdateItemInHandUI(null);
+            }
+        }*/
+
+
 
         /// <summary>
         /// Swaps the item in this hand with an item in the specified inventory.
@@ -125,6 +184,8 @@ namespace Sataura
         /// <param name="parent">The parent transform of the item.</param>
         public void Swap(ref List<ItemSlot> inventory, int slotIndex, StoredType storageType = StoredType.Another, bool forceUpdateUI = false, Transform parent = null)
         {
+            Debug.Log("Swap");
+
             var inHandSlotTemp = new ItemSlot(this.itemSlot);
             var invSlotChoosen = inventory[slotIndex];
 
@@ -147,6 +208,83 @@ namespace Sataura
             }
         }
 
+
+   
+        [ServerRpc]
+        public void SwapServerRpc(ulong clientId, int slotIndex, StoredType storageType = StoredType.Another, bool forceUpdateUI = false)
+        {
+            Debug.Log("HandleSwapInGameInventoryServerRpc");
+
+
+            var inHandSlotTemp = new ItemSlot(this.itemSlot);
+            var invSlotChoosen = player.PlayerInGameInventory.inGameInventory[slotIndex];
+
+            this.itemSlot = new ItemSlot(invSlotChoosen);
+            player.PlayerInGameInventory.inGameInventory[slotIndex] = new ItemSlot(inHandSlotTemp);
+
+            ItemGetFrom = new ItemSlotData
+            {
+                slotIndex = slotIndex,
+                slotStoredType = storageType
+            };
+            isFirstTimeUsingItem = true;
+
+
+            if (IsOwner && IsServer)
+            {              
+                EventManager.TriggerItemInHandChangedEvent();
+
+                if (forceUpdateUI)
+                {
+                    uiItemInHand.UpdateItemInHandUI(null);
+                }
+                return;
+            }
+
+
+
+            // NOTE! In case you know a list of ClientId's ahead of time, that does not need change,
+            // Then please consider caching this (as a member variable), to avoid Allocating Memory every time you run this function
+            ClientRpcParams clientRpcParams = new ClientRpcParams
+            {
+                Send = new ClientRpcSendParams
+                {
+                    TargetClientIds = new ulong[] { clientId }
+                }
+            };
+            SwapClientRpc(slotIndex, storageType, forceUpdateUI, clientRpcParams);
+        }
+
+        [ClientRpc]
+        private void SwapClientRpc(int slotIndex, StoredType storageType = StoredType.Another, bool forceUpdateUI = false, ClientRpcParams clientRpcParams = default)
+        {
+            if (!IsOwner || IsServer) return;
+
+            Debug.Log("Server call client");
+
+            var inHandSlotTemp = new ItemSlot(this.itemSlot);
+            var invSlotChoosen = player.PlayerInGameInventory.inGameInventory[slotIndex];
+
+            this.itemSlot = new ItemSlot(invSlotChoosen);
+            player.PlayerInGameInventory.inGameInventory[slotIndex] = new ItemSlot(inHandSlotTemp);
+
+            ItemGetFrom = new ItemSlotData
+            {
+                slotIndex = slotIndex,
+                slotStoredType = storageType
+            };
+
+
+            isFirstTimeUsingItem = true;
+            EventManager.TriggerItemInHandChangedEvent();
+            if (forceUpdateUI)
+            {
+                uiItemInHand.UpdateItemInHandUI(null);
+            }
+
+            UIPlayerInGameInventory.Instance.UpdateInventoryUI();
+            
+        }
 
         /// <summary>
         /// Swaps the current item with the item at the given slot index in the specified inventory.
@@ -228,12 +366,67 @@ namespace Sataura
             }
         }
 
+        [ServerRpc]
+        public void SplitItemSlotQuantityInInventoryServerRpc(ulong clientId, int slotIndex)
+        {
+            List<ItemSlot> inventory = player.PlayerInGameInventory.inGameInventory;
+
+            int itemQuantity = inventory[slotIndex].ItemQuantity;
+            if (itemQuantity > 1)
+            {
+                int splitItemQuantity = itemQuantity / 2;
+                inventory[slotIndex].SetItemQuantity(itemQuantity - splitItemQuantity);
+
+                var chosenSlot = new ItemSlot(inventory[slotIndex]);
+                chosenSlot.SetItemQuantity(splitItemQuantity);
+                
+                SetItem(chosenSlot, slotIndex, StoredType.PlayerInventory, true);
+
+            }
+            else
+            {
+
+                Swap(ref inventory, slotIndex, StoredType.PlayerInventory, true);
+                //SwapServerRpc(clientId, slotIndex, StoredType.PlayerInventory, true);
+            }
+
+            ClientRpcParams clientRpcParams = new ClientRpcParams
+            {
+                Send = new ClientRpcSendParams
+                {
+                    TargetClientIds = new ulong[] { clientId }
+                }
+            };
+            SplitItemSlotQuantityInInventoryClientRpc(slotIndex, clientRpcParams);
+        }
+
+        [ClientRpc]
+        private void SplitItemSlotQuantityInInventoryClientRpc(int slotIndex, ClientRpcParams clientRpcParams = default)
+        {
+            if (!IsOwner || IsServer) return;
+            List<ItemSlot> inventory = player.PlayerInGameInventory.inGameInventory;
+
+            int itemQuantity = inventory[slotIndex].ItemQuantity;
+            if (itemQuantity > 1)
+            {
+                int splitItemQuantity = itemQuantity / 2;
+                inventory[slotIndex].SetItemQuantity(itemQuantity - splitItemQuantity);
+
+                var chosenSlot = new ItemSlot(inventory[slotIndex]);
+                chosenSlot.SetItemQuantity(splitItemQuantity);
+
+                SetItem(chosenSlot, slotIndex, StoredType.PlayerInventory, true);
+            }
+            else
+            {
+                Swap(ref inventory, slotIndex, StoredType.PlayerInventory, true);
+            }
+        }
 
         /// <summary>
         /// Sets the current item to the specified item.
         /// </summary>
         /// <param name="item">The item to set as the current item.</param>
-
         [ServerRpc]
         public void SetCurrentItemIDServerRpc(int itemID)
         {
@@ -258,6 +451,8 @@ namespace Sataura
         /// <returns>A boolean indicating whether the item was successfully picked up or not.</returns>
         public bool PickupItem(ref ItemSlot itemContainerSlot)
         {
+            Debug.Log("PickupItem");
+
             bool canPickupItem;
 
 
@@ -454,7 +649,6 @@ namespace Sataura
             if (networkObject != null && networkObject.IsSpawned && IsServer)
             {
                 networkObject.Despawn();
-                Debug.Log("Despawn network object.");
             }
             SetCurrentItemIDServerRpc(-1);
         }
@@ -480,7 +674,6 @@ namespace Sataura
 
         private void OnItemIDChanged(int oldID, int newID)
         {
-            Debug.Log("OnItemIDChanged");
             if (!IsOwner) return;
             if (newID == -1) return;
 

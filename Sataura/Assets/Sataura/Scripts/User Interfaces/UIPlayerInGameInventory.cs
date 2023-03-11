@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using UnityEngine;
+using Unity.Netcode;
 
 namespace Sataura
 {
@@ -115,7 +116,6 @@ namespace Sataura
         private void Update()
         {
             if (AlreadyLoadReferences == false) return;
-
 
             if (itemInHand.HasItemData())
             {
@@ -277,14 +277,17 @@ namespace Sataura
                 else
                 {
                     //Debug.Log("HAND: EMPTY \t SLOT: HAS ITEM");
-                    itemInHand.Swap(ref playerInGameInventory.inGameInventory, index, StoredType.PlayerInGameInventory, true);
+                    //itemInHand.Swap(ref playerInGameInventory.inGameInventory, index, StoredType.PlayerInGameInventory, true);
+                    itemInHand.SwapServerRpc(NetworkManager.Singleton.LocalClientId ,index, StoredType.PlayerInGameInventory, true);
                 }
             }
             else
             {
                 if (slotHasItem == false)
                 {
-                    itemInHand.Swap(ref playerInGameInventory.inGameInventory, index, StoredType.PlayerInGameInventory, true);
+                    //Debug.Log("HAND: HAS ITEM \t SLOT: EMPTY");
+                    //itemInHand.Swap(ref playerInGameInventory.inGameInventory, index, StoredType.PlayerInGameInventory, true);
+                    itemInHand.SwapServerRpc(NetworkManager.Singleton.LocalClientId, index, StoredType.PlayerInGameInventory, true);
                 }
                 else
                 {
@@ -292,12 +295,15 @@ namespace Sataura
                     bool isSameItem = ItemData.IsSameItem(playerInGameInventory.inGameInventory[index].ItemData, itemInHand.GetItemData());
                     if (isSameItem)
                     {
-                        ItemSlot remainItems = playerInGameInventory.inGameInventory[index].AddItemsFromAnotherSlot(itemInHand.GetSlot());
-                        itemInHand.SetItem(remainItems, index, StoredType.PlayerInGameInventory, true);
+                        /*ItemSlot remainItems = playerInGameInventory.inGameInventory[index].AddItemsFromAnotherSlot(itemInHand.GetSlot());
+                        itemInHand.SetItem(remainItems, index, StoredType.PlayerInGameInventory, true);*/
+
+                        playerInGameInventory.AddInHandItemSlotAtServerRpc(NetworkManager.Singleton.LocalClientId, index);
                     }
                     else
                     {
-                        itemInHand.Swap(ref playerInGameInventory.inGameInventory, index, StoredType.PlayerInGameInventory, true);
+                        //itemInHand.Swap(ref playerInGameInventory.inGameInventory, index, StoredType.PlayerInGameInventory, true);
+                        itemInHand.SwapServerRpc(NetworkManager.Singleton.LocalClientId, index, StoredType.PlayerInGameInventory, true);
                     }
                 }
             }
@@ -316,8 +322,9 @@ namespace Sataura
                 }
                 else
                 {
-                    //Debug.Log("HAND: EMPTY \t SLOT: HAS ITEM");
-                    itemInHand.SplitItemSlotQuantityInInventory(ref playerInGameInventory.inGameInventory, index);
+                    Debug.Log("HAND: EMPTY \t SLOT: HAS ITEM");
+                    //itemInHand.SplitItemSlotQuantityInInventory(ref playerInGameInventory.inGameInventory, index);
+                    itemInHand.SplitItemSlotQuantityInInventoryServerRpc(NetworkManager.Singleton.LocalClientId, index);
                 }
             }
             else
