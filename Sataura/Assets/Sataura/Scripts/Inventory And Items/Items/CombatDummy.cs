@@ -34,13 +34,14 @@ namespace Sataura
 
 
 
-
-
-        protected override void Start()
+        public override void OnNetworkSpawn()
         {
-            base.Start();
+            if (Model == null)
+                base.LoadComponents();
+
             anim = base.Model.GetComponent<Animator>();
         }
+
 
         private bool IsLeftSideChecker(Transform object01, Transform object02)
         {
@@ -66,7 +67,7 @@ namespace Sataura
         }
 
 
-        public override bool Use(Player player)
+        public override bool Use(Player player, Vector2 mousePosition)
         {
             //Debug.Log("Use");
             return true;

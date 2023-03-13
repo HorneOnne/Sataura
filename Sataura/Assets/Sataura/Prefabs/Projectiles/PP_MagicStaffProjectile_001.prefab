@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1738800344217802987}
   - component: {fileID: 7099312270547782237}
   - component: {fileID: 4664618080890013991}
+  - component: {fileID: -9141399210884553681}
   m_Layer: 30
   m_Name: PP_MagicStaffProjectile_001
   m_TagString: Item
@@ -86,6 +87,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   useGravity: 1
+  spriteRenderer: {fileID: 0}
+--- !u!114 &-9141399210884553681
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1029242142444853136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 951099334
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1 &2248959886653816589
 GameObject:
   m_ObjectHideFlags: 0
@@ -157,7 +175,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1804832047
-  m_SortingLayer: 1
+  m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

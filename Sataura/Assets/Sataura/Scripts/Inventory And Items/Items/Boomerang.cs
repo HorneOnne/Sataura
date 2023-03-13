@@ -29,15 +29,10 @@ namespace Sataura
             EventManager.OnBoomerangReturned -= ResetBoomerangState;
         }
 
-        protected override void Start()
-        {
-            base.Start();
-            
-        }
 
 
 
-        public override bool Use(Player player)
+        public override bool Use(Player player, Vector2 mousePosition)
         {
             boomerangData = (BoomerangData)this.ItemData;
             /*if (boomerangProjectilePrefab == null)

@@ -8,7 +8,4 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Sataura/Scenes/Multiplayer Game scene.unity
     guid: f5892c59818042248b00a592e32aa9d7
-  - enabled: 1
-    path: Assets/Sataura/Scenes/Testing netcode.unity
-    guid: 6671bc1c7140e7544acbf2fbca03f414
   m_configObjects: {}

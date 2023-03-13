@@ -36,13 +36,13 @@ namespace Sataura
         private const float TIME_TO_RETURN_WHEN_COLLIDE = 3.0f;
 
 
-        protected override void Start()
+  
+        public override void OnNetworkSpawn()
         {
-            base.Start();
-
-            // Get the MagicStaffData instance associated with the magic staff used to fire this projectile.
-            this.staffData = (MagicStaffData)ItemData;                   
+            this.staffData = (MagicStaffData)ItemData;
         }
+
+
 
 
         public void Shoot()

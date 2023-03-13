@@ -12,14 +12,14 @@ namespace Sataura
         public bool UseGravity { get; set; }
 
 
-        protected override void Start()
+
+        public override void OnNetworkSpawn()
         {
-            base.Start();
             magicStaffData = (MagicStaffData)ItemData;
         }
 
 
-        public override bool Use(Player player)
+        public override bool Use(Player player, Vector2 mousePosition)
         {
             magicStaffProjectileObject = MagicStaffProjectileSpawner.Instance.Pool.Get();
             magicStaffProjectileObject.transform.position = transform.position;

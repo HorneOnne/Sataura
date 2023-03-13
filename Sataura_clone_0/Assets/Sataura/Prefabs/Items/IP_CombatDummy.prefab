@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4299879340710165103}
   - component: {fileID: 4299879340710165100}
   - component: {fileID: 4299879340710165097}
+  - component: {fileID: -2840385610667026224}
   m_Layer: 28
   m_Name: IP_CombatDummy
   m_TagString: Enemy
@@ -95,8 +96,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <ItemData>k__BackingField: {fileID: 0}
-  <OffsetPosition>k__BackingField: {x: 0, y: 0}
-  <OffsetZAngle>k__BackingField: 0
   spriteRenderer: {fileID: 0}
   showIconWhenHoldByHand: 0
   <ShowRay>k__BackingField: 0
@@ -104,6 +103,22 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2147483648
   <Cooldown>k__BackingField: 0.02
+--- !u!114 &-2840385610667026224
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4299879340710165101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 951099334
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1 &4299879342231019030
 GameObject:
   m_ObjectHideFlags: 0

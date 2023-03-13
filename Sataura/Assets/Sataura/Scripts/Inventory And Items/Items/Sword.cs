@@ -1,3 +1,5 @@
+using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 
 namespace Sataura
@@ -8,24 +10,32 @@ namespace Sataura
         private GameObject swordProjectileObject;
         private SwordData swordData;
 
+        public NetworkObject swordNetworkObject;
 
-        protected override void Start()
+        private float initialZAngle;
+        public override void OnNetworkSpawn()
         {
-            base.Start();
             swordProjectilePrefab = GameDataManager.Instance.GetProjectilePrefab("PP_SwordProjectile_001");
             swordData = ((SwordData)ItemData);
+
+            if(IsServer)
+            {
+                int itemID = GameDataManager.Instance.GetItemID(swordData);
+                SetDataServerRpc(itemID, 1);
+
+                
+            }
         }
 
-
-        public override bool Use(Player player)
+        public override bool Use(Player player, Vector2 mousePosition)
         {           
             switch(swordData.useType)
             {
                 case 1:
-                    UseType01(player);
+                    UseType01(player, mousePosition);
                     break;
                 case 2:
-                    UseType02(player);
+                    UseType02(player, mousePosition);
                     break;
                 default:
                     Debug.LogWarning($"Not found useType {swordData.useType} in SwordData.");
@@ -34,18 +44,30 @@ namespace Sataura
 
             return true;
         }
+        
+    
 
-        private void UseType01(Player player)
+        private void UseType01(Player player, Vector2 mousePosition)
         {
-            swordProjectilePrefab = GameDataManager.Instance.GetProjectilePrefab("PP_SwordProjectile_001");
-            swordProjectileObject = Instantiate(swordProjectilePrefab, transform.position, transform.rotation, player.transform);
-            swordProjectileObject.transform.localScale = new Vector3(4, 4, 1);
-            swordProjectileObject.SetActive(true);
-            swordProjectileObject.GetComponent<Projectile>().SetData(this.ItemSlot.ItemData);
+            /*if (mousePosition.x - transform.position.x > 0)
+                initialZAngle = 90;
+            else
+                initialZAngle = 0;*/
 
+            initialZAngle = (mousePosition.x - transform.position.x > 0) ? 90 : 0;
+
+            swordProjectilePrefab = GameDataManager.Instance.GetProjectilePrefab("PP_SwordProjectile_001");
+            swordProjectileObject = Instantiate(swordProjectilePrefab, transform.position, Quaternion.Euler(0,0, initialZAngle), player.transform); 
+            swordNetworkObject = swordProjectileObject.GetComponent<NetworkObject>();
+            swordNetworkObject.Spawn();
+            swordNetworkObject.TrySetParent(player.transform);
+ 
+            int itemID = GameDataManager.Instance.GetItemID(this.ItemSlot.ItemData);            
+            swordProjectileObject.GetComponent<SwordProjectile_001>().SetDataServerRpc(itemID, true);            
+            swordProjectileObject.GetComponent<SwordProjectile_001>().LoadSwordProjectileDataServerRpc(mousePosition);
         }
 
-        private void UseType02(Player player)
+        private void UseType02(Player player, Vector2 mousePosition)
         {
             swordProjectilePrefab = GameDataManager.Instance.GetProjectilePrefab("PP_SwordProjectile_001");
             swordProjectileObject = Instantiate(swordProjectilePrefab, transform.position, transform.rotation, player.transform);
@@ -56,8 +78,7 @@ namespace Sataura
             var swordProjectile002 = SworldProjectile002Spawner.Instance.Pool.Get().GetComponent<SwordProjectile_002>();
             swordProjectile002.SetData(swordData);
             swordProjectile002.Shoot(this.transform.position);
-            
-            Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
             Utilities.RotateObjectTowardMouse2D(mousePosition,swordProjectile002.transform, -45f);
         }
 

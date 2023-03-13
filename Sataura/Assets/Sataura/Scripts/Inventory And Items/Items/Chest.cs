@@ -34,10 +34,8 @@ namespace Sataura
 
 
 
-
-        protected override void Start()
+        public override void OnNetworkSpawn()
         {
-            base.Start();
             anim = base.Model.GetComponent<Animator>();
             isOpen = false;
             chestInventory = GetComponent<ChestInventory>();

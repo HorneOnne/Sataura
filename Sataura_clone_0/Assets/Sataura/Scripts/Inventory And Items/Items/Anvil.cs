@@ -74,14 +74,13 @@ namespace Sataura
         }
 
 
-        protected override void Start()
+ 
+        public override void OnNetworkSpawn()
         {
-            base.Start();
             uiAnvilCanvas = UIManager.Instance.AnvilCanvas;
             requiredMaterialSlots = new List<ItemSlot>();
             filledMaterialSlots = new List<ItemSlot>();
         }
-
 
 
         public bool IsAboveGround(Player player, bool showRay = false)

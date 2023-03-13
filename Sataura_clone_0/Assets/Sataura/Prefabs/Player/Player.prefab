@@ -916,6 +916,9 @@ MonoBehaviour:
   itemSlot:
     <ItemData>k__BackingField: {fileID: 0}
     <ItemQuantity>k__BackingField: 0
+  itemSlotStruct:
+    itemID: 0
+    itemQuantity: 0
   currentItem: {fileID: 0}
   currentItemID:
     m_InternalValue: 0

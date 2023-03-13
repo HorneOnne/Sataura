@@ -125,7 +125,7 @@ namespace Sataura
                     {
                         if (Time.time - pressIntervalTimeCount >= pressIntervalTime)
                         {
-                            OnRightPress(GetItemSlotIndex(currentSlotClicked));
+                            //OnRightPress(GetItemSlotIndex(currentSlotClicked));
                             pressIntervalTimeCount = Time.time;
                         }
                     }
@@ -322,7 +322,7 @@ namespace Sataura
                 }
                 else
                 {
-                    Debug.Log("HAND: EMPTY \t SLOT: HAS ITEM");
+                    //Debug.Log("HAND: EMPTY \t SLOT: HAS ITEM");
                     //itemInHand.SplitItemSlotQuantityInInventory(ref playerInGameInventory.inGameInventory, index);
                     itemInHand.SplitItemSlotQuantityInInventoryServerRpc(NetworkManager.Singleton.LocalClientId, index);
                 }
@@ -332,21 +332,26 @@ namespace Sataura
                 if (slotHasItem == false)
                 {
                     //Debug.Log("HAND: HAS ITEM \t SLOT: EMPTY");
-                    playerInGameInventory.AddNewItemAt(index, itemInHand.GetItemData());
-                    itemInHand.RemoveItem();
+                    /*playerInGameInventory.AddNewItemAt(index, itemInHand.GetItemData());
+                    itemInHand.RemoveItem();*/
+
+                    int itemID = GameDataManager.Instance.GetItemID(itemInHand.GetItemData());
+                    playerInGameInventory.AddNewItemAtServerRpc(NetworkManager.Singleton.LocalClientId, index, itemID);
+                    itemInHand.RemoveItemServerRpc(NetworkManager.Singleton.LocalClientId);
 
                 }
                 else
                 {
-                    //Debug.Log("HAND: HAS ITEM \t SLOT: HAS ITEM");
+                    Debug.Log("HAND: HAS ITEM \t SLOT: HAS ITEM");
                     if (ItemData.IsSameItem(itemInHand.GetItemData(), playerInGameInventory.GetItem(index)))
                     {
-                        bool isSlotNotFull = playerInGameInventory.AddItemAt(index);
+                        /*bool isSlotNotFull = playerInGameInventory.AddItemAt(index);
 
                         if (isSlotNotFull)
                         {
                             itemInHand.RemoveItem();
-                        }
+                        }*/
+                        playerInGameInventory.AddItemAtServerRpc(NetworkManager.Singleton.LocalClientId, index);
                     }
                 }
             }

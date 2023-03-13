@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
+
 
 namespace Sataura
 {
@@ -22,30 +24,45 @@ namespace Sataura
         private ArrowProjectile_001 arrowProjectileObject;
 
 
-        protected override void Start()
-        {
-            base.Start();
+        // Cached
+        private ulong[] cachedClientIds;
+        NetworkObject playerNetworkObject;
+        Player playerObject;
 
+        public override void OnNetworkSpawn()
+        {
             bowItemData = (BowData)this.ItemData;
             arrowProjectilePrefab = GameDataManager.Instance.GetProjectilePrefab("PP_ArrowProjectile_001");
 
+
+            if (IsServer)
+            {
+                int itemID = GameDataManager.Instance.GetItemID(bowItemData);
+                SetDataServerRpc(itemID, 1);
+            }
+            
         }
 
 
-
-        public override bool Use(Player player)
-        {
+        public override bool Use(Player player, Vector2 mousePosition)
+        {                    
             inGameInventory = player.PlayerInGameInventory;
             arrowSlotIndex = inGameInventory.FindArrowSlotIndex();
 
             if (arrowSlotIndex == null) return false;
             if (arrowProjectilePrefab == null) return false;
 
+            if (cachedClientIds == null || cachedClientIds.Length == 0)
+            {
+                InitializeCachedClientIds(player.GetComponent<NetworkObject>().OwnerClientId);            
+            }
+
+
 
             switch (bowItemData.useType)
             {
                 case 1:
-                    UseType01();
+                    UseType01(mousePosition);
                     break;
                 case 2:
                     UseType02();
@@ -58,16 +75,24 @@ namespace Sataura
             }
 
             if (consumeArrow)
-                ConsumeArrow();
+            {
+                ConsumeArrowServerRpc((int)arrowSlotIndex);
+            }
+
             return true;
         }
 
 
-        private void UseType01()
+        private void UseType01(Vector2 mousePosition)
         {
-            arrowProjectileObject = ArrowProjectileSpawner.Instance.Pool.Get().GetComponent<ArrowProjectile_001>();
-            arrowProjectileObject.transform.position = shootingPoints[0].position;
-            arrowProjectileObject.transform.rotation = transform.rotation;
+            Debug.Log("here");
+            //arrowProjectileObject = ArrowProjectileSpawner.Instance.Pool.Get().GetComponent<ArrowProjectile_001>();
+            arrowProjectilePrefab = GameDataManager.Instance.GetProjectilePrefab("PP_ArrowProjectile_001");            
+            arrowProjectileObject = Instantiate(arrowProjectilePrefab, shootingPoints[0].position, transform.rotation).GetComponent<ArrowProjectile_001>();
+            Utilities.RotateObjectTowardMouse2D(mousePosition, arrowProjectileObject.transform, -45);
+            arrowProjectileObject.GetComponent<NetworkObject>().Spawn();
+
+
             arrowSlotInPlayerInventory = inGameInventory.inGameInventory[(int)arrowSlotIndex];
             arrowItemData = (ArrowData)arrowSlotInPlayerInventory.ItemData;                               
             arrowProjectileObject.SetData(arrowItemData);           
@@ -104,14 +129,51 @@ namespace Sataura
         }
 
 
-
-        /// <summary>
-        /// Consumes an arrow from the player's inventory if the consumeArrow flag is set.
-        /// </summary>
-        private void ConsumeArrow()
+        
+        private void InitializeCachedClientIds(ulong clientId)
         {
-            arrowSlotInPlayerInventory.RemoveItem();
-            UIPlayerInGameInventory.Instance.UpdateInventoryUIAt((int)arrowSlotIndex);
+            Debug.Log("InitializeCachedClientIds");
+            // Assuming that you have a list of client IDs that doesn't change and you want to cache them
+            List<ulong> clientIds = new List<ulong>
+            {
+                clientId
+            };
+
+            cachedClientIds = clientIds.ToArray();
+        }
+
+
+        [ServerRpc]
+        private void ConsumeArrowServerRpc(int arrowIndex)
+        {
+            inGameInventory.inGameInventory[arrowIndex].RemoveItem();
+
+            ClientRpcParams clientRpcParams = new ClientRpcParams
+            {
+                Send = new ClientRpcSendParams
+                {
+                    TargetClientIds = cachedClientIds
+                }
+            };
+
+            ConsumeArrowClientRpc(arrowIndex, clientRpcParams);
+        }
+
+        [ClientRpc]
+        private void ConsumeArrowClientRpc(int arrowIndex, ClientRpcParams clientRpcParams = default)
+        {
+            if (IsServer) 
+                return;
+
+            playerNetworkObject = NetworkManager.LocalClient.PlayerObject;
+            playerObject = playerNetworkObject.GetComponent<Player>();
+
+            if(playerObject != null)
+            {
+                playerObject.PlayerInGameInventory.inGameInventory[arrowIndex].RemoveItem();
+                UIPlayerInGameInventory.Instance.UpdateInventoryUIAt(arrowIndex);
+            }
+            
         }
     }
 }

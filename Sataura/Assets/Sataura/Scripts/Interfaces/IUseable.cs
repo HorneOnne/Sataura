@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace Sataura
 {
     /// <summary>
@@ -10,6 +12,6 @@ namespace Sataura
         /// </summary>
         /// <param name="player">The player using the object.</param>
         /// <returns>True if the object was successfully used, false otherwise.</returns>
-        public bool Use(Player player);
+        public bool Use(Player player, Vector2 mousePosition);
     }
 }

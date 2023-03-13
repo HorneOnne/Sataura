@@ -1,8 +1,9 @@
 using UnityEngine;
+using Unity.Netcode;
 
 namespace Sataura
 {
-    public abstract class Item : MonoBehaviour, IDroppable, ICollectible, IUseable
+    public abstract class Item : NetworkBehaviour, IDroppable, ICollectible, IUseable
     {
         #region Properties
         [field: SerializeField]
@@ -20,14 +21,15 @@ namespace Sataura
         public bool showIconWhenHoldByHand;
 
 
-        protected virtual void Start()
+        public override void OnNetworkSpawn()
         {
-            LoadComponents();         
+            Debug.Log("OnNetworkSpawn");
+            LoadComponents();
         }
 
- 
 
-        private void LoadComponents()
+
+        protected void LoadComponents()
         {
             Model = GetComponentInChildren<SpriteRenderer>().gameObject;
             spriteRenderer = Model.GetComponent<SpriteRenderer>();
@@ -42,14 +44,29 @@ namespace Sataura
         }
 
 
-        public void UpdateData()
+        [ServerRpc]
+        public void SetDataServerRpc(int itemID, int itemQuantity)
+        {
+            ItemData itemData = GameDataManager.Instance.GetItemData(itemID);
+            ItemSlot itemSlot = new ItemSlot(itemData, itemQuantity);
+            SetData(itemSlot);
+            SetDataClientRpc(itemID, itemQuantity);
+        }
+
+        [ClientRpc]
+        private void SetDataClientRpc(int itemID, int itemQuantity)
+        {
+            ItemData itemData = GameDataManager.Instance.GetItemData(itemID);
+            ItemSlot itemSlot = new ItemSlot(itemData, itemQuantity);
+            SetData(itemSlot);
+        }
+
+        private void UpdateData()
         {
             if (spriteRenderer == null)
                 LoadComponents();
 
-
-            spriteRenderer.sprite = ItemData.icon;
-           
+            spriteRenderer.sprite = ItemData.icon;          
         }
 
 
@@ -79,9 +96,11 @@ namespace Sataura
 
 
 
-        public virtual bool Use(Player player)
+        public virtual bool Use(Player player, Vector2 mousePosition)
         {
             return true;
         }
+
+  
     }
 }

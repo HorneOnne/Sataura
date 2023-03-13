@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.EventSystems;
-
+using Unity.Netcode;
 
 namespace Sataura
 {
@@ -135,13 +135,30 @@ namespace Sataura
             if (pointerEventData.button == PointerEventData.InputButton.Left)   // Mouse Left Event
             {
                 ItemData itemData = itemDataList[clickedObject.GetComponent<UIItemSlot>().SlotIndex];
+                int itemID = GameDataManager.Instance.GetItemID(itemData);
                 if (player.PlayerInputHandler.PressUtilityKeyInput)
                 {
-                    itemInHand.SetItem(new ItemSlot(itemData, itemData.max_quantity), -1, StoredType.Another, true);
+                    //itemInHand.SetItem(new ItemSlot(itemData, itemData.max_quantity), -1, StoredType.Another, true);
+
+                    itemInHand.SetItemServerRpc(
+                        NetworkManager.Singleton.LocalClientId,
+                        new ItemSlotStruct 
+                        { 
+                            itemID = itemID,  
+                            itemQuantity = itemData.max_quantity 
+                        }, - 1, StoredType.Another, true);
                 }             
                 else
                 {
-                    itemInHand.SetItem(new ItemSlot(itemData, 1), -1, StoredType.Another, true);
+                    //itemInHand.SetItem(new ItemSlot(itemData, 1), -1, StoredType.Another, true);
+
+                    itemInHand.SetItemServerRpc(
+                        NetworkManager.Singleton.LocalClientId,
+                        new ItemSlotStruct
+                        {
+                            itemID = itemID,
+                            itemQuantity = 1
+                        }, -1, StoredType.Another, true);
                 }
                     
             }

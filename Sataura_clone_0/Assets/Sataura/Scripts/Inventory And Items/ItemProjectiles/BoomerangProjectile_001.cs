@@ -24,14 +24,12 @@ namespace Sataura
         private Vector2 currentVelocity;
 
 
-        protected override void Start()
-        {
-            base.Start();
-            edgeCollider2D = GetComponent<EdgeCollider2D>();
 
+        public override void OnNetworkSpawn()
+        {
+            edgeCollider2D = GetComponent<EdgeCollider2D>();
             edgeCollider2D.isTrigger = true;
         }
-
 
         public bool Throw(Player player, BoomerangData data)
         {

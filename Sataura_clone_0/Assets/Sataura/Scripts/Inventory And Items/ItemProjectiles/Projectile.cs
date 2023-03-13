@@ -1,3 +1,4 @@
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Sataura
@@ -6,12 +7,12 @@ namespace Sataura
     /// An abstract class representing a projectile.
     /// </summary>
     [RequireComponent(typeof(Rigidbody2D))]
-    public abstract class Projectile : MonoBehaviour
+    public abstract class Projectile : NetworkBehaviour
     {
         #region Properties
 
         public ItemData ItemData { get; private set; }
-        protected GameObject Model { get; private set; }
+        protected GameObject Model { get;  set; }
 
         /// <summary>
         /// Whether the projectile uses gravity or not.
@@ -22,7 +23,7 @@ namespace Sataura
 
         [Header("References")]
         protected ParticleControl particleControl;
-        protected SpriteRenderer spriteRenderer;
+        [HideInInspector] public SpriteRenderer spriteRenderer;
         protected Rigidbody2D rb;
         protected GameDataManager itemDataManager;
 
@@ -33,10 +34,7 @@ namespace Sataura
             LoadComponents();
         }
 
-        protected virtual void Start()
-        {
-
-        }
+        
 
 
         private void LoadComponents()
@@ -61,11 +59,7 @@ namespace Sataura
             
         }
 
-        /// <summary>
-        /// Sets the item data of the projectile and updates its sprite.
-        /// </summary>
-        /// <param name="itemData">The item data to set.</param>
-        /// <param name="sprite">The sprite to set.</param>
+
         public void SetData(ItemData itemData, Sprite sprite, bool updateSprite = true)
         {
             this.ItemData = itemData;
@@ -77,13 +71,23 @@ namespace Sataura
         }
 
 
-        /// <summary>
-        /// Sets the item data of the projectile, updates its sprite and sets whether it uses gravity.
-        /// </summary>
-        /// <param name="itemData">The item data to set.</param>
-        /// <param name="sprite">The sprite to set.</param>
-        /// <param name="useGravity">Whether the projectile uses gravity or not.</param>
-        public void SetData(ItemData itemData, Sprite sprite, bool useGravity, bool updateSprite = true)
+        [ServerRpc]
+        public void SetDataServerRpc(int itemID, bool updateSprite = true)
+        {
+            ItemData itemData = GameDataManager.Instance.GetItemData(itemID);
+            SetData(itemData, updateSprite);
+
+            SetDataClientRpc(itemID, updateSprite);       
+        }
+
+        [ClientRpc]
+        private void SetDataClientRpc(int itemID, bool updateSprite = true)
+        {
+            ItemData itemData = GameDataManager.Instance.GetItemData(itemID);
+            SetData(itemData, updateSprite);
+        }
+
+        /*public void SetData(ItemData itemData, Sprite sprite, bool useGravity, bool updateSprite = true)
         {
             this.ItemData = itemData;          
             UseGravity(useGravity);
@@ -92,8 +96,7 @@ namespace Sataura
             {
                 SetSprite(itemData.icon);
             }
-
-        }
+        }*/
 
 
         /// <summary>
@@ -118,8 +121,20 @@ namespace Sataura
             spriteRenderer.sprite = sprite;
         }
 
+        [ServerRpc]
+        public void UpdateSpriteServerRpc()
+        {
+            SetSprite(ItemData.icon);
+            UpdateSpriteClientRpc();
+        }
 
- 
+        [ClientRpc]
+        private void UpdateSpriteClientRpc()
+        {
+            SetSprite(ItemData.icon);
+        }
+
+
 
         /// <summary>
         /// Enables or disables gravity on the game object.

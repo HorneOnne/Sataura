@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Unity.Netcode;
 using UnityEngine;
 
 
@@ -27,9 +28,9 @@ namespace Sataura
 
 
 
-        protected override void Start()
+    
+        public override void OnNetworkSpawn()
         {
-            base.Start();
             arrowCollider = GetComponent<BoxCollider2D>();
             waitForReturnOnCollision = new WaitForSeconds(TIME_TO_RETURN_WHEN_COLLIDE);
         }
@@ -54,7 +55,7 @@ namespace Sataura
             if (rb == null)
                 rb = GetComponent<Rigidbody2D>();
 
-            rb.velocity = Quaternion.Euler(0, 0, 0) * transform.right * bowData.releaseSpeed;
+            rb.velocity = Quaternion.Euler(0, 0, 45) * transform.right * bowData.releaseSpeed;
         }
 
 
@@ -63,7 +64,7 @@ namespace Sataura
             timeElapsedSinceShot += Time.deltaTime;
             if (timeElapsedSinceShot > TIME_TO_RETURN)
             {
-                ReturnToPool();
+                //ReturnToPool();
             }
 
             Vector2 direction = rb.velocity;
@@ -75,10 +76,18 @@ namespace Sataura
         private void OnCollisionEnter2D(Collision2D collision)
         {
             ArrowPropertiesWhenCollide();
-            StartCoroutine(PerformReturnToPool());
 
-            var explosionObject = Instantiate(explosionObjectPrefab, explosionSpawnPosition.position, Quaternion.identity);
-            Destroy(explosionObject, 0.5f);
+            if(IsServer)
+            {
+                GetComponent<NetworkObject>().Despawn();
+
+            }
+
+
+            //StartCoroutine(PerformReturnToPool());
+
+            /*var explosionObject = Instantiate(explosionObjectPrefab, explosionSpawnPosition.position, Quaternion.identity);
+            Destroy(explosionObject, 0.5f);*/
         }
 
 
@@ -88,9 +97,16 @@ namespace Sataura
         IEnumerator PerformReturnToPool()
         {
             yield return waitForReturnOnCollision;
+            
             ReturnToPool();
         }
 
+
+
+        private void Despawn()
+        {
+            GetComponent<NetworkObject>().Despawn();
+        }
 
         /// <summary>
         /// Returns the arrow projectile to the pool.

@@ -17,9 +17,9 @@ namespace Sataura
         [Header("Workbench Properties")]
         private bool isOpen;
 
-        protected override void Start()
+ 
+        public override void OnNetworkSpawn()
         {
-            base.Start();
             uiCraftingTableCanvas = UIManager.Instance.CraftingTableCanvas;
         }
 

@@ -13,13 +13,11 @@ namespace Sataura
         Vector2 mousePosition;
         Vector2 direction;
 
-        protected override void Start()
+        public override void OnNetworkSpawn()
         {
-            base.Start();
-            projectileEdgeCollider = GetComponent<EdgeCollider2D>();               
+            projectileEdgeCollider = GetComponent<EdgeCollider2D>();
         }
-
-
+   
         public void Shoot(Vector2 shootPosition)
         {
             this.transform.position = shootPosition;

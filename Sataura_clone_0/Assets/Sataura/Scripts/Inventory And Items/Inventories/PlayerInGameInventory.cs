@@ -168,6 +168,40 @@ namespace Sataura
         }
 
 
+        [ServerRpc]
+        public void AddItemAtServerRpc(ulong clientId, int index)
+        {
+            bool isSlotNotFull = AddItemAt(index);
+
+            if (isSlotNotFull)
+            {
+                itemInHand.RemoveItem();
+            }
+
+            ClientRpcParams clientRpcParams = new ClientRpcParams
+            {
+                Send = new ClientRpcSendParams
+                {
+                    TargetClientIds = new ulong[] { clientId }
+                }
+            };
+
+            AddItemAtClientRpc(index);
+        }
+
+        [ClientRpc]
+        public void AddItemAtClientRpc(int index, ClientRpcParams clientRpcParams = default)
+        {
+            if (!IsOwner || IsServer) return;
+
+            bool isSlotNotFull = AddItemAt(index);
+
+            if (isSlotNotFull)
+            {
+                itemInHand.RemoveItem();
+            }
+        }
+
         /// <summary>
         /// Adds a new item to the inventory slot at the given index.
         /// </summary>
@@ -177,6 +211,35 @@ namespace Sataura
         {
             inGameInventory[index].AddNewItem(item);
             EventManager.TriggerInventoryUpdatedEvent();
+        }
+
+        [ServerRpc]
+        public void AddNewItemAtServerRpc(ulong clientId, int index, int itemID)
+        {
+            ItemData itemData = GameDataManager.Instance.GetItemData(itemID);
+            AddNewItemAt(index, itemData);
+
+            ClientRpcParams clientRpcParams = new ClientRpcParams
+            {
+                Send = new ClientRpcSendParams
+                {
+                    TargetClientIds = new ulong[] { clientId }
+                }
+            };
+
+            AddNewItemAtClientRpc(index, itemID, clientRpcParams);
+
+        }
+
+        [ClientRpc]
+        private void AddNewItemAtClientRpc(int index, int itemID, ClientRpcParams clientRpcParams = default)
+        {
+            if (!IsOwner || IsServer) return;
+
+            ItemData itemData = GameDataManager.Instance.GetItemData(itemID);
+            AddNewItemAt(index, itemData);
+
+            UIPlayerInGameInventory.Instance.UpdateInventoryUIAt(index);
         }
 
 

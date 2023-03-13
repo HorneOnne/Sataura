@@ -1,6 +1,5 @@
 using UnityEngine;
 using Unity.Netcode;
-using UnityEditor;
 using UnityEngine.InputSystem;
 
 namespace Sataura
@@ -65,10 +64,7 @@ namespace Sataura
         /// </summary>
         private float lastRightPressIntervalTimeCount = 0.0f;
 
-        /// <summary>
-        /// The time elapsed since the last mouse press.
-        /// </summary>
-        private float elapsedTime = 0.0f;
+        
 
 
         /// <summary>
@@ -76,10 +72,7 @@ namespace Sataura
         /// </summary>
         bool isLeftClicking = false;
 
-        /// <summary>
-        /// Whether the current item being used is being used for the first time.
-        /// </summary>
-        private bool firstUseItem = true;
+        
 
 
         // Cached
@@ -179,9 +172,7 @@ namespace Sataura
         private void Update()
         {
             if (!IsOwner) return;
-
-            elapsedTime += Time.deltaTime;
-
+   
             if (player.handleMovement)
             {
                 JumpInput = playerInputAction.Player.Jump.ReadValue<float>();
@@ -212,7 +203,6 @@ namespace Sataura
                     }*/
 
 
-
                     HandleMouseEvents();
 
 
@@ -227,7 +217,8 @@ namespace Sataura
                     }
                     else if (CurrentMouseState == PointerState.LeftPress)
                     {
-                        UseItem();
+                        mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                        itemInHand.UseItemServerRpc(mousePosition);
                     }
                 }
 
@@ -393,30 +384,9 @@ namespace Sataura
         }
 
 
-        /// <summary>
-        /// Use item if left mouse button is pressed
-        /// </summary>
-        private void UseItem()
-        {
-            if (itemInHand.HasItemData() && itemInHand.GetICurrenttem() != null)
-            {
-                // Check if it's time to attack
-                if (elapsedTime >= 1.0f / (itemInHand.GetItemData().usageVelocity + 0.001f))
-                {
-                    elapsedTime = 0;
-                    itemInHand.UseItem();
-                }
-                else if (firstUseItem)
-                {
-                    bool canUseItem = itemInHand.UseItem();
-                    if (canUseItem)
-                    {
-                        firstUseItem = false;
-                        elapsedTime = 0;
-                    }
-                }
-            }
-        }
+        
+
+
 
 
 
