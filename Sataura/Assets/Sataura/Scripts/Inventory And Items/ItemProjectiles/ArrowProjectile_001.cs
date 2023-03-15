@@ -49,8 +49,8 @@ namespace Sataura
 
             this.currentBowData = bowData;
             this.currentArrowData = arrowData;
-            SetDust(arrowData.particle);
-
+            //SetDust(arrowData.particle);
+            SetDustServerRpc(arrowData.particle);
 
             if (rb == null)
                 rb = GetComponent<Rigidbody2D>();

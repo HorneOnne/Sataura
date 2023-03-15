@@ -109,6 +109,22 @@ namespace Sataura
             particleControl.SetParticles(itemDataManager.GetProjectileParticleFrames(dustIndex));
         }
 
+        [ServerRpc]
+        public void SetDustServerRpc(int dustIndex)
+        {
+            SetDust(dustIndex);
+
+            SetDustClientRpc(dustIndex);
+        }
+
+        [ClientRpc]
+        private void SetDustClientRpc(int dustIndex)
+        {
+            if (IsServer) return;
+
+            SetDust(dustIndex);
+        }
+
         /// <summary>
         /// Sets the sprite renderer's sprite to the given sprite.
         /// </summary>
