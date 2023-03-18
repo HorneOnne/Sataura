@@ -2,7 +2,7 @@
 
 namespace Sataura
 {
-    public class SwordProjectile_002 : Projectile, ICanCauseDamage
+    public class SwordProjectile_002 : NetworkProjectile, ICanCauseDamage
     {
         private SwordData swordData;
 

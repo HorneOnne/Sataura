@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEditor;
 using UnityEngine;
 
@@ -11,6 +12,7 @@ namespace Sataura
     {
         private const string itemPrefabPrefix = "IP_";
         private const string projectilePrefabPrefix = "PP_";
+        private const string enemyPrefabPrefix = "EP_";
         private const string itemDataPrefix = "I_";
         private const string upgradeableItemDataPrefix = "UI_";
         private const string craftingRecipePrefix = "CR_";
@@ -28,8 +30,15 @@ namespace Sataura
         [Header("PREFABS")]
         [SerializeField] List<GameObject> itemPrefabs = new List<GameObject>();
 
-
         [SerializeField] List<GameObject> projectilePrefabs = new List<GameObject>();
+
+        [SerializeField] List<GameObject> enemyPrefabs = new List<GameObject>();
+
+        [Header("Currency")]
+        [SerializeField] private GameObject bronzeCoinPrefab;
+        [SerializeField] private GameObject sliverCoinPrefab;
+        [SerializeField] private GameObject goldCoinPrefab;
+
 
         /// <summary>
         /// A list of all the recipe data.
@@ -65,6 +74,7 @@ namespace Sataura
         /// </summary>
         private Dictionary<string, GameObject> itemPrefabByNameDict = new Dictionary<string, GameObject>();
         private Dictionary<string, GameObject> projectilePrefabByNameDict = new Dictionary<string, GameObject>();
+        private Dictionary<string, GameObject> enemyPrefabByNameDict = new Dictionary<string, GameObject>();
 
 
 
@@ -74,8 +84,9 @@ namespace Sataura
         [Header("DUST DATA")]
         public List<ProjectileParticleData> projectileParticleDatas;
 
-
-
+        [Space(50)]
+        [Header("NETWORK OBJECT")]
+        public List<GameObject> networkObjects;
 
         /// <summary>
         /// The parent transform for all the item objects.
@@ -89,14 +100,22 @@ namespace Sataura
         /// Initializes the item data and prefab dictionaries, and generates the recipe dictionaries.
         /// </summary>
         private void Awake()
-        {
+        {            
             GenerateItemDataDict();
             GenerateItemPrefabDictionary();
             GenerateProjectilePrefabDictionary();
-            InitializeRecipes();
+            GenerateEnemyPrefabDictionary();
+            InitializeRecipes();  
         }
 
 
+        private void Start()
+        {
+            for (int i = 0; i < networkObjects.Count; i++)
+            {
+                NetworkManager.Singleton.AddNetworkPrefab(networkObjects[i]);
+            }
+        }
 
         /// <summary>
         /// Generates the <see cref="itemDataDict"/> and <see cref="itemDataById"/> dictionaries.
@@ -178,6 +197,21 @@ namespace Sataura
         }
 
 
+        private void GenerateEnemyPrefabDictionary()
+        {
+            for (int i = 0; i < enemyPrefabs.Count; i++)
+            {
+                if (enemyPrefabs[i] != null && enemyPrefabByNameDict.ContainsKey(enemyPrefabs[i].name))
+                    Debug.LogError($"[ItemDictionary]: \tEnemy Prefab at {i} already exist.");
+                else
+                {
+                    enemyPrefabByNameDict.Add(enemyPrefabs[i].name, enemyPrefabs[i]);
+                }
+            }
+        }
+
+
+
 
         /// <summary>
         /// Gets the item prefab for the item with the specified name.
@@ -232,6 +266,29 @@ namespace Sataura
             else
             {
                 throw new System.Exception($"Not found projectile prefab name {name} in GameDataManager.cs.");
+            }
+        }
+
+
+        public GameObject GetEnemyPrefab(string name)
+        {
+            if (enemyPrefabByNameDict.ContainsKey(name))
+                return enemyPrefabByNameDict[name];
+            else
+            {
+                throw new System.Exception($"Not found enemy prefab name {name} in GameDataManager.cs.");
+            }
+        }
+
+
+        public GameObject GetEnemyPrefab<T>(T item)
+        {
+            string name = $"{enemyPrefabPrefix}{typeof(T).Name}";
+            if (enemyPrefabByNameDict.ContainsKey($"{name}"))
+                return enemyPrefabByNameDict[name];
+            else
+            {
+                throw new System.Exception($"Not found enemy prefab name {name} in GameDataManager.cs.");
             }
         }
 
@@ -313,5 +370,10 @@ namespace Sataura
         {
             return projectileParticleDatas[index].frames;
         }
+
+        public GameObject GetBronzeCoin() => bronzeCoinPrefab;
+        public GameObject GetSliverCoin() => sliverCoinPrefab;
+        public GameObject GetGoldCoin() => goldCoinPrefab;
+
     }
 }

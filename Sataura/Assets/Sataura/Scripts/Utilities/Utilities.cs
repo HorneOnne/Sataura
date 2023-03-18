@@ -73,6 +73,21 @@ namespace Sataura
             objectTransform.rotation = Quaternion.Euler(new Vector3(0f, 0f, angle + offsetZAngle));
         }
 
+        public static void RotateObjectTowardDirection2D(Vector2 direction, Transform objectTransform, float offsetZAngle)
+        {
+            if (direction.magnitude > 0.1f)
+            {
+                // Calculate the angle between the sprite's position and the analog stick direction
+                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+                // Calculate the target rotation quaternion
+                Quaternion targetRotation = Quaternion.Euler(new Vector3(0f, 0f, angle + offsetZAngle));
+
+                // Lerp the current rotation toward the target rotation over time
+                objectTransform.rotation = Quaternion.Lerp(objectTransform.rotation, targetRotation, 90 * Time.deltaTime);
+            }
+        }
+
     }
 }
 

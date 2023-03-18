@@ -1,76 +1,171 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.Jobs;
+using Sataura;
 using UnityEngine;
+using Unity.Netcode;
+using UnityEditor.PackageManager;
 
-public class MaxEnemiesTest : MonoBehaviour
+public class MaxEnemiesTest : NetworkBehaviour
 {
     [SerializeField] Transform prefab;
 
-    private List<Enemy001> enemies;
-
     private void Start()
     {
-        enemies = new List<Enemy001>();
         float xPos;
         float yPos;
 
-        for(int i = 0; i < 10000; i++)
+        for (int i = 0; i < 5000; i++)
         {
             xPos = Random.Range(-400, 400);
             yPos = Random.Range(-400, 400);
 
-            Transform e = Instantiate(prefab, new Vector2(xPos, yPos), Quaternion.identity);
-            enemies.Add(e.GetComponent<Enemy001>());
+            var e = Instantiate(prefab, new Vector2(xPos, yPos), Quaternion.identity);
+            WorldGrid.Instance.AddCurrency(new Vector2(xPos, yPos), e.GetComponent<Currency>());
         }
+
+        /*for(int i = 0; i < WorldGrid.Instance.chunkList.Count; i++)
+        {
+            WorldGrid.Instance.HideChunk(WorldGrid.Instance.chunkList[i].IndexPosition);
+        }*/
     }
+
+    /*public Transform player;
+    public override void OnNetworkSpawn()
+    {
+        var clientId = NetworkManager.Singleton.LocalClientId;
+        player = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.transform;
+    }*/
 
     Vector2 mousePos;
     Vector2 direction;
     float distance;
-    int count = 0;
 
-    private void FixedUpdate()
+    float timeElapse = 0.0f;
+    float getEnemiesAroundTimeElapse = 0.0f;
+    public LayerMask enemyLayer;
+    Enemy001 enemy;
+    Collider2D[] enemies;
+
+
+    private void Update()
     {
-        mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        count = 0;
-
-        for (int i = 0; i < 10000; i++)
+        if(Input.GetMouseButtonDown(0))
         {
-            distance = Vector2.Distance(mousePos, enemies[i].rb2D.position);
+            mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-          
-            if (distance < 1f)
+            Vector2Int chunkIndex = WorldGrid.Instance.WorldToIndexPosition(mousePos);
+
+            for(int y = chunkIndex.y - 1; y <= chunkIndex.y + 1; y++)
             {
-                count++;
-                continue;
-            }
-            if (distance < 200)
-            {
-                enemies[i].rb2D.simulated = true;
-
-                direction = mousePos - enemies[i].rb2D.position;
-
-                // Normalize the direction to get a unit vector
-                direction.Normalize();
-
-                enemies[i].rb2D.MovePosition(enemies[i].rb2D.position + direction * 5 * Time.fixedDeltaTime);
-                count++;
-                
-            }     
-            else
-            {
-                enemies[i].rb2D.simulated = false;
+                for (int x = chunkIndex.x - 1; x <= chunkIndex.y + 1; x++)
+                {
+                    Vector2Int index = new Vector2Int(x, y);
+                    WorldGrid.Instance.ShowChunk(index);
+                }
             }
 
-            if(count >= 3000)
-            {
-                break;
-            }
         }
     }
 
+    /*private void FixedUpdate()
+    {
+        //if (player == null) return;
 
-    
+        if(Time.time - getEnemiesAroundTimeElapse >= 2.0f)
+        {
+            getEnemiesAroundTimeElapse = Time.time;
+            enemies = Physics2D.OverlapCircleAll(mousePos, 150, enemyLayer);
+        }
+
+        if (Time.time - timeElapse >= 0.035f)
+        {
+            timeElapse = Time.time;
+
+            if (enemies == null) return;
+
+            mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            //mousePos = player.position;
+            int size = enemies.Length;
+
+            for (int i = 0; i < size; i++)
+            {
+                enemy = enemies[i].GetComponent<Enemy001>();
+                distance = Vector2.Distance(mousePos, enemy.Rb2D.position);
+
+                if (distance < 1f)
+                {
+  
+                    continue;
+                }
+                else if (distance < 400)
+                {           
+                    direction = mousePos - enemy.Rb2D.position;
+                    direction.Normalize();
+                    enemy.Rb2D.MovePosition(enemy.Rb2D.position + direction * 10 * Time.fixedDeltaTime);
+                }
+            }     
+        }           
+    }*/
+
+
+    /*List<Enemy001> enemiesList = new List<Enemy001>(); 
+    private void FixedUpdate()
+    {
+
+        if (Time.time - getEnemiesAroundTimeElapse >= 2.0f)
+        {
+            *//*getEnemiesAroundTimeElapse = Time.time;
+            enemies = Physics2D.OverlapCircleAll(mousePos, 200, enemyLayer);*//*
+
+            mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            enemiesList.Clear();
+
+            Vector2Int worldIndex = WorldGrid.Instance.WorldToIndexPosition(mousePos);
+
+            for (int y = worldIndex.y - 1; y <= worldIndex.y + 1; y++)
+            {
+                for (int x = worldIndex.x - 1; x <= worldIndex.x + 1; x++)
+                {
+                    Vector2Int key = new Vector2Int(x, y);
+                    WorldGrid.Instance.EnablePhysicsSimulationAtGrid(key);
+                    enemiesList.AddRange(WorldGrid.Instance.worldGrid[key].enemies);
+                }
+            }
+
+            getEnemiesAroundTimeElapse = Time.time;
+            //enemies = Physics2D.OverlapCircleAll(mousePos, 200, enemyLayer);
+            
+        }
+
+        if (Time.time - timeElapse >= 0.035f)
+        {
+            timeElapse = Time.time;
+
+            mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            int size = enemiesList.Count;
+
+            for (int i = 0; i < size; i++)
+            {
+                enemy = enemiesList[i].GetComponent<Enemy001>();
+                distance = Vector2.Distance(mousePos, enemy.rb2D.position);
+
+                if (distance < 1f)
+                {
+
+                    continue;
+                }
+                else if (distance < 400)
+                {
+
+
+                    direction = mousePos - enemy.rb2D.position;
+                    direction.Normalize();
+                    enemy.rb2D.MovePosition(enemy.rb2D.position + direction * 10 * Time.fixedDeltaTime);
+                }
+            }
+        }
+    }*/
+
+
+
+
 
 }

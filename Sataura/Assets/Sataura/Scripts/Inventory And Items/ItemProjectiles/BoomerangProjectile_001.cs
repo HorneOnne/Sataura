@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace Sataura
 {
-    public class BoomerangProjectile_001 : Projectile, ICanCauseDamage
+    public class BoomerangProjectile_001 : NetworkProjectile, ICanCauseDamage
     {
         private EdgeCollider2D edgeCollider2D;
         private BoomerangData boomerangData;

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1251238356633449712}
   - component: {fileID: 1251238356877273029}
-  m_Layer: 30
+  m_Layer: 29
   m_Name: Model
   m_TagString: Item
   m_Icon: {fileID: 0}
@@ -71,7 +71,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1804832047
-  m_SortingLayer: 1
+  m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: -1873988066, guid: 0804b8f0cd3b81241862b9b94a207c61, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -96,7 +96,8 @@ GameObject:
   - component: {fileID: 2942270104973382695}
   - component: {fileID: 6081494857439053039}
   - component: {fileID: -4783284443509730044}
-  m_Layer: 30
+  - component: {fileID: -8973804671705556007}
+  m_Layer: 29
   m_Name: PP_BoomerangProjectile_001
   m_TagString: Item
   m_Icon: {fileID: 0}
@@ -181,4 +182,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: baae230e0c3e3c44798e2b05273574f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <ItemData>k__BackingField: {fileID: 0}
   useGravity: 0
+  networkObject: {fileID: 0}
+  spriteRenderer: {fileID: 0}
+--- !u!114 &-8973804671705556007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3139863566514667555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 951099334
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1

@@ -1,4 +1,6 @@
-﻿namespace Sataura
+﻿using System;
+
+namespace Sataura
 {
 
     /// <summary>
@@ -16,6 +18,8 @@
         /// </summary>
         /// <param name="damage">Amount of damage to inflict on the object.</param>
         public void TakeDamage(int damaged);
+
+        public bool IsOutOfHealth();
     }
 }
 

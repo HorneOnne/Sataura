@@ -9,7 +9,7 @@ namespace Sataura
     /// Represents an arrow projectile that can cause damage on collision.
     /// </summary>
     [RequireComponent(typeof(BoxCollider2D))]
-    public class ArrowProjectile_001 : Projectile, ICanCauseDamage
+    public class ArrowProjectile_001 : NetworkProjectile, ICanCauseDamage
     {
         [Header("REFERENCES")]
         [SerializeField] private GameObject explosionObjectPrefab;
@@ -18,17 +18,14 @@ namespace Sataura
 
         // Cached variables
         private BoxCollider2D arrowCollider;
-        private bool hasReturnedToPool;
         private float timeElapsedSinceShot = 0.0f;
-        private const float TIME_TO_RETURN = 5.0f;
-        private const float TIME_TO_RETURN_WHEN_COLLIDE = 3.0f;
+        private const float TIME_TO_RETURN = 3.0f;
+        private const float TIME_TO_RETURN_WHEN_COLLIDE = 2.0f;
         private WaitForSeconds waitForReturnOnCollision;
         private BowData currentBowData;
         private ArrowData currentArrowData;
 
 
-
-    
         public override void OnNetworkSpawn()
         {
             arrowCollider = GetComponent<BoxCollider2D>();
@@ -43,10 +40,7 @@ namespace Sataura
         /// <param name="arrowData">The arrow data to use for the shot.</param>
         public void Shoot(BowData bowData, ArrowData arrowData)
         {
-            hasReturnedToPool = false;
             timeElapsedSinceShot = 0.0f;
-
-
             this.currentBowData = bowData;
             this.currentArrowData = arrowData;
             //SetDust(arrowData.particle);
@@ -61,10 +55,13 @@ namespace Sataura
 
         private void Update()
         {
+            if (!IsServer) return;
+
             timeElapsedSinceShot += Time.deltaTime;
             if (timeElapsedSinceShot > TIME_TO_RETURN)
             {
-                //ReturnToPool();
+                ResetArrowPropertiesServerRpc();
+                ReturnToNetworkPoolServerRpc();
             }
 
             Vector2 direction = rb.velocity;
@@ -75,21 +72,19 @@ namespace Sataura
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            ArrowPropertiesWhenCollide();
-
-            if(IsServer)
-            {
-                GetComponent<NetworkObject>().Despawn();
-
-            }
-
-
-            //StartCoroutine(PerformReturnToPool());
-
+            ArrowPropertiesWhenCollideServerRpc();
+            StartCoroutine(PerformReturnToPool());
+     
             /*var explosionObject = Instantiate(explosionObjectPrefab, explosionSpawnPosition.position, Quaternion.identity);
             Destroy(explosionObject, 0.5f);*/
         }
 
+
+        private void OnTriggerEnter2D(Collider2D collision)
+        {
+            ArrowPropertiesWhenCollideServerRpc();
+            StartCoroutine(PerformReturnToPool());
+        }
 
         /// <summary>
         /// Performs the return of the arrow projectile to the pool after a delay.
@@ -97,28 +92,44 @@ namespace Sataura
         IEnumerator PerformReturnToPool()
         {
             yield return waitForReturnOnCollision;
-            
-            ReturnToPool();
+            ResetArrowPropertiesServerRpc();
+            ReturnToNetworkPoolServerRpc();
         }
 
 
 
-        private void Despawn()
-        {
-            GetComponent<NetworkObject>().Despawn();
-        }
 
         /// <summary>
         /// Returns the arrow projectile to the pool.
         /// </summary>
-        private void ReturnToPool()
+        private void ReturnToNetworkPool()
         {
-            if (hasReturnedToPool == true) return;
+            //ResetArrowProperties();
 
-            ResetArrowProperties();
-            ArrowProjectileSpawner.Instance.Pool.Release(this.gameObject);
-            hasReturnedToPool = true;
+            if(networkObject.IsSpawned)
+                networkObject.Despawn(false);
+
+            var projectilePrefab = GameDataManager.Instance.GetProjectilePrefab("PP_ArrowProjectile_001");
+            NetworkObjectPool.Singleton.ReturnNetworkObject(networkObject, projectilePrefab);
+            
         }
+
+        [ServerRpc]
+        private void ReturnToNetworkPoolServerRpc()
+        {
+            ReturnToNetworkPool();
+
+            ReturnToNetworkPoolClientRpc();  
+        }
+
+        [ClientRpc]
+        private void ReturnToNetworkPoolClientRpc()
+        {
+            if (IsServer) return;
+            ReturnToNetworkPool();
+        }
+
+
 
         /// <summary>
         /// Resets the arrow properties to default.
@@ -131,6 +142,21 @@ namespace Sataura
             arrowCollider.enabled = true;
         }
 
+        [ServerRpc]
+        private void ResetArrowPropertiesServerRpc()
+        {
+            ResetArrowProperties();
+            ResetArrowPropertiesClientRpc();
+        }
+
+        [ClientRpc]
+        private void ResetArrowPropertiesClientRpc()
+        {
+            if (IsServer) return;
+            ResetArrowProperties();
+        }
+
+
 
         /// <summary>
         /// Sets the arrow properties when it collides with something.
@@ -141,6 +167,20 @@ namespace Sataura
             spriteRenderer.enabled = false;
             rb.velocity = Vector2.zero;
             arrowCollider.enabled = false;
+        }
+
+        [ServerRpc]
+        private void ArrowPropertiesWhenCollideServerRpc()
+        {
+            ArrowPropertiesWhenCollide();
+            ArrowPropertiesWhenCollideClientRpc();
+        }
+
+        [ClientRpc]
+        private void ArrowPropertiesWhenCollideClientRpc()
+        {
+            if (IsServer) return;
+            ArrowPropertiesWhenCollide();
         }
 
 

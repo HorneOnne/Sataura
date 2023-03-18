@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5659769113906887946}
   - component: {fileID: 6847856887161037802}
-  m_Layer: 29
+  m_Layer: 28
   m_Name: Movement Handler
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -59,7 +59,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5207464967138502183}
-  m_Layer: 29
+  m_Layer: 28
   m_Name: Inventories
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -92,7 +92,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5207464967594749306}
   - component: {fileID: 5207464967594749307}
-  m_Layer: 29
+  m_Layer: 28
   m_Name: InGameInventory
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -140,7 +140,7 @@ GameObject:
   - component: {fileID: 5207464967858103183}
   - component: {fileID: 5207464967858103184}
   - component: {fileID: 5912903495902227307}
-  m_Layer: 29
+  m_Layer: 28
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -224,7 +224,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5207464968012310430}
-  m_Layer: 29
+  m_Layer: 28
   m_Name: GroundCheckPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -257,7 +257,7 @@ GameObject:
   - component: {fileID: 5207464968261917008}
   - component: {fileID: 5207464968261917010}
   - component: {fileID: 5207464968261917009}
-  m_Layer: 26
+  m_Layer: 28
   m_Name: Loot Item Zone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -318,7 +318,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5207464968280998306}
   - component: {fileID: 5207464968280998305}
-  m_Layer: 29
+  m_Layer: 28
   m_Name: Chest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -402,7 +402,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5207464968426694066}
   - component: {fileID: 5207464968426694067}
-  m_Layer: 29
+  m_Layer: 28
   m_Name: Helm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -486,7 +486,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5207464968623987650}
   - component: {fileID: 5207464968623987651}
-  m_Layer: 29
+  m_Layer: 28
   m_Name: Head
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -570,7 +570,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5207464968624710039}
   - component: {fileID: 5207464968624710040}
-  m_Layer: 29
+  m_Layer: 28
   m_Name: Torso
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -653,7 +653,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5207464968788662752}
-  m_Layer: 29
+  m_Layer: 28
   m_Name: Skin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -691,7 +691,7 @@ GameObject:
   - component: {fileID: 1890486741531456354}
   - component: {fileID: -1638119520357863833}
   - component: {fileID: -6080863556039538741}
-  m_Layer: 29
+  m_Layer: 28
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -735,7 +735,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: b49d83434ea91474990f1091e5b268bc, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
@@ -753,7 +753,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   handHoldItemToSpawn: {fileID: 9095001263188952735, guid: 7aeb687f08e46694fad7fb871a78a1f9, type: 3}
-  playerData: {fileID: 11400000, guid: 69fb33f4da30ffb4eb53dcccd243fed1, type: 2}
+  playerData: {fileID: 11400000, guid: 7517087262a8edc449f61c02688dc494, type: 2}
+  characterData: {fileID: 11400000, guid: 69fb33f4da30ffb4eb53dcccd243fed1, type: 2}
   playerInventory: {fileID: 0}
   playerInGameInventory: {fileID: 5207464967594749307}
   itemInHand: {fileID: 8223764839905027213}
@@ -830,7 +831,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6209304591604716130}
   - component: {fileID: 6155473145235841608}
-  m_Layer: 29
+  m_Layer: 28
   m_Name: Input Handler
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -878,7 +879,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6890333130367431354}
   - component: {fileID: 8223764839905027213}
-  m_Layer: 29
+  m_Layer: 28
   m_Name: ItemInHand Handler
   m_TagString: Untagged
   m_Icon: {fileID: 0}

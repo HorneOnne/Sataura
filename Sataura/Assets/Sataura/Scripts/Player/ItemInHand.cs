@@ -104,8 +104,12 @@ namespace Sataura
 
                 if (currentItemID.Value != -1)
                 {
+                    // Mouse
                     Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                     RotateHoldItemServerRpc(mousePosition);
+
+                    // Controller
+                    //RotateHoldItemServerRpc(player.PlayerInputHandler.RotateWeaponInput);
                 }
 
             }
@@ -120,7 +124,12 @@ namespace Sataura
             if (GetICurrenttem() == null) return;
             if (GetICurrenttem().showIconWhenHoldByHand == true)
             {
+                // Mouse
                 Utilities.RotateObjectTowardMouse2D(mousePosition, player.HandHoldItem, 0);
+
+
+                // Controller
+                //Utilities.RotateObjectTowardDirection2D(mousePosition, player.HandHoldItem, 0);
             }
         }
 

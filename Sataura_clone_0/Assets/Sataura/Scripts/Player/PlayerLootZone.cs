@@ -1,3 +1,5 @@
+using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Sataura
@@ -30,8 +32,16 @@ namespace Sataura
             collectibleObject = collision.gameObject.GetComponent<ICollectible>();
             if (collectibleObject != null)
             {
-                collectibleObject.Collect(player);
-                uiInGameInventory.UpdateInventoryUI();
+                if(collectibleObject is Item)
+                {
+                    collectibleObject.Collect(player);
+                    uiInGameInventory.UpdateInventoryUI();
+                }
+                else if(collectibleObject is Currency)
+                {
+                    collectibleObject.Collect(player);
+                    collision.gameObject.GetComponent<NetworkObject>().Despawn();
+                }
             }
         }
     }

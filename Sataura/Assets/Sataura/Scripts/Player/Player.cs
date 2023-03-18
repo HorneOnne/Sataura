@@ -18,6 +18,7 @@ namespace Sataura
 
         [Header("CHARACTER DATA")]
         public PlayerData playerData;
+        public CharacterData characterData;
         [SerializeField] private PlayerInventory playerInventory;
         [SerializeField] private PlayerInGameInventory playerInGameInventory;
         [SerializeField] private ItemInHand itemInHand;
@@ -62,24 +63,14 @@ namespace Sataura
         [HideInInspector] public PlayerInput PlayerInput { get; private set; }
         #endregion
 
-
-        /*private void Awake()
-        {
-            if (!IsOwner) return;
-            PlayerInput = GetComponent<PlayerInput>();
-        }*/
-
+      
         public NetworkVariable<int> clientID = new NetworkVariable<int>();
+        
 
         public override void OnNetworkSpawn()
         {
             PlayerInput = GetComponent<PlayerInput>();
-            
-            if(IsServer || IsOwner)
-            {
-
-            }
-           
+                    
 
             if (IsOwner)
             {

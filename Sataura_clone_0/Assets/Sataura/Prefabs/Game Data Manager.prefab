@@ -133,10 +133,15 @@ MonoBehaviour:
   - {fileID: 8447209267487775634, guid: 975db47014452db4caabcd437786c711, type: 3}
   - {fileID: 312586115855323783, guid: a0f3c3c8fe259a64680e479376e6753e, type: 3}
   projectilePrefabs:
-  - {fileID: 1045334807443795593, guid: 9962602cb9502cc49a3bd5d756c92401, type: 3}
+  - {fileID: 4973538020444718908, guid: 9962602cb9502cc49a3bd5d756c92401, type: 3}
   - {fileID: 3139863566514667555, guid: 2df01702708932345b34d9c6cb49d296, type: 3}
   - {fileID: 1029242142444853136, guid: 9a08a7f63d9a6fc4d93a8c47b66c05de, type: 3}
   - {fileID: 7163825116418857947, guid: 2d276384e0de20546b28f4964dfc5b99, type: 3}
+  enemyPrefabs:
+  - {fileID: 3119597679863554553, guid: dda04c634d94fdb40bd605aa3a43d137, type: 3}
+  bronzeCoinPrefab: {fileID: 3765923086305111446, guid: 777c892840afd664390456487433499c, type: 3}
+  sliverCoinPrefab: {fileID: 0}
+  goldCoinPrefab: {fileID: 0}
   itemRecipeData:
   - {fileID: 11400000, guid: 35194a542fc0d424ea7682d03b555f0f, type: 2}
   - {fileID: 11400000, guid: 70ea75c18511f6643b557c065533ae4c, type: 2}
@@ -259,4 +264,14 @@ MonoBehaviour:
     - {fileID: 1620155514, guid: f92440ba9d066c641aaac5f0da37c943, type: 3}
     - {fileID: 91930958, guid: f92440ba9d066c641aaac5f0da37c943, type: 3}
     - {fileID: -1767183998, guid: f92440ba9d066c641aaac5f0da37c943, type: 3}
+  networkObjects:
+  - {fileID: 3119597679863554553, guid: dda04c634d94fdb40bd605aa3a43d137, type: 3}
+  - {fileID: 9095001263188952735, guid: 7aeb687f08e46694fad7fb871a78a1f9, type: 3}
+  - {fileID: 5207464968828955612, guid: 76dca213e545aea408be6333805ae122, type: 3}
+  - {fileID: 2349573720829118872, guid: b60aba05a81bc9f4fb600f47c1f35a91, type: 3}
+  - {fileID: 8447209267487775634, guid: 975db47014452db4caabcd437786c711, type: 3}
+  - {fileID: 7603960275652137570, guid: 53262f99ff17183409f9fc0d8a8159bd, type: 3}
+  - {fileID: 4973538020444718908, guid: 9962602cb9502cc49a3bd5d756c92401, type: 3}
+  - {fileID: 7163825116418857947, guid: 2d276384e0de20546b28f4964dfc5b99, type: 3}
+  - {fileID: 0}
   itemContainerParent: {fileID: 0}

@@ -34,6 +34,7 @@ namespace Sataura
 
         #region Properties
         public Vector2 MovementInput { get; private set; }
+        public Vector2 RotateWeaponInput { get; private set; }
         public bool PressUtilityKeyInput { get; private set; }
         public float JumpInput { get; private set; }
 
@@ -177,8 +178,9 @@ namespace Sataura
             {
                 JumpInput = playerInputAction.Player.Jump.ReadValue<float>();
                 MovementInput = playerInputAction.Player.Movement.ReadValue<Vector2>();
+                RotateWeaponInput = playerInputAction.Player.RotateWeapon.ReadValue<Vector2>();
             }
-
+          
 
             if (player.handleItem)
             {
@@ -219,7 +221,7 @@ namespace Sataura
                     {
                         mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                         itemInHand.UseItemServerRpc(mousePosition);
-                    }
+                    }                
                 }
 
             }
@@ -232,7 +234,7 @@ namespace Sataura
         {
             // Calculate hang time (Time leave ground)
             if (playerMovement.isGrounded)
-                hangCounter = player.playerData.hangTime;
+                hangCounter = player.characterData.hangTime;
             else
                 hangCounter -= Time.deltaTime;
 
@@ -240,7 +242,7 @@ namespace Sataura
             // calculate Jump Buffer
             if (JumpInput == 1)
             {
-                jumpBufferCount = player.playerData.jumpBufferLength;
+                jumpBufferCount = player.characterData.jumpBufferLength;
             }
             else
             {
@@ -420,7 +422,7 @@ namespace Sataura
 
         public float GetTimeLeftGround()
         {
-            return Mathf.Abs(hangCounter - player.playerData.hangTime);
+            return Mathf.Abs(hangCounter - player.characterData.hangTime);
         }
     }
 }

@@ -6,7 +6,7 @@ namespace Sataura
     /// <summary>
     /// A class that represents a sword projectile that can cause damage to an enemy.
     /// </summary>
-    public class SwordProjectile_001 : Projectile, ICanCauseDamage
+    public class SwordProjectile_001 : NetworkProjectile, ICanCauseDamage
     {
         private SwordData swordData;
         private Vector3 startRotationAngle;

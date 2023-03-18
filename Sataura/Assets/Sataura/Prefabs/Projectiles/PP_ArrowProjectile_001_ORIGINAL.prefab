@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8195455794431102657}
   - component: {fileID: 8195455794431102656}
   - component: {fileID: 8248255118845421421}
-  m_Layer: 30
+  m_Layer: 29
   m_Name: PP_ArrowProjectile_001_ORIGINAL
   m_TagString: Item
   m_Icon: {fileID: 0}
@@ -97,7 +97,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df73a4ca757b5ab40af703a4f07aae4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <ItemData>k__BackingField: {fileID: 0}
   useGravity: 1
+  networkObject: {fileID: 8248255118845421421}
+  spriteRenderer: {fileID: 0}
   explosionObjectPrefab: {fileID: 7070060414050384019, guid: afa7d8e101f07904081040c98e567783, type: 3}
   explosionSpawnPosition: {fileID: 2017764031259471140}
 --- !u!114 &8248255118845421421
@@ -125,7 +128,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2017764031259471140}
-  m_Layer: 30
+  m_Layer: 29
   m_Name: Explosion Position
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -157,7 +160,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3769378304507730522}
   - component: {fileID: 3769378304759875951}
-  m_Layer: 30
+  m_Layer: 29
   m_Name: Model
   m_TagString: Item
   m_Icon: {fileID: 0}
@@ -243,7 +246,7 @@ GameObject:
   - component: {fileID: 6824511210170887532}
   - component: {fileID: 6824511210170887535}
   - component: {fileID: 8546666110216863740}
-  m_Layer: 0
+  m_Layer: 29
   m_Name: MainParticle
   m_TagString: Untagged
   m_Icon: {fileID: 0}

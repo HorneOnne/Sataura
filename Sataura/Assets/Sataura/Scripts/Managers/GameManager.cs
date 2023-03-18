@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using Cinemachine;
 using System.Collections.Generic;
+using Unity.Netcode;
 
 namespace Sataura
 {
@@ -13,9 +14,13 @@ namespace Sataura
 
         public CinemachineVirtualCamera CinemachineVirtualCamera { get => cinemachineVirtualCamera; }
 
+
         private void Awake()
         {
             Application.targetFrameRate = limitFps;
+
         }
+
+    
     }
 }

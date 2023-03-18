@@ -223,6 +223,11 @@ namespace Sataura
         {
             canTrigger = true;
         }
+
+        public bool IsOutOfHealth()
+        {
+            return false;
+        }
     }
 }
 

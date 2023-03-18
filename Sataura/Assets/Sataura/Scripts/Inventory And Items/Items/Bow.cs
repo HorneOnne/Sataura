@@ -85,18 +85,20 @@ namespace Sataura
 
         private void UseType01(Vector2 mousePosition)
         {
-            Debug.Log("here");
-            //arrowProjectileObject = ArrowProjectileSpawner.Instance.Pool.Get().GetComponent<ArrowProjectile_001>();
-            arrowProjectilePrefab = GameDataManager.Instance.GetProjectilePrefab("PP_ArrowProjectile_001");            
-            arrowProjectileObject = Instantiate(arrowProjectilePrefab, shootingPoints[0].position, transform.rotation).GetComponent<ArrowProjectile_001>();
+            arrowProjectilePrefab = GameDataManager.Instance.GetProjectilePrefab("PP_ArrowProjectile_001");
+            var netObject = NetworkObjectPool.Singleton.GetNetworkObject(arrowProjectilePrefab, shootingPoints[0].position, transform.rotation);
+
+            if (netObject.IsSpawned == false)
+                netObject.Spawn();
+
+            arrowProjectileObject = netObject.GetComponent<ArrowProjectile_001>();
             Utilities.RotateObjectTowardMouse2D(mousePosition, arrowProjectileObject.transform, -45);
-            arrowProjectileObject.GetComponent<NetworkObject>().Spawn();
-
-
             arrowSlotInPlayerInventory = inGameInventory.inGameInventory[(int)arrowSlotIndex];
-            arrowItemData = (ArrowData)arrowSlotInPlayerInventory.ItemData;                               
-            arrowProjectileObject.SetData(arrowItemData);           
-            arrowProjectileObject.Shoot(bowItemData, arrowItemData);
+            arrowItemData = (ArrowData)arrowSlotInPlayerInventory.ItemData;
+           
+            int arrowID = GameDataManager.Instance.GetItemID(arrowItemData);
+            arrowProjectileObject.SetDataServerRpc(arrowID, true);
+            arrowProjectileObject.Shoot(bowItemData, arrowItemData); 
         }
 
 
@@ -109,7 +111,9 @@ namespace Sataura
                 arrowProjectileObject.transform.rotation = transform.rotation;
                 arrowSlotInPlayerInventory = inGameInventory.inGameInventory[(int)arrowSlotIndex];
                 arrowItemData = (ArrowData)arrowSlotInPlayerInventory.ItemData;
-                arrowProjectileObject.SetData(arrowItemData);
+
+                int arrowID = GameDataManager.Instance.GetItemID(arrowItemData);
+                arrowProjectileObject.SetDataServerRpc(arrowID, true);
                 arrowProjectileObject.Shoot(bowItemData, arrowItemData);
             }
         }
@@ -147,6 +151,7 @@ namespace Sataura
         private void ConsumeArrowServerRpc(int arrowIndex)
         {
             inGameInventory.inGameInventory[arrowIndex].RemoveItem();
+            UIPlayerInGameInventory.Instance.UpdateInventoryUIAt(arrowIndex);
 
             ClientRpcParams clientRpcParams = new ClientRpcParams
             {

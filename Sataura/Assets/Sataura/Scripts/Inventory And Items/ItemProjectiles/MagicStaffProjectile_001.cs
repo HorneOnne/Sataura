@@ -7,7 +7,7 @@ namespace Sataura
     /// Represents a projectile fired by a magic staff that can cause damage to targets it collides with.
     /// </summary>
     [RequireComponent(typeof(CircleCollider2D))]
-    public class MagicStaffProjectile_001 : Projectile, ICanCauseDamage
+    public class MagicStaffProjectile_001 : NetworkProjectile, ICanCauseDamage
     {
         /// <summary>
         /// The data associated with the magic staff used to fire this projectile.

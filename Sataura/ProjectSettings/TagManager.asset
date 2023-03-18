@@ -8,6 +8,8 @@ TagManager:
   - Enemy
   - UICraftingTableCanvas
   - UIChestInventoryCanvas
+  - Currency
+  - Ground
   layers:
   - Default
   - TransparentFX
@@ -35,13 +37,19 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Currency
+  - Item
+  - Character
+  - Projectile
+  - Enemy
   - Ground
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Currency
+    uniqueID: 1028821391
+    locked: 0
+  - name: Enemy
+    uniqueID: 2369512197
     locked: 0

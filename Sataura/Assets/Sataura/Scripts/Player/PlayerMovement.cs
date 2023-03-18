@@ -13,7 +13,7 @@ namespace Sataura
         [SerializeField] private Player player;
         [SerializeField] private Rigidbody2D rb;
         [SerializeField] Transform groundCheckPoint;
-        private PlayerData playerData;
+        private CharacterData playerData;
 
         [SerializeField] private PlayerInputHandler playerInputHandler;
         
@@ -41,7 +41,7 @@ namespace Sataura
         public override void OnNetworkSpawn()
         {
             playerInputHandler = player.PlayerInputHandler;
-            playerData = player.playerData;
+            playerData = player.characterData;
             FacingDirection = 1;
         }
 

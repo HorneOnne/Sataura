@@ -73,7 +73,7 @@ namespace Sataura
             swordProjectileObject = Instantiate(swordProjectilePrefab, transform.position, transform.rotation, player.transform);
             swordProjectileObject.transform.localScale = new Vector3(4, 4, 1);
             swordProjectileObject.SetActive(true);
-            swordProjectileObject.GetComponent<Projectile>().SetData(this.ItemSlot.ItemData);
+            swordProjectileObject.GetComponent<NetworkProjectile>().SetData(this.ItemSlot.ItemData);
 
             var swordProjectile002 = SworldProjectile002Spawner.Instance.Pool.Get().GetComponent<SwordProjectile_002>();
             swordProjectile002.SetData(swordData);
