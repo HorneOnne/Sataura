@@ -1,6 +1,7 @@
 using UnityEngine;
 using Unity.Netcode;
 using UnityEngine.InputSystem;
+using System;
 
 namespace Sataura
 {
@@ -65,16 +66,13 @@ namespace Sataura
         /// </summary>
         private float lastRightPressIntervalTimeCount = 0.0f;
 
-        
+
 
 
         /// <summary>
         /// Tracks whether the left mouse button is currently being clicked.
         /// </summary>
         bool isLeftClicking = false;
-
-        
-
 
         // Cached
         private Vector2 mousePosition;
@@ -143,13 +141,15 @@ namespace Sataura
             }
         }*/
 
+        public bool canJump;
+
         public override void OnNetworkSpawn()
         {
             playerInputAction = new PlayerInputAction();
             playerInputAction.Player.Enable();
             jump = playerInputAction.Player.Jump;
             jump.Enable();
-            jump.performed += SettingsJump;
+            jump.performed += Jump;
 
 
             if (player.handleMovement)
@@ -167,20 +167,44 @@ namespace Sataura
             }
         }
 
+        private void Jump(InputAction.CallbackContext context)
+        {
+            jumpBufferCount = player.characterData.jumpBufferLength;
+        }
 
-  
 
         private void Update()
         {
             if (!IsOwner) return;
-   
+
             if (player.handleMovement)
             {
                 JumpInput = playerInputAction.Player.Jump.ReadValue<float>();
                 MovementInput = playerInputAction.Player.Movement.ReadValue<Vector2>();
                 RotateWeaponInput = playerInputAction.Player.RotateWeapon.ReadValue<Vector2>();
+
+
+                if (playerMovement.isGrounded || playerMovement.isOnPlatform)
+                    hangCounter = player.characterData.hangTime;
+                else
+                    hangCounter -= Time.deltaTime;
+
+
+
+                // calculate Jump Buffer
+                if (jumpBufferCount >= 0)
+                {
+                    jumpBufferCount -= Time.deltaTime;
+                }
+
+
+                if (jumpBufferCount > 0 && hangCounter > 0)
+                {
+                    canJump = true;
+                    jumpBufferCount = 0;
+                }     
             }
-          
+
 
             if (player.handleItem)
             {
@@ -221,39 +245,13 @@ namespace Sataura
                     {
                         mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                         itemInHand.UseItemServerRpc(mousePosition);
-                    }                
+                    }
                 }
 
             }
         }
 
 
-
-
-        private void SettingsJump(InputAction.CallbackContext context)
-        {
-            // Calculate hang time (Time leave ground)
-            if (playerMovement.isGrounded)
-                hangCounter = player.characterData.hangTime;
-            else
-                hangCounter -= Time.deltaTime;
-
-
-            // calculate Jump Buffer
-            if (JumpInput == 1)
-            {
-                jumpBufferCount = player.characterData.jumpBufferLength;
-            }
-            else
-            {
-                jumpBufferCount -= Time.deltaTime;
-            }
-
-            if (jumpBufferCount > 0 && hangCounter > 0)
-            {
-                jumpBufferCount = 0;
-            }
-        }
 
         //// <summary>
         /// Handles mouse events and updates the current mouse state.
@@ -312,6 +310,8 @@ namespace Sataura
         /// </summary>
         private void StackItem()
         {
+            if (itemInHand.HasItem() == false) return;
+
             switch (itemInHand.ItemGetFrom.slotStoredType)
             {
                 case StoredType.PlayerInventory:
@@ -386,7 +386,7 @@ namespace Sataura
         }
 
 
-        
+
 
 
 

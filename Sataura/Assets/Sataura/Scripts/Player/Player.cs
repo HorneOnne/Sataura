@@ -65,10 +65,15 @@ namespace Sataura
 
       
         public NetworkVariable<int> clientID = new NetworkVariable<int>();
-        
+
+
+        // Events
+
+
 
         public override void OnNetworkSpawn()
         {
+            transform.position = new Vector2(200, 30);
             PlayerInput = GetComponent<PlayerInput>();
                     
 
@@ -76,7 +81,7 @@ namespace Sataura
             {
                 // Camera
                 GameManager.Instance.CinemachineVirtualCamera.Follow = this.transform;
-
+                
                 UIPlayerInGameInventory.Instance.SetPlayer(this);
                 UIItemInHand.Instance.SetPlayer(this);
                 UIPlayerEquipment.Instance.SetPlayer(this);
@@ -106,6 +111,7 @@ namespace Sataura
                 handHoldItemNetworkObject = handHoldItemInstance.GetComponent<NetworkObject>();            
                 handHoldItemNetworkObject.Spawn();
                 handHoldItemNetworkObject.TrySetParent(this.transform);
+                handHoldItemNetworkObject.transform.localPosition = Vector3.zero;
             }
 
             if (IsOwner)
@@ -114,8 +120,14 @@ namespace Sataura
                 UIItemInHand.Instance.LoadReferences();
                 UIPlayerEquipment.Instance.LoadReferences();
                 UICreativeInventory.Instance.LoadReferences();
-                UIChestInventory.Instance.LoadReferences();
+                UIChestInventory.Instance.LoadReferences();              
             }
+
+            if(IsOwner)
+            {
+                CameraBounds.Instance.localPlayer = this.transform;
+            }
+ 
         }
 
  

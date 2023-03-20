@@ -12,18 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7f11ce6a06fe5646bda3a398c6fff9a, type: 3}
   m_Name: CharacterData
   m_EditorClassIdentifier: 
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 2147483648
-  roundCheckRadius: 0.85
   movementSpeed: 20
   movementForceInAir: 30
   airDragMultiplier: 0.1
-  jumpForce: 60
+  jumpForce: 80
   hangTime: 0.1
-  jumpBufferLength: 0.1
+  jumpBufferLength: 0.2
   fallMultiplier: 0.28
   lowMultiplier: 0.22
   maxMovementSpeed: 100
-  maxJumpVelocity: 50
-  maxFallVelocity: -50
+  maxJumpVelocity: 100
+  maxFallVelocity: -100

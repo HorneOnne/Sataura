@@ -43,31 +43,11 @@ namespace Sataura
         public override void OnNetworkSpawn()
         {
             InitializePool();
-
-            /*if (IsServer)
-            {
-                SetParentForPooledObject();
-            }*/
         }
 
         public override void OnNetworkDespawn()
         {
             ClearPool();
-        }
-
-        private void SetParentForPooledObject()
-        {
-            foreach (var pooledObject in pooledObjects)
-            {
-                //var parent = PooledPrefabsList.Find(a => a.Prefab.Equals(pooledObject.Key));
-                foreach (var e in pooledObject.Value)
-                {
-                    e.Spawn();
-                    e.TrySetParent(this.transform);
-                    e.Despawn(false);
-                }
-
-            }
         }
 
 

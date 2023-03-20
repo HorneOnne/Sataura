@@ -1,5 +1,6 @@
 using System.Collections;
 using Unity.Netcode;
+using UnityEditor;
 using UnityEngine;
 
 namespace Sataura
@@ -16,7 +17,13 @@ namespace Sataura
         private CharacterData playerData;
 
         [SerializeField] private PlayerInputHandler playerInputHandler;
-        
+
+
+        [Header("Layer Properties")]
+        public LayerMask groundLayer;
+        public LayerMask platformLayer;
+        public float roundCheckRadius;
+
 
 
         #region Properties
@@ -28,15 +35,12 @@ namespace Sataura
         #endregion Properties   
 
         public Vector2 CurrentVelocity { get { return rb.velocity; } }
-
         public bool isGrounded;
+        public bool isOnPlatform;
 
-        /*private void Start()
-        {
-            playerInputHandler = player.PlayerInputHandler;
-            playerData = player.playerData;
-            FacingDirection = 1;
-        }*/
+
+
+        private float platformRationalOffsetWaitTime;
 
         public override void OnNetworkSpawn()
         {
@@ -54,6 +58,8 @@ namespace Sataura
             if(player.handleMovement)
             {
                 isGrounded = IsGrounded();
+                isOnPlatform = IsOnPlatform();
+
 
                 HandleMovementOnGround(player.PlayerInputHandler.MovementInput);
 
@@ -62,11 +68,21 @@ namespace Sataura
 
                 // Jump 
                 // =========================================================================
-                HandleJump(playerInputHandler.JumpInput == 1, isGrounded);
+                if(playerInputHandler.canJump)
+                {
+                    HandleJump();
+                    playerInputHandler.canJump = false;
+                }
+
+
+                if(playerInputHandler.MovementInput.y < 0)
+                {
+                    HandleOneWayPlatformEffector2D();
+                }
+         
 
                 // Pre-Calculate Physics
                 HandleAddGravityMultiplier();
-
 
                 //SetMaxVelocity();
                 HandleSetMaxVelocity();
@@ -82,12 +98,20 @@ namespace Sataura
         /// <returns>True if the player is grounded, false otherwise.</returns>
         public bool IsGrounded()
         {
-            return Physics2D.OverlapCircle(groundCheckPoint.position, playerData.roundCheckRadius, playerData.groundLayer);
+            return Physics2D.OverlapCircle(groundCheckPoint.position, roundCheckRadius, groundLayer);
+        }
+
+        public bool IsOnPlatform()
+        {
+            return Physics2D.OverlapCircle(groundCheckPoint.position, roundCheckRadius, platformLayer);
+        }
+        IEnumerator ResetOneWayEffector2D(PlatformEffector2D platformEffector2D)
+        {
+            yield return new WaitForSeconds(0.2f);
+            platformEffector2D.rotationalOffset = 0;
         }
 
 
-
-        //[ServerRpc]
         private void HandleMovementOnGround(Vector2 movementInputVector)
         {
             if (movementInputVector.x != 0)
@@ -100,8 +124,21 @@ namespace Sataura
             }
         }
 
+        private void HandleOneWayPlatformEffector2D()
+        {
+            var col = Physics2D.OverlapCircle(groundCheckPoint.position, roundCheckRadius, platformLayer);
+            if (col != null)
+            {
+                PlatformEffector2D platformEffector2D = col.GetComponent<PlatformEffector2D>();
+                if (platformEffector2D != null)
+                {
+                    platformEffector2D.rotationalOffset = 180;
+                    StartCoroutine(ResetOneWayEffector2D(platformEffector2D));
+                }
+            }
+        }
 
-        //[ServerRpc]
+
         private void HandleMoveInAir(Vector2 movementInputVector, bool isOnGrounded)
         {
             if (isOnGrounded == false && movementInputVector.x != 0)
@@ -124,19 +161,12 @@ namespace Sataura
         }
 
 
-
-        //[ServerRpc]
-        private void HandleJump(bool triggerJump, bool isOnGrounded)
+        public void HandleJump()
         {
-            if(isOnGrounded && triggerJump)
-            {
-                rb.velocity = new Vector2(rb.velocity.x, playerData.jumpForce);
-            }
+            rb.velocity = new Vector2(rb.velocity.x, playerData.jumpForce);
         }
 
 
-
-        //[ServerRpc]
         private void HandleSetMaxVelocity()
         {
             if (rb.velocity.y > playerData.maxJumpVelocity)
@@ -146,7 +176,6 @@ namespace Sataura
         }
 
 
-        //[ServerRpc]
         private void HandleAddGravityMultiplier()
         {
             if (rb.velocity.y < 0)

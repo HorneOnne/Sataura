@@ -1,3 +1,4 @@
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,7 +17,7 @@ namespace Sataura
             if(world.ContainsKey(indexPos) == false)
             {
                 world.Add(indexPos, new Chunk());
-                world[indexPos].IndexPosition = indexPos;
+                world[indexPos].indexPosition = indexPos;
                 world[indexPos].enemies.Add(enemy);
 
                 chunkList.Add(world[indexPos]);
@@ -35,7 +36,7 @@ namespace Sataura
             if (world.ContainsKey(indexPos) == false)
             {
                 world.Add(indexPos, new Chunk());
-                world[indexPos].IndexPosition = indexPos;
+                world[indexPos].indexPosition = indexPos;
                 world[indexPos].currencies.Add(currency);
 
                 chunkList.Add(world[indexPos]);
@@ -119,17 +120,6 @@ namespace Sataura
         }*/
 
     }
-
-    [System.Serializable]
-    public class Chunk
-    {
-        public Vector2Int IndexPosition;
-        public List<Enemy001> enemies = new List<Enemy001>();
-        public List<Currency> currencies = new List<Currency>();
-
-    }
-
-
 }
 
 

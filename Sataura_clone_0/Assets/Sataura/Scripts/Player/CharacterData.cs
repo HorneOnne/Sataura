@@ -5,10 +5,6 @@ namespace Sataura
     [CreateAssetMenu(fileName = "CharacterData", menuName = "Sataura/Player/CharacterData")]
     public class CharacterData : ScriptableObject
     {
-        [Header("Ground Layer  Properties")]
-        public LayerMask groundLayer;
-        public float roundCheckRadius;
-
         [Header("Movement Properties")]
         public float movementSpeed;
         public float movementForceInAir;

@@ -29,7 +29,6 @@ namespace Sataura
         [ServerRpc]
         public void LoadSwordProjectileDataServerRpc(Vector2 mousePosition)
         {
-            Debug.Log("LoadSwordProjectileDataServerRpc");
             this.swordData = (SwordData)ItemData;
             swingDuration = 1.0f / (swordData.usageVelocity + 0.001f);
             SetSwingDirection(mousePosition);
@@ -41,7 +40,6 @@ namespace Sataura
         [ClientRpc]
         private void LoadSwordProjectileDataClientRpc(Vector2 mousePosition)
         {
-            Debug.Log("LoadSwordProjectileDataClientRpc");
             this.swordData = (SwordData)ItemData;
             swingDuration = 1.0f / (swordData.usageVelocity + 0.001f);
         }
