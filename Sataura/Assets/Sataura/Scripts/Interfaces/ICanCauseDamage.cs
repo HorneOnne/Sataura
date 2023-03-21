@@ -10,5 +10,6 @@
         /// </summary>
         /// <returns>The amount of damage caused by the object.</returns>
         public int GetDamage();
+        public float GetKnockback();
     }
 }

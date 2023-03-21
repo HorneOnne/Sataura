@@ -145,6 +145,11 @@ namespace Sataura
         {
             return boomerangData.damage;
         }
+
+        public float GetKnockback()
+        {
+            return 0.0f;
+        }
     }
 }
 

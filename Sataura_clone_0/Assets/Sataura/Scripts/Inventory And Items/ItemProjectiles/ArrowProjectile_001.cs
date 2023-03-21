@@ -188,5 +188,10 @@ namespace Sataura
         {
             return currentArrowData.damage + currentBowData.baseAttackDamage;
         }
+
+        public float GetKnockback()
+        {
+            return 0.0f;
+        }
     }
 }

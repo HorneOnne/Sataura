@@ -8,6 +8,7 @@ namespace Sataura
     public class EnemySpawnWaves : NetworkBehaviour
     {
         [SerializeField] private GameObject enemyPrefab;
+        [SerializeField] private GameObject pinkSlimePrefab;
         private NetworkObjectPool networkObjectPool;
 
 
@@ -16,7 +17,7 @@ namespace Sataura
 
         [SerializeField] private List<Transform> players = new List<Transform>();
 
-        [SerializeField] private List<Enemy001> currentEnemy001Wave = new List<Enemy001>();
+        [SerializeField] private List<BaseEnemy> currentEnemyWave = new List<BaseEnemy>();
 
         public override void OnNetworkSpawn()
         {
@@ -44,17 +45,27 @@ namespace Sataura
 
             if (Input.GetKeyDown(KeyCode.J))
             {
-                currentEnemy001Wave.Clear();
+                //currentEnemyWave.Clear();
 
                 //SpawnEnemiesInCircle();
 
-                GenerateSquareWaveEnemies();
+                //GenerateSquareWaveEnemies();
 
                 //GenerateCircleWaveEnemies(players[0].position);
+                Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                for (int i = 0; i < 1; i++)
+                {              
+                    var enemyObject = Instantiate(pinkSlimePrefab, mousePos, Quaternion.identity);
+                    enemyObject.GetComponent<BaseEnemy>().SetFollowTarget(players[0]);
+
+                    var enemyNetworkObject = enemyObject.GetComponent<NetworkObject>();
+                    enemyNetworkObject.Spawn();
+                }
+               
             }
         }
 
-        float getEnemiesAroundTimeElapse = 0.0f;
+        /*float getEnemiesAroundTimeElapse = 0.0f;
         float timeElapse = 0.0f;
         private void FixedUpdate()
         {
@@ -69,26 +80,32 @@ namespace Sataura
             {
                 timeElapse = Time.time;
 
-                if (currentEnemy001Wave == null) return;
-                if (currentEnemy001Wave.Count == 0) return;
+                if (currentEnemyWave == null) return;
+                if (currentEnemyWave.Count == 0) return;
 
-                int size = currentEnemy001Wave.Count;
+                int size = currentEnemyWave.Count;
+                List<int> enemiesDestroyedIndex = new List<int>();
 
                 for (int i = 0; i < size; i++)
                 {
-                    var enemy = currentEnemy001Wave[i].GetComponent<Enemy001>();
-                    //var distance = Vector2.Distance(players[0].position, enemy.Rb2D.position);
-
-                    if (enemy.isBeingKnockback == false)
+                    if(currentEnemyWave[i] == null)
                     {
-                        var direction = (Vector2)players[0].position - enemy.Rb2D.position;
-                        direction.Normalize();
-                        enemy.Rb2D.MovePosition(enemy.Rb2D.position + direction * 10 * Time.fixedDeltaTime);
+                        enemiesDestroyedIndex.Add(i);
+                        continue;
                     }
 
+                    var enemy = currentEnemyWave[i].GetComponent<BaseEnemy>();
+                    enemy.MoveAI(players[0].position);
+                }
+
+
+                // Destroy enemies in currentEnemyWave when it has been dead.
+                for (int i = 0; i < enemiesDestroyedIndex.Count; i++)
+                {
+                    enemiesDestroyedIndex.RemoveAt(i);
                 }
             }
-        }
+        }*/
 
 
         private GameObject Spawn(Vector2 position, Quaternion rotation)
@@ -116,7 +133,7 @@ namespace Sataura
 
 
                 var e = Spawn(new Vector2(x, y), Quaternion.identity);
-                currentEnemy001Wave.Add(e.GetComponent<Enemy001>());
+                currentEnemyWave.Add(e.GetComponent<Enemy001>());
             }
         }
 
@@ -133,7 +150,7 @@ namespace Sataura
                 angle += angleIncrement;
 
                 var e = Spawn(new Vector2(x, y), Quaternion.identity);
-                currentEnemy001Wave.Add(e.GetComponent<Enemy001>());
+                currentEnemyWave.Add(e.GetComponent<Enemy001>());
             }
         }
 
@@ -148,7 +165,7 @@ namespace Sataura
             for (int i = 0; i < numPoints; i++)
             {
                 var e = Spawn(new Vector2(x, y), Quaternion.identity);
-                currentEnemy001Wave.Add(e.GetComponent<Enemy001>());
+                currentEnemyWave.Add(e.GetComponent<Enemy001>());
 
                 if ((i + 1) % pointsPerSide == 0)
                 {

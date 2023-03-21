@@ -76,5 +76,10 @@ namespace Sataura
         {
             return ((BoomerangData)ItemData).damage;
         }
+
+        public float GetKnockback()
+        {
+            return 0.0f;
+        }
     }
 }

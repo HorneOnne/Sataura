@@ -2,8 +2,6 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
-using static UnityEditor.Progress;
-using UnityEditor.PackageManager;
 
 namespace Sataura
 {

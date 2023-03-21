@@ -17,5 +17,5 @@ MonoBehaviour:
   damage: 0
   attackRange: 10
   attackCooldown: 1
-  knockbackForce: 10
+  knockbackResistence: 5
   knockbackDuration: 0.1

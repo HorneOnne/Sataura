@@ -50,5 +50,10 @@ namespace Sataura
         {
             return ((SwordData)ItemData).damage;
         }
+
+        public float GetKnockback()
+        {
+            return ((SwordData)ItemData).knockback;
+        }
     }
 }

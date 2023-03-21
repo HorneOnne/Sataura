@@ -7,7 +7,7 @@ namespace Sataura
     {
         [Header("SWORD PROPERTIES")]
         public int damage;
-        public float swingSwordIncreaseSize;    // Used to increase swing sword size
+        public float knockback;
 
         [Header("UPGRADE PROPERTIES")]
         public int useType;

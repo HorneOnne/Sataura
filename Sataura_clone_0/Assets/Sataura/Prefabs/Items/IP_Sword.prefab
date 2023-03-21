@@ -133,6 +133,7 @@ MonoBehaviour:
   <ItemData>k__BackingField: {fileID: 0}
   spriteRenderer: {fileID: 0}
   showIconWhenHoldByHand: 0
+  swordNetworkObject: {fileID: 0}
 --- !u!114 &3404917382395811677
 MonoBehaviour:
   m_ObjectHideFlags: 0

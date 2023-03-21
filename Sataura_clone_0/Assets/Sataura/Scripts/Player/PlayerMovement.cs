@@ -22,7 +22,7 @@ namespace Sataura
         [Header("Layer Properties")]
         public LayerMask groundLayer;
         public LayerMask platformLayer;
-        public float roundCheckRadius;
+        public float groundCheckRadius;
 
 
 
@@ -98,12 +98,12 @@ namespace Sataura
         /// <returns>True if the player is grounded, false otherwise.</returns>
         public bool IsGrounded()
         {
-            return Physics2D.OverlapCircle(groundCheckPoint.position, roundCheckRadius, groundLayer);
+            return Physics2D.OverlapCircle(groundCheckPoint.position, groundCheckRadius, groundLayer);
         }
 
         public bool IsOnPlatform()
         {
-            return Physics2D.OverlapCircle(groundCheckPoint.position, roundCheckRadius, platformLayer);
+            return Physics2D.OverlapCircle(groundCheckPoint.position, groundCheckRadius, platformLayer);
         }
         IEnumerator ResetOneWayEffector2D(PlatformEffector2D platformEffector2D)
         {
@@ -126,7 +126,7 @@ namespace Sataura
 
         private void HandleOneWayPlatformEffector2D()
         {
-            var col = Physics2D.OverlapCircle(groundCheckPoint.position, roundCheckRadius, platformLayer);
+            var col = Physics2D.OverlapCircle(groundCheckPoint.position, groundCheckRadius, platformLayer);
             if (col != null)
             {
                 PlatformEffector2D platformEffector2D = col.GetComponent<PlatformEffector2D>();

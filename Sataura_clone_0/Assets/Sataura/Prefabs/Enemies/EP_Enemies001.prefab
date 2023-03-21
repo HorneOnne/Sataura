@@ -98,6 +98,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb2D: {fileID: 3119597679863554558}
+  sr: {fileID: 3119597680691373748}
   enemyData: {fileID: 11400000, guid: 30a463074e95e3a49869d859414f7e5b, type: 2}
   itemDropData: {fileID: 11400000, guid: dac954a8d6edebd448d76d10ea1a8125, type: 2}
   currentHealth:

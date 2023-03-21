@@ -72,8 +72,6 @@ namespace Sataura
                 player.playerData.currency = 0;
             // End Testing purpose
 
-            Debug.Log($"Total Currency: {TotalCurrency}");
-
             player.playerData.currency += new BigInteger(TotalCurrency);
             player.playerData.currencyString = AA(player.playerData.currency);
         }

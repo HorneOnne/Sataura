@@ -4,27 +4,34 @@ using System.Collections;
 
 namespace Sataura
 {
+
     public abstract class BaseEnemy : NetworkBehaviour, IDamageable
     {
+        [Header("Base properties")]
+        [SerializeField] protected Animator anim;
         [SerializeField] protected Rigidbody2D rb2D;
+        [SerializeField] protected SpriteRenderer sr;
         [SerializeField] protected EnemyData enemyData;
         [SerializeField] protected ItemDropData itemDropData;
         protected NetworkObject networkObject;
         protected NetworkObjectPool networkObjectPool;
-
-
-        protected bool canTrigger = true;
-        [SerializeField] protected NetworkVariable<int> currentHealth = new NetworkVariable<int>(0);
+  
+        
 
         #region Properties
-        public Rigidbody2D Rb2D { get => rb2D; }
-        public float Cooldown { get; set; }
-
-
+        [field: SerializeField] public float Cooldown { get; set; }
         #endregion
 
-        public bool isBeingKnockback;
 
+        // Cached
+        protected bool canTrigger = true;
+        protected bool isBeingKnockback;
+        protected bool isDead = false;
+        private Transform playerTranform;
+        [SerializeField] protected NetworkVariable<int> currentHealth = new NetworkVariable<int>(0);
+
+
+        float knockbackDuration = 2f;
 
         public override void OnNetworkSpawn()
         {
@@ -33,34 +40,41 @@ namespace Sataura
             networkObject = GetComponent<NetworkObject>();
         }
 
+        public void SetFollowTarget(Transform target)
+        {
+            playerTranform = target;
+        }
 
-        public void TakeDamage(int damaged)
+
+        public abstract void MoveAI(Vector2 target);
+
+
+        float timeElapse = 0.0f;
+        protected virtual void FixedUpdate()
+        {
+            if (Time.time - timeElapse >= 0.035f)
+            {
+                timeElapse = Time.time;
+                MoveAI(playerTranform.position);
+            }
+        }
+
+        public virtual void TakeDamage(int damaged)
         {
             currentHealth.Value -= damaged;
         }
+
+        public virtual void OnEnemyDead() { }
 
         public bool IsOutOfHealth()
         {
             return currentHealth.Value <= 0;
         }
 
+
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            if (canTrigger)
-            {
-                ICanCauseDamage projectile = collision.gameObject.GetComponent<ICanCauseDamage>();
-                if (projectile != null)
-                {
-                    TakeDamage(projectile.GetDamage());
-                    if(IsOutOfHealth())
-                    {
-                        ReturnToNetworkPoolServerRpc();
-                    }
-                }
-
-                canTrigger = false;
-                Invoke("ResetTrigger", Cooldown);
-            }
+         
         }
 
 
@@ -73,17 +87,22 @@ namespace Sataura
                 if (projectile != null)
                 {
                     TakeDamage(projectile.GetDamage());
-                                                         
+                    if (isDead == true) return;
+                    
                     if (IsOutOfHealth())
                     {
+                        isDead = true;
+                        OnEnemyDead();
                         DropItem();
-                        ReturnToNetworkPoolServerRpc();
+
+                        Invoke("ReturnToNetworkPoolServerRpc", 1f);
+                        //ReturnToNetworkPoolServerRpc();
                     }
                     else
                     {
                         Vector2 direction = transform.position - collision.transform.position;
                         direction.Normalize();
-                        Knockback(direction);
+                        Knockback(direction, projectile.GetKnockback());
                     }
                     
                 }
@@ -105,7 +124,6 @@ namespace Sataura
         private void ReturnToNetworkPoolServerRpc()
         {
             ReturnToNetworkPool();
-
             ReturnToNetworkPoolClientRpc();
         }
 
@@ -177,25 +195,38 @@ namespace Sataura
             ConvertToCoin(currencyValue);
         }
 
-        public void Knockback(Vector2 direction)
+        public void Knockback(Vector2 direction, float knockback)
         {
             isBeingKnockback = true;
             rb2D.velocity = Vector2.zero;
-            rb2D.AddForce(direction.normalized * enemyData.knockbackForce, ForceMode2D.Impulse);
-            StartCoroutine(KnockbackCoroutine());
+            Debug.Log($"Knockback Applided: {CalculateKnockbackFormula(knockback)}");
+            rb2D.AddForce(direction.normalized * CalculateKnockbackFormula(knockback), ForceMode2D.Impulse);
+            StartCoroutine(KnockbackCoroutine(CalculateKnockbackFormula(knockback)));
         }
 
-        private IEnumerator KnockbackCoroutine()
+
+        private float CalculateKnockbackFormula(float knockback)
         {
-            float timer = 0f;
-            while (timer < enemyData.knockbackDuration)
+            float knockbackValue = knockback - enemyData.knockbackResistence;
+            if(knockback < 0)
             {
-                timer += Time.deltaTime;
-                yield return null;
+                return 0.0f;
             }
-            rb2D.velocity = Vector2.zero;
+            else
+            {
+                return knockbackValue;
+            }
+
+        }
+
+        private IEnumerator KnockbackCoroutine(float knockbackvalue)
+        {
+            yield return new WaitForSeconds(.3f + knockbackvalue / 60f);
             isBeingKnockback = false;
         }
+
+
+
     }
 
 }

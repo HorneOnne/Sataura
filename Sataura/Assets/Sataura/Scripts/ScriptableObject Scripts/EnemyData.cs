@@ -13,8 +13,8 @@ namespace Sataura
         public int damage;
         public float attackRange;
         public float attackCooldown;
-        public float knockbackForce = 5f; // The force of the knockback applied to the enemy
-        public float knockbackDuration = 1f; //
+        public float knockbackResistence = 5f; // The force of the knockback applied to the enemy
+        public float knockbackDuration = 1f; 
 
 
        

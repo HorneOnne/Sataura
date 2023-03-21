@@ -80,8 +80,12 @@ namespace Sataura
             return staffData.damage;
         }
 
+        public float GetKnockback()
+        {
+            return 0.0f;
+        }
 
-    
+
 
         /// <summary>
         /// This method returns the projectile to the object pool for reuse. It checks if the projectile has already been returned to the pool before, if so, it immediately returns.

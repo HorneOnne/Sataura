@@ -55,7 +55,7 @@ MonoBehaviour:
   platformLayer:
     serializedVersion: 2
     m_Bits: 16777216
-  roundCheckRadius: 0.3
+  groundCheckRadius: 0.3
   isGrounded: 0
   isOnPlatform: 0
 --- !u!1 &5207464967138502182
@@ -500,7 +500,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5207464968623987650
 Transform:
   m_ObjectHideFlags: 0
@@ -699,6 +699,7 @@ GameObject:
   - component: {fileID: 1890486741531456354}
   - component: {fileID: -1638119520357863833}
   - component: {fileID: -6080863556039538741}
+  - component: {fileID: 6829113176843627378}
   m_Layer: 28
   m_Name: Player
   m_TagString: Player
@@ -829,6 +830,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80d7c879794dfda4687da0e400131852, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6829113176843627378
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5207464968828955612}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6d52036e3cde1340a2a078ea77a0c1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ghostPrefab: {fileID: 7331404450038766613, guid: b573fb8e79d142146934cf40bd8c84fe, type: 3}
+  sr: {fileID: 5207464968624710040}
 --- !u!1 &6718347646597124920
 GameObject:
   m_ObjectHideFlags: 0

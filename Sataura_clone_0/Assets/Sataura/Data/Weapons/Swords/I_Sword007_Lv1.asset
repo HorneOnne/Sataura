@@ -32,5 +32,5 @@ MonoBehaviour:
       itemData: {fileID: 11400000, guid: dd5a62e3fe24b1e4ba6db75902e404ef, type: 2}
       quantity: 1
   damage: 234
-  swingSwordIncreaseSize: 4
+  knockback: 20
   useType: 1
