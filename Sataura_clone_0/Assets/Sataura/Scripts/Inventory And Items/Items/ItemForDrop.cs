@@ -14,7 +14,7 @@ namespace Sataura
             var returnSlot = player.PlayerInGameInventory.AddItem(ItemSlot);
 
 
-            if (returnSlot.HasItem() == true)
+            if (returnSlot.HasItemData() == true)
             {
                 Set(returnSlot);
             }

@@ -35,6 +35,8 @@ namespace Sataura
         #endregion Properties   
 
         public Vector2 CurrentVelocity { get { return rb.velocity; } }
+        public Rigidbody2D Rb2D { get { return rb; } }
+
         public bool isGrounded;
         public bool isOnPlatform;
 

@@ -14,7 +14,10 @@ namespace Sataura
         public float attackRange;
         public float attackCooldown;
         public float knockbackResistence = 5f; // The force of the knockback applied to the enemy
-        public float knockbackDuration = 1f; 
+        public float knockbackDuration = 1f;
+
+        [Header("Sound Effect")]
+        public AudioClip dieSFX;
 
 
        

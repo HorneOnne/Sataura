@@ -25,12 +25,12 @@ namespace Sataura
             this.textColor = color;
             textMesh.color = textColor;
             textMesh.fontSize = size;
-            this.transform.rotation = Quaternion.Euler(rotation);
+            //this.transform.rotation = Quaternion.Euler(rotation);
 
             textMesh.text = damage.ToString();
 
             disappearTimer = DISAPPEAR_TIMER_MAX;
-            this.moveVector = moveVector * 60f;
+            this.moveVector = moveVector * 30f;
             //moveVector = new Vector3(Random.Range(-1f, 1f), Random.Range(0.5f, 1f)) * 60f;
         }
 
@@ -42,14 +42,14 @@ namespace Sataura
             if (disappearTimer > DISAPPEAR_TIMER_MAX * .5f)
             {
                 // First half of the popup lifetime
-                float increaseScaleAmount = 1f;
-                transform.localScale += Vector3.one * increaseScaleAmount * Time.deltaTime;
+                //float increaseScaleAmount = 1f;
+                //transform.localScale += Vector3.one * increaseScaleAmount * Time.deltaTime;
             }
             else
             {
                 // Second half of the popup lifetime
-                float decreaseScaleAmount = 1f;
-                transform.localScale -= Vector3.one * decreaseScaleAmount * Time.deltaTime;
+                //float decreaseScaleAmount = 1f;
+                //transform.localScale -= Vector3.one * decreaseScaleAmount * Time.deltaTime;
             }
 
             disappearTimer -= Time.deltaTime;
@@ -66,6 +66,9 @@ namespace Sataura
                 }
             }
         }
+
+
+
 
 
         private void ReturnToPool()

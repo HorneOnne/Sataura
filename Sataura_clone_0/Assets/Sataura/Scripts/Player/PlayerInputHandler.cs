@@ -1,7 +1,9 @@
 using UnityEngine;
 using Unity.Netcode;
 using UnityEngine.InputSystem;
+using System.Collections.Generic;
 using System;
+using Unity.VisualScripting;
 
 namespace Sataura
 {
@@ -10,6 +12,10 @@ namespace Sataura
     /// </summary>
     public class PlayerInputHandler : NetworkBehaviour
     {
+        // Event
+        public static event Action<int,int> OnCurrentUseItemIndexChanged;
+
+
         [Header("REFERENCES")]
         [SerializeField] private Player player;
         private PlayerInventory playerInventory;
@@ -18,10 +24,9 @@ namespace Sataura
         private ItemInHand itemInHand;
         private PlayerMovement playerMovement;
 
-        /// <summary>
-        /// The value of the horizontal movement input.
-        /// </summary>
-        private float movementInput;
+        // New input system
+        private PlayerInputAction playerInputAction;
+        private InputAction jump;
 
         /// <summary>
         /// The number of seconds left in the jump buffer.
@@ -32,20 +37,7 @@ namespace Sataura
         /// The time left for the player to hang in the air after leaving the ground.
         /// </summary>
         private float hangCounter;
-
-        #region Properties
-        public Vector2 MovementInput { get; private set; }
-        public Vector2 RotateWeaponInput { get; private set; }
-        public bool PressUtilityKeyInput { get; private set; }
-        public float JumpInput { get; private set; }
-
-        /// <summary>
-        /// State of mouse pointer
-        /// </summary>
-        [field: SerializeField] public PointerState CurrentMouseState { get; private set; }
-        #endregion Properties
-
-
+     
         /// <summary>
         /// The time in seconds between clicks to register as a double click.
         /// </summary>
@@ -67,8 +59,6 @@ namespace Sataura
         private float lastRightPressIntervalTimeCount = 0.0f;
 
 
-
-
         /// <summary>
         /// Tracks whether the left mouse button is currently being clicked.
         /// </summary>
@@ -83,15 +73,44 @@ namespace Sataura
         /// The key used to activate the utility ability.
         /// </summary>
         [Header("KEY BINDING")]
-        public KeyCode utilityKeyBinding = KeyCode.LeftShift;
+        [SerializeField] private KeyCode utilityKeyBinding = KeyCode.LeftShift;
 
         /// <summary>
         /// The key used to drop the current item.
         /// </summary>
-        public KeyCode dropItemKey = KeyCode.T;
+        [SerializeField] private KeyCode dropItemKey = KeyCode.T;
 
-        PlayerInputAction playerInputAction;
-        private InputAction jump;
+        [SerializeField]
+        private List<KeyCode> selectItemBindingKeys = new List<KeyCode>
+        {
+            KeyCode.Alpha1,
+            KeyCode.Alpha2,
+            KeyCode.Alpha3,
+            KeyCode.Alpha4,
+            KeyCode.Alpha5,
+            KeyCode.Alpha6,
+            KeyCode.Alpha7,
+            KeyCode.Alpha8,
+            KeyCode.Alpha9,
+        };
+        //[SerializeField] private int currentUseItemIndex = -1;
+        public NetworkVariable<int> currentUseItemIndex = new NetworkVariable<int>(-1);
+
+
+
+        #region Properties
+        public Vector2 MovementInput { get; private set; }
+        public Vector2 RotateWeaponInput { get; private set; }
+        public bool PressUtilityKeyInput { get; private set; }
+        public float JumpInput { get; private set; }
+        public int CurrentUseItemIndex { get => currentUseItemIndex.Value; }
+
+        /// <summary>
+        /// State of mouse pointer
+        /// </summary>
+        [field: SerializeField] public PointerState CurrentMouseState { get; private set; }
+        #endregion Properties
+        
 
 
         #region Events handler
@@ -100,7 +119,9 @@ namespace Sataura
             if (player.canUseItem)
             {
                 //EventManager.OnItemInHandChanged += ReInstantiateItem;
-                EventManager.OnItemInHandChanged += FastEquipItem;
+                //EventManager.OnItemInHandChanged += FastEquipItem;
+
+                EventManager.OnItemInHandChanged += ResetOnCurrentUseItemIndex;
             }
 
         }
@@ -110,36 +131,16 @@ namespace Sataura
             if (player.canUseItem)
             {
                 //EventManager.OnItemInHandChanged -= ReInstantiateItem;
-                EventManager.OnItemInHandChanged -= FastEquipItem;
+                //EventManager.OnItemInHandChanged -= FastEquipItem;
+
+                EventManager.OnItemInHandChanged -= ResetOnCurrentUseItemIndex;
             }
         }
         #endregion
 
 
 
-        /*private void Start()
-        {          
-            playerInputAction = new PlayerInputAction();         
-            playerInputAction.Player.Enable();
-            jump = playerInputAction.Player.Jump;
-            jump.Enable();
-            jump.performed += SettingsJump;
 
-
-            if (player.handleMovement)
-            {
-                playerMovement = player.PlayerMovement;
-            }
-                
-
-            if(player.handleItem)
-            {
-                playerInventory = player.PlayerInventory;
-                playerInGameInventory = player.PlayerInGameInventory;
-                playerEquipment = player.PlayerEquipment;
-                itemInHand = player.ItemInHand;
-            }
-        }*/
 
         public bool canJump;
 
@@ -173,9 +174,52 @@ namespace Sataura
         }
 
 
+        private void ResetOnCurrentUseItemIndex()
+        {
+            OnCurrentUseItemIndexChanged.Invoke(currentUseItemIndex.Value, -1);
+
+            if(IsServer)
+            {
+                currentUseItemIndex.Value = -1;
+            }
+            
+        }
+
+        [ServerRpc]
+        private void AAServerRpc(int oldIndex, int newIndex)
+        {        
+            currentUseItemIndex.Value = newIndex;
+        }
+
         private void Update()
         {
             if (!IsOwner) return;
+
+            for(int i = 0; i < selectItemBindingKeys.Count; i++)
+            {
+                if (Input.GetKeyDown(selectItemBindingKeys[i]))
+                {
+                    // Do nothing if player holding item in hand.
+                    if(itemInHand.HasHandHoldItemInServer())
+                    {
+                        return;
+                    }
+
+
+                    /*int oldIndex = currentUseItemIndex.Value;
+                    int newIndex = i;
+
+                    OnCurrentUseItemIndexChanged.Invoke(oldIndex, newIndex);
+                    currentUseItemIndex.Value = newIndex;*/
+
+
+                    int oldIndex = currentUseItemIndex.Value;
+                    int newIndex = i;
+                    OnCurrentUseItemIndexChanged.Invoke(oldIndex, newIndex);
+                    AAServerRpc(oldIndex, newIndex);
+                }
+            }
+    
 
             if (player.handleMovement)
             {
@@ -212,10 +256,10 @@ namespace Sataura
 
                 if (Input.GetKeyDown(dropItemKey))
                 {
-                    if (itemInHand.GetICurrenttem() != null)
+                    if (itemInHand.GetItemObject() != null)
                     {
                         mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                        itemInHand.GetICurrenttem().Drop(player, mousePosition, Vector3.zero, true);
+                        itemInHand.GetItemObject().Drop(player, mousePosition, Vector3.zero, true);
                         itemInHand.ClearSlot();
                     }
                 }
@@ -223,12 +267,6 @@ namespace Sataura
 
                 if (player.handleItem)
                 {
-                    /*if (itemInHand.currentItemID.Value != -1)
-                    {
-                        RotateHoldItemServerRpc();
-                    }*/
-
-
                     HandleMouseEvents();
 
 
@@ -239,7 +277,6 @@ namespace Sataura
                     else if (CurrentMouseState == PointerState.SingleLeftClick)
                     {
                         OpenCloseChest();
-                        //UseItem();
                     }
                     else if (CurrentMouseState == PointerState.LeftPress)
                     {
@@ -310,7 +347,8 @@ namespace Sataura
         /// </summary>
         private void StackItem()
         {
-            if (itemInHand.HasItem() == false) return;
+            if (itemInHand.HasItemObject() == false) return;
+            //if (itemInHand.HasHandHoldItemInServer() == false) return;
 
             switch (itemInHand.ItemGetFrom.slotStoredType)
             {
@@ -351,17 +389,17 @@ namespace Sataura
                     switch (itemInHand.GetItemData().itemType)
                     {
                         case ItemType.Helm:
-                            if (playerEquipment.Helm.HasItem() == true)
+                            if (playerEquipment.Helm.HasItemData() == true)
                                 currentEquipmentSlot = new ItemSlot(playerEquipment.Helm);
                             canEquip = playerEquipment.Equip(ItemType.Helm, equipItemSlot);
                             break;
                         case ItemType.ChestArmor:
-                            if (playerEquipment.Chest.HasItem() == true)
+                            if (playerEquipment.Chest.HasItemData() == true)
                                 currentEquipmentSlot = new ItemSlot(playerEquipment.Chest);
                             canEquip = playerEquipment.Equip(ItemType.ChestArmor, equipItemSlot);
                             break;
                         case ItemType.Shield:
-                            if (playerEquipment.Shield.HasItem() == true)
+                            if (playerEquipment.Shield.HasItemData() == true)
                                 currentEquipmentSlot = new ItemSlot(playerEquipment.Shield);
                             canEquip = playerEquipment.Equip(ItemType.Shield, equipItemSlot);
                             break;

@@ -16,13 +16,12 @@ namespace Sataura
 
 
         private EdgeCollider2D projectileEdgeCollider;
-        private int cachedPlayerFacingDirection;
+        private int cachedPlayerFacingDirection = 0;
 
         public override void OnNetworkSpawn()
         {
             if (NetworkManager.Singleton.IsServer == false) return;
             projectileEdgeCollider = GetComponent<EdgeCollider2D>();
-           
         }
 
 
@@ -42,6 +41,7 @@ namespace Sataura
         {
             this.swordData = (SwordData)ItemData;
             swingDuration = 1.0f / (swordData.usageVelocity + 0.001f);
+            SetSwingDirection(mousePosition);
         }
 
 
@@ -54,7 +54,7 @@ namespace Sataura
         /// <summary>
         /// Update method called once per frame to rotate the sword while the timer is less than the rotation time.
         /// </summary>
-        void Update()
+        /*void Update()
         {
             if (!IsServer) return;
             
@@ -73,6 +73,35 @@ namespace Sataura
 
             }
 
+        }*/
+
+        void Update()
+        {
+            if (Time.time < .5f)
+                return;
+
+            // increment timer
+            swingTimer += Time.deltaTime;
+            // rotate the object
+            if (swingTimer < swingDuration)
+            {
+                transform.localPosition = Vector3.zero;
+                Swing();
+
+            }
+            else
+            {
+                if(IsServer)
+                {
+                    if(networkObject.IsSpawned)
+                    {
+                        networkObject.Despawn();
+                    }
+                    
+                }
+                
+
+            }
         }
 
 

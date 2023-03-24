@@ -56,6 +56,9 @@ namespace Sataura
 
                 for (int i = 0; i < players.Count; i++)
                 {
+                    if (players[i] == null)
+                        continue;
+
                     float distanceFromPlayer = Vector2.Distance(transform.position, players[i].position);
                     if (distanceFromPlayer < minDistance)
                     {

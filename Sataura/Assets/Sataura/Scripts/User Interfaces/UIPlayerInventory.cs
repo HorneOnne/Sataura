@@ -205,7 +205,7 @@ namespace Sataura
                         if (dragType == DragType.Swap)
                         {
                             int startingSlotIndex = GetItemSlotIndex(startingSlotDrag);
-                            if (playerInventory.inventory[startingSlotIndex].HasItem() == false)
+                            if (playerInventory.inventory[startingSlotIndex].HasItemData() == false)
                             {
                                 startingSlotDrag = null;
                                 itemInHand.Swap(ref playerInventory.inventory, startingSlotIndex, StoredType.PlayerInventory, true);
@@ -230,7 +230,7 @@ namespace Sataura
         private void OnLeftClick(int index)
         {
             handHasItem = itemInHand.HasItemData();
-            slotHasItem = playerInventory.inventory[index].HasItem();
+            slotHasItem = playerInventory.inventory[index].HasItemData();
 
             if (handHasItem == false)
             {
@@ -270,7 +270,7 @@ namespace Sataura
         private void OnRightClick(int index)
         {
             handHasItem = itemInHand.HasItemData();
-            slotHasItem = playerInventory.inventory[index].HasItem();
+            slotHasItem = playerInventory.inventory[index].HasItemData();
 
             if (handHasItem == false)
             {
@@ -313,7 +313,7 @@ namespace Sataura
         private void OnRightPress(int index)
         {
             handHasItem = itemInHand.HasItemData();
-            slotHasItem = playerInventory.inventory[index].HasItem();
+            slotHasItem = playerInventory.inventory[index].HasItemData();
 
             if (handHasItem == true)
             {

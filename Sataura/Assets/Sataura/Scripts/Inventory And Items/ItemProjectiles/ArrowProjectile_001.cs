@@ -82,6 +82,8 @@ namespace Sataura
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
+            if (!IsServer) return;
+
             ArrowPropertiesWhenCollideServerRpc();
             StartCoroutine(PerformReturnToPool());
         }

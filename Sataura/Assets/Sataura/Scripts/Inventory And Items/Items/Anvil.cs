@@ -202,7 +202,7 @@ namespace Sataura
             if (upgradeItemInputSlot == null)
                 return false;
 
-            return upgradeItemInputSlot.HasItem();
+            return upgradeItemInputSlot.HasItemData();
         }
 
         public bool HasOuputUpgradeItem()
@@ -210,7 +210,7 @@ namespace Sataura
             if (upgradeItemOutputSlot == null)
                 return false;
 
-            return upgradeItemOutputSlot.HasItem();
+            return upgradeItemOutputSlot.HasItemData();
         }
 
 
@@ -300,7 +300,7 @@ namespace Sataura
 
             for (int i = 0; i < filledMaterialSlots.Count; i++)
             {
-                if (filledMaterialSlots[i].HasItem())
+                if (filledMaterialSlots[i].HasItemData())
                 {
                     hasMaterials = true;
                     break;
@@ -319,7 +319,7 @@ namespace Sataura
         public bool AddItemInputSlot(ItemSlot itemSlot)
         {
             if (itemSlot == null) return false;
-            if (itemSlot.HasItem() == false) return false;
+            if (itemSlot.HasItemData() == false) return false;
             bool canAdd = false;
 
             if (itemSlot.ItemData is UpgradeableItemData)
@@ -366,7 +366,7 @@ namespace Sataura
         {
             for (int i = 0; i < filledMaterialSlots.Count; i++)
             {
-                if (filledMaterialSlots[i].HasItem())
+                if (filledMaterialSlots[i].HasItemData())
                 {
                     Item itemObject = Utilities.InstantiateItemObject(filledMaterialSlots[i], GameDataManager.Instance.itemContainerParent);
                     itemObject.SetData(filledMaterialSlots[i]);

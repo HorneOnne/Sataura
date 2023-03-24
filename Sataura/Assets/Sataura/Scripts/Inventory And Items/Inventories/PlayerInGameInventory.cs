@@ -104,7 +104,7 @@ namespace Sataura
 
             for (int i = 0; i < inGameInventory.Count; i++)
             {
-                if (inGameInventory[i].HasItem() == false)
+                if (inGameInventory[i].HasItemData() == false)
                 {
                     inGameInventory[i].AddNewItem(itemData);
                     canAddItem = true;
@@ -143,7 +143,7 @@ namespace Sataura
             {
                 returnItemSlot = inGameInventory[i].AddItemsFromAnotherSlot(copyItemSlot);
 
-                if (returnItemSlot.HasItem() == false)
+                if (returnItemSlot.HasItemData() == false)
                 {
                     break;
                 }
@@ -262,7 +262,7 @@ namespace Sataura
         {
             try
             {
-                inGameInventory[slotIndex].HasItem();
+                inGameInventory[slotIndex].HasItemData();
             }
             catch
             {
@@ -282,7 +282,7 @@ namespace Sataura
         {
             if (HasSlot(slotIndex))
             {
-                return inGameInventory[slotIndex].HasItem();
+                return inGameInventory[slotIndex].HasItemData();
             }
             return false;
         }
@@ -344,7 +344,7 @@ namespace Sataura
         {
             for (int i = 0; i < inGameInventory.Count; i++)
             {
-                if (inGameInventory[i].HasItem() == false)
+                if (inGameInventory[i].HasItemData() == false)
                     continue;
 
                 if (inGameInventory[i].GetItemType() == ItemType.Arrow)

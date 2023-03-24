@@ -66,7 +66,7 @@ namespace Sataura
 
         private void UpdateHelmEquipmentUI()
         {
-            if (player.PlayerEquipment.Helm.HasItem())
+            if (player.PlayerEquipment.Helm.HasItemData())
                 uiHelmSlot.Set(player.PlayerEquipment.Helm.GetItemIcon());
             else
                 uiHelmSlot.SetDefault();
@@ -74,7 +74,7 @@ namespace Sataura
 
         private void UpdateChestEquipmentUI()
         {
-            if (player.PlayerEquipment.Chest.HasItem())
+            if (player.PlayerEquipment.Chest.HasItemData())
                 uiChestSlot.Set(player.PlayerEquipment.Chest.GetItemIcon());
             else
                 uiChestSlot.SetDefault();
@@ -82,7 +82,7 @@ namespace Sataura
 
         private void UpdateShieldEquipmentUI()
         {
-            if (player.PlayerEquipment.Shield.HasItem())
+            if (player.PlayerEquipment.Shield.HasItemData())
                 uiShieldSlot.Set(player.PlayerEquipment.Shield.GetItemIcon());
             else
                 uiShieldSlot.SetDefault();
@@ -106,7 +106,7 @@ namespace Sataura
 
             if (itemInHand.HasItemData() == false)
             {
-                if (equipmentSlot.HasItem() == false)
+                if (equipmentSlot.HasItemData() == false)
                 {
                     //Debug.Log("HAND: EMPTY \t SLOT: EMPTY");
                 }
@@ -119,7 +119,7 @@ namespace Sataura
             }
             else
             {
-                if (equipmentSlot.HasItem() == false)
+                if (equipmentSlot.HasItemData() == false)
                 {
                     //Debug.Log("HAND: HAS ITEM \t SLOT: EMPTY");           
                     
@@ -156,7 +156,7 @@ namespace Sataura
         /// <param name="index">index for itemSlotList</param>
         private void Equip(ItemSlot equipmentSlot, ItemType equipmentType)
         {
-            if (equipmentSlot.HasItem())
+            if (equipmentSlot.HasItemData())
             {
                 var copyEquipmentSlot = new ItemSlot(equipmentSlot);
 

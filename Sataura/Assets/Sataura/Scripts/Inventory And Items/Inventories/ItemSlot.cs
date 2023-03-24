@@ -77,7 +77,7 @@ namespace Sataura
         /// <returns><c>true</c> if the current item quantity is less than the maximum item quantity; otherwise, <c>false</c>.</returns>
         public bool AddItem()
         {
-            if (HasItem() == false) return false;
+            if (HasItemData() == false) return false;
 
             ItemQuantity++;
             if (ItemQuantity > this.ItemData.max_quantity)
@@ -114,7 +114,7 @@ namespace Sataura
         /// <returns>The new item slot if the current item slot is full or cannot add, otherwise the added item slot.</returns>
         public ItemSlot AddItemsFromAnotherSlot(ItemSlot addedSlot)
         {
-            if (HasItem() == false)
+            if (HasItemData() == false)
             {
                 this.ItemData = addedSlot.ItemData;
                 this.ItemQuantity = addedSlot.ItemQuantity;
@@ -189,7 +189,7 @@ namespace Sataura
         /// Checks if this item slot has an item data.
         /// </summary>
         /// <returns>Returns true if this item slot has an item data, otherwise false.</returns>
-        public bool HasItem()
+        public bool HasItemData()
         {
             return ItemData != null;
         }

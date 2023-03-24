@@ -19,3 +19,4 @@ MonoBehaviour:
   attackCooldown: 1
   knockbackResistence: 5
   knockbackDuration: 0.1
+  dieSFX: {fileID: 8300000, guid: 10f3f6d1395e9e144930f3f8c16a84b5, type: 3}

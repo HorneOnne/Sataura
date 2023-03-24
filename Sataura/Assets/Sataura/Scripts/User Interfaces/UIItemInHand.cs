@@ -31,19 +31,14 @@ namespace Sataura
         }
 
 
-        /*private void Start()
-        {
-            mainCamera = Camera.main;
-            itemInHand = player.ItemInHand;
-        }*/
-
-        private bool AlreadyLoadReferences;
+    
+        private bool alreadyLoadReferences;
         public void LoadReferences()
         {
             mainCamera = Camera.main;
             itemInHand = player.ItemInHand;
 
-            AlreadyLoadReferences = true;
+            alreadyLoadReferences = true;
         }
 
 
@@ -54,8 +49,7 @@ namespace Sataura
 
         private void Update()
         {
-            if (AlreadyLoadReferences == false) return;
-
+            if (alreadyLoadReferences == false) return;
 
             if (player.ItemInHand.HasItemData() && uiSlotDisplay != null)
             {

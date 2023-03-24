@@ -83,7 +83,7 @@ namespace Sataura
 
             var itemSlot = craftingTable.GetInputItemSlotAt(index);
 
-            if (itemSlot != null && itemSlot.HasItem())
+            if (itemSlot != null && itemSlot.HasItemData())
             {
                 uiSlot.SetData(craftingTable.GetInputItemSlotAt(index), 1.0f);
             }
@@ -105,7 +105,7 @@ namespace Sataura
 
             var itemSlot = craftingTable.outputSlot;
 
-            if (itemSlot != null && itemSlot.HasItem())
+            if (itemSlot != null && itemSlot.HasItemData())
             {
                 uiSlot.SetData(craftingTable.outputSlot, 1.0f);
             }
@@ -138,7 +138,7 @@ namespace Sataura
                 {
                     QuickGetAllOutputItem();
                 }
-                else if (craftingTable.HasOutputSlot() && craftingTable.outputSlot.HasItem())
+                else if (craftingTable.HasOutputSlot() && craftingTable.outputSlot.HasItemData())
                 {
                     var outputItemSlot = craftingTable.outputSlot;
                     bool canPickup = itemInHand.PickupItem(ref outputItemSlot);
@@ -162,7 +162,7 @@ namespace Sataura
         {
             while (true)
             {
-                if (craftingTable.HasOutputSlot() && craftingTable.outputSlot.HasItem())
+                if (craftingTable.HasOutputSlot() && craftingTable.outputSlot.HasItemData())
                 {
                     var outputItemSlot = craftingTable.outputSlot;
                     bool canPickup = itemInHand.PickupItem(ref outputItemSlot);
@@ -220,7 +220,7 @@ namespace Sataura
         private void OnLeftClick(int index)
         {
             handHasItem = itemInHand.HasItemData();
-            slotHasItem = craftingTable.GetInputItemSlotAt(index).HasItem();
+            slotHasItem = craftingTable.GetInputItemSlotAt(index).HasItemData();
 
             if (handHasItem == false)
             {
@@ -269,7 +269,7 @@ namespace Sataura
         private void OnRightClick(int index)
         {
             handHasItem = itemInHand.HasItemData();
-            slotHasItem = craftingTable.GetInputItemSlotAt(index).HasItem();
+            slotHasItem = craftingTable.GetInputItemSlotAt(index).HasItemData();
 
             if (handHasItem == false)
             {
@@ -325,7 +325,7 @@ namespace Sataura
 
             int index = GetItemSlotIndex(clickedObject);
             handHasItem = itemInHand.HasItemData();
-            slotHasItem = craftingTable.GetInputItemSlotAt(index).HasItem();
+            slotHasItem = craftingTable.GetInputItemSlotAt(index).HasItemData();
 
             if (handHasItem == true)
             {

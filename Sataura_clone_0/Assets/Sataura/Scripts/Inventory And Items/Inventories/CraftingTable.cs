@@ -88,7 +88,7 @@ namespace Sataura
         {
             for (int i = 0; i < inputSlots.Length; i++)
             {
-                if (inputSlots[i].HasItem())
+                if (inputSlots[i].HasItemData())
                 {
                     inputSlots[i].RemoveItem();
                 }
@@ -179,14 +179,14 @@ namespace Sataura
         /// <param name="index">The index of the crafting input slot to check.</param>
         /// <returns>True if there is an item in the crafting input slot at the specified index, otherwise false.</returns>
         /// <seealso cref="HasSlot(int)"/>
-        /// <seealso cref="ItemSlot.HasItem()"/>
+        /// <seealso cref="ItemSlot.HasItemData()"/>
         public bool HasItem(int index)
         {
             if (HasSlot(index) == false) return false;
 
             try
             {
-                inputSlots[index].HasItem();
+                inputSlots[index].HasItemData();
             }
             catch
             {

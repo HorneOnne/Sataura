@@ -53,15 +53,15 @@ namespace Sataura
 
         public override void OnNetworkSpawn()
         {
-            Debug.Log("OnNetworkSpawn");
-            Invoke("DisableAnimator", 5f);
-        }
-
-        private void Start()
-        {
-            Invoke("DisableAnimator", 5f);
+            Invoke("DisableAnimator", Random.Range(3f, 5f));
             Invoke("TurnOnPhysicKinematic", 5f);
         }
+
+        /*private void Start()
+        {
+            Invoke("DisableAnimator", Random.Range(3f, 5f));
+            Invoke("TurnOnPhysicKinematic", 5f);
+        }*/
 
 
 

@@ -58,13 +58,13 @@ namespace Sataura
 
         private void Update()
         {
-            if (itemInHand.HasItem() == false) return;
-            if (itemInHand.GetICurrenttem() is IPlaceable == false) return;
+            if (itemInHand.HasItemObject() == false) return;
+            if (itemInHand.GetItemObject() is IPlaceable == false) return;
 
             mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             transform.position = mousePosition;
 
-            isAboveGround = itemInHand.GetICurrenttem().GetComponent<IPlaceable>().IsAboveGround(player);
+            isAboveGround = itemInHand.GetItemObject().GetComponent<IPlaceable>().IsAboveGround(player);
 
             if (isAboveGround && IsCollideWithOtherObject == false)
             {
@@ -73,7 +73,7 @@ namespace Sataura
 
                 if (Input.GetMouseButtonDown(0))
                 {
-                    itemInHand.GetICurrenttem().GetComponent<IPlaceable>().Placed(mousePosition, player, placeableItemContainerParent);
+                    itemInHand.GetItemObject().GetComponent<IPlaceable>().Placed(mousePosition, player, placeableItemContainerParent);
                 }
             }
             else

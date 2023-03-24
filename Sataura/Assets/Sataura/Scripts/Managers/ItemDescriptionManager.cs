@@ -64,7 +64,7 @@ namespace Sataura
             }
 
 
-            if(itemInHand.HasItem())
+            if(itemInHand.HasItemObject())
             {
                 Hide();
             }

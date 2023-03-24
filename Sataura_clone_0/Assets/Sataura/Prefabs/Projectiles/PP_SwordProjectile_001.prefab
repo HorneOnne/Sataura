@@ -10,14 +10,14 @@ GameObject:
   m_Component:
   - component: {fileID: 7163825116639611106}
   - component: {fileID: 8431559877168370848}
-  - component: {fileID: 7099038870744077377}
+  - component: {fileID: 1291408098506306696}
   - component: {fileID: 53915443801136149}
   - component: {fileID: 3746594686923954316}
   - component: {fileID: -4198557020341165950}
   - component: {fileID: 984596181266737672}
   m_Layer: 29
   m_Name: PP_SwordProjectile_001
-  m_TagString: Item
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -59,8 +59,8 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!68 &7099038870744077377
-EdgeCollider2D:
+--- !u!60 &1291408098506306696
+PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -72,23 +72,22 @@ EdgeCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.75, y: 0.75}
-  m_EdgeRadius: 0
+  m_Offset: {x: 0.5, y: 0.5}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
   m_Points:
-  - {x: -0.4649601, y: -0.49038088}
-  - {x: -0.4670024, y: -0.30636334}
-  - {x: -0.31266564, y: -0.14894077}
-  - {x: 0.2759332, y: 0.45416772}
-  - {x: 0.47778594, y: 0.46171242}
-  - {x: 0.46860766, y: 0.28696644}
-  - {x: -0.07169515, y: -0.21235925}
-  - {x: -0.13869917, y: -0.27838457}
-  - {x: -0.33788922, y: -0.45580804}
-  - {x: -0.4667621, y: -0.48850104}
-  m_AdjacentStartPoint: {x: 0, y: 0}
-  m_AdjacentEndPoint: {x: 0, y: 0}
-  m_UseAdjacentStartPoint: 0
-  m_UseAdjacentEndPoint: 0
+    m_Paths:
+    - - {x: 0.3892464, y: 0.5356225}
+      - {x: -0.49088764, y: -0.43481773}
+      - {x: -0.39867467, y: -0.50644034}
+      - {x: 0.53105235, y: 0.3949867}
 --- !u!114 &53915443801136149
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -103,7 +102,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <ItemData>k__BackingField: {fileID: 0}
   useGravity: 0
-  networkObject: {fileID: 0}
+  networkObject: {fileID: 3746594686923954316}
   spriteRenderer: {fileID: 0}
   swingDuration: 0
 --- !u!114 &3746594686923954316
@@ -139,7 +138,7 @@ MonoBehaviour:
   SyncPositionZ: 0
   SyncRotAngleX: 0
   SyncRotAngleY: 0
-  SyncRotAngleZ: 1
+  SyncRotAngleZ: 0
   SyncScaleX: 0
   SyncScaleY: 0
   SyncScaleZ: 0
@@ -185,7 +184,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8220889714316096326}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.75, y: 0.75, z: 0}
+  m_LocalPosition: {x: 0.5, y: 0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -233,7 +232,7 @@ SpriteRenderer:
   m_SortingLayerID: -1804832047
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 2051969137, guid: d4d04b54f146fc9499ef61e7951f0861, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -241,6 +240,6 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0

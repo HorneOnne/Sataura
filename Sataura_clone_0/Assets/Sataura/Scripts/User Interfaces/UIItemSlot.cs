@@ -27,7 +27,7 @@ namespace Sataura
         
         public void SetData(ItemSlot itemSlot)
         {
-            if (itemSlot == null || itemSlot.HasItem() == false)
+            if (itemSlot == null || itemSlot.HasItemData() == false)
             {
                 defaultImage.enabled = true;
                 this.mainImage.sprite = null;
@@ -56,7 +56,7 @@ namespace Sataura
             Color defaultTextColor = amountItemInSlotText.color;
             defaultTextColor.a = opacity;
 
-            if (itemSlot == null || itemSlot.HasItem() == false)
+            if (itemSlot == null || itemSlot.HasItemData() == false)
             {
                 defaultImage.enabled = true;
                 this.mainImage.sprite = null;

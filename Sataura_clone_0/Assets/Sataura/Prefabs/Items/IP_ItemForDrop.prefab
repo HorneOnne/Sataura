@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8497554094401409814}
   - component: {fileID: 5453535841282176704}
   - component: {fileID: 3478537958014404193}
-  m_Layer: 30
+  m_Layer: 27
   m_Name: IP_ItemForDrop
   m_TagString: Item
   m_Icon: {fileID: 0}

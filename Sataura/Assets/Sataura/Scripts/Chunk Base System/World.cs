@@ -55,6 +55,9 @@ namespace Sataura
 
             for (int i = 0; i < players.Count; i++)
             {
+                if (players[i] == null)
+                    continue;
+
                 if (Mathf.Abs(players[i].position.x - lastPlayerPosition[i].x) > chunkSize / 3)
                 {
                     lastPlayerPosition[i] = new Vector2(players[i].position.x, lastPlayerPosition[i].y);

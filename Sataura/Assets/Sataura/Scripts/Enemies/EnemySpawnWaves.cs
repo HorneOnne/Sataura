@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Unity.Netcode;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Sataura
@@ -12,18 +11,23 @@ namespace Sataura
         private NetworkObjectPool networkObjectPool;
 
 
-
-
-
         [SerializeField] private List<Transform> players = new List<Transform>();
 
         [SerializeField] private List<BaseEnemy> currentEnemyWave = new List<BaseEnemy>();
 
+        public static int currentTotalEnemiesIngame;
+
+
+
         public override void OnNetworkSpawn()
         {
             networkObjectPool = NetworkObjectPool.Singleton;
-
             NetworkManager.OnClientConnectedCallback += AddClient;
+
+            if(IsServer)
+            {
+                currentTotalEnemiesIngame = 0;
+            }
         }
 
         public override void OnNetworkDespawn()
@@ -60,9 +64,20 @@ namespace Sataura
 
                     var enemyNetworkObject = enemyObject.GetComponent<NetworkObject>();
                     enemyNetworkObject.Spawn();
+                    currentTotalEnemiesIngame++;
                 }
                
             }
+
+            /*if(currentTotalEnemiesIngame < 10)
+            {
+                var enemyObject = Instantiate(pinkSlimePrefab, (Vector2)players[0].position + Random.insideUnitCircle * 30, Quaternion.identity);
+                enemyObject.GetComponent<BaseEnemy>().SetFollowTarget(players[0]);
+
+                var enemyNetworkObject = enemyObject.GetComponent<NetworkObject>();
+                enemyNetworkObject.Spawn();
+                currentTotalEnemiesIngame++;
+            }*/
         }
 
         /*float getEnemiesAroundTimeElapse = 0.0f;

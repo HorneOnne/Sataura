@@ -48,6 +48,7 @@ GameObject:
   - component: {fileID: 4172944246086273944}
   - component: {fileID: 660097472547711228}
   - component: {fileID: 660097472547711229}
+  - component: {fileID: -5290333367323741756}
   m_Layer: 30
   m_Name: EP_Slime
   m_TagString: Untagged
@@ -109,11 +110,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1925455099
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 1359092941, guid: 6860a85928d67c14a90283e26a1896f9, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.19607843}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -238,20 +239,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   anim: {fileID: 660097472547711229}
   rb2D: {fileID: 5404143556966860767}
+  boxCollider2D: {fileID: 5404143556966860766}
   sr: {fileID: 660097472547711170}
   enemyData: {fileID: 11400000, guid: 30a463074e95e3a49869d859414f7e5b, type: 2}
   itemDropData: {fileID: 11400000, guid: dac954a8d6edebd448d76d10ea1a8125, type: 2}
   <Cooldown>k__BackingField: 0.02
   currentHealth:
     m_InternalValue: 0
+  dropRate: 0.5
   groundLayer:
     serializedVersion: 2
     m_Bits: 2164260864
   groundCheckPoint: {fileID: 7818057259678083653}
   groundCheckRadius: 0.3
   jumpForce: 40
-  jumpRange: 20
-  deadAudio: {fileID: 8300000, guid: 10f3f6d1395e9e144930f3f8c16a84b5, type: 3}
+  canJump: 1
 --- !u!95 &660097472547711229
 Animator:
   serializedVersion: 5
@@ -272,3 +274,17 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
+--- !u!114 &-5290333367323741756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5404143556966860760}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 87a1835cba6238a40ba21e5f2d5d0ad1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TransitionStateInfoList: []
+  m_Animator: {fileID: 660097472547711229}

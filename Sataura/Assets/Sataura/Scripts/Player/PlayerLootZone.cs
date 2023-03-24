@@ -1,5 +1,4 @@
 using Unity.Netcode;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Sataura
@@ -7,7 +6,7 @@ namespace Sataura
     /// <summary>
     /// A script to handle the collection of items by the player in a loot zone.
     /// </summary>
-    public class PlayerLootZone : MonoBehaviour
+    public class PlayerLootZone : NetworkBehaviour
     {
         /// <summary>
         /// The game object representing the player.
@@ -40,9 +39,17 @@ namespace Sataura
                 else if(collectibleObject is Currency)
                 {
                     collectibleObject.Collect(player);
-                    collision.gameObject.GetComponent<NetworkObject>().Despawn();
+
+                    if(IsServer)
+                        collision.gameObject.GetComponent<NetworkObject>().Despawn();
                 }
             }
+        }
+
+        [ClientRpc]
+        private void LootClientRpc()
+        {
+
         }
     }
 }

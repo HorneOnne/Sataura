@@ -187,12 +187,12 @@ namespace Sataura
             if (helmSr == null || chestSr == null)
                 Debug.LogError("Missing player armor skin references.");
 
-            if (Helm.HasItem())
+            if (Helm.HasItemData())
                 helmSr.sprite = Helm.GetItemIcon();
             else
                 helmSr.sprite = null;
 
-            if (Chest.HasItem())
+            if (Chest.HasItemData())
                 chestSr.sprite = Chest.GetItemIcon();
             else
                 chestSr.sprite = null;

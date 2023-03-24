@@ -2,6 +2,7 @@
 using UnityEngine.EventSystems;
 using UnityEngine;
 using Unity.Netcode;
+using System;
 
 namespace Sataura
 {
@@ -43,42 +44,30 @@ namespace Sataura
         private void OnEnable()
         {
             EventManager.OnPlayerInventoryUpdated += UpdateInventoryUI;
+            PlayerInputHandler.OnCurrentUseItemIndexChanged += UpdateCurrentUseItemUI;
         }
+
+        
 
         private void OnDisable()
         {
             EventManager.OnPlayerInventoryUpdated -= UpdateInventoryUI;
+            PlayerInputHandler.OnCurrentUseItemIndexChanged -= UpdateCurrentUseItemUI;
         }
 
-
-        /*private void Start()
+        private void UpdateCurrentUseItemUI(int oldIndex, int newIndex)
         {
-            itemInHand = player.ItemInHand;
-            playerInGameInventory = player.PlayerInGameInventory;
-            playerInputHandler = player.PlayerInputHandler;
-            dragType = DragType.Swap;
+            if (alreadyLoadReferences == false) return;
 
+            if(oldIndex != -1)
+                itemSlotList[oldIndex].transform.localScale = Vector3.one;
 
-            for (int i = 0; i < playerInGameInventory.Capacity; i++)
-            {
-                GameObject slotObject = Instantiate(itemSlotPrefab, this.transform);
-                slotObject.transform.localScale = Vector3.one * scaleUI;
-                slotObject.GetComponent<UIItemSlot>().SetIndex(i);
-                slotObject.GetComponent<UIItemSlot>().SetData(null);
-                Utilities.AddEvent(slotObject, EventTriggerType.PointerClick, (baseEvent) => OnClick(baseEvent, slotObject));
-                Utilities.AddEvent(slotObject, EventTriggerType.PointerEnter, delegate { OnEnter(slotObject); });
-                Utilities.AddEvent(slotObject, EventTriggerType.PointerExit, delegate { OnExit(slotObject); });
-                Utilities.AddEvent(slotObject, EventTriggerType.BeginDrag, (baseEvent) => OnBeginDrag(baseEvent, slotObject));
-                Utilities.AddEvent(slotObject, EventTriggerType.EndDrag, (baseEvent) => OnEndDrag(baseEvent, slotObject));
+            if(newIndex != -1)
+            itemSlotList[newIndex].transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);
 
-                itemSlotList.Add(slotObject);
-            }
+        }
 
-            // Update Inventory UI at the first time when start game.
-            Invoke("UpdateInventoryUI", .1f);
-        }*/
-
-        private bool AlreadyLoadReferences;
+        private bool alreadyLoadReferences;
         public void LoadReferences()
         {
             itemInHand = player.ItemInHand;
@@ -101,7 +90,7 @@ namespace Sataura
 
                 itemSlotList.Add(slotObject);
 
-                AlreadyLoadReferences = true;
+                alreadyLoadReferences = true;
             }
 
             // Update Inventory UI at the first time when start game.
@@ -115,7 +104,7 @@ namespace Sataura
 
         private void Update()
         {
-            if (AlreadyLoadReferences == false) return;
+            if (alreadyLoadReferences == false) return;
 
             if (itemInHand.HasItemData())
             {
@@ -241,7 +230,7 @@ namespace Sataura
                         if (dragType == DragType.Swap)
                         {
                             int startingSlotIndex = GetItemSlotIndex(startingSlotDrag);
-                            if (playerInGameInventory.inGameInventory[startingSlotIndex].HasItem() == false)
+                            if (playerInGameInventory.inGameInventory[startingSlotIndex].HasItemData() == false)
                             {
                                 startingSlotDrag = null;
                                 itemInHand.Swap(ref playerInGameInventory.inGameInventory, startingSlotIndex, StoredType.PlayerInGameInventory, true);
@@ -266,7 +255,7 @@ namespace Sataura
         private void OnLeftClick(int index)
         {
             handHasItem = itemInHand.HasItemData();
-            slotHasItem = playerInGameInventory.inGameInventory[index].HasItem();
+            slotHasItem = playerInGameInventory.inGameInventory[index].HasItemData();
 
             if (handHasItem == false)
             {
@@ -312,7 +301,7 @@ namespace Sataura
         private void OnRightClick(int index)
         {
             handHasItem = itemInHand.HasItemData();
-            slotHasItem = playerInGameInventory.inGameInventory[index].HasItem();
+            slotHasItem = playerInGameInventory.inGameInventory[index].HasItemData();
 
             if (handHasItem == false)
             {
@@ -361,7 +350,7 @@ namespace Sataura
         private void OnRightPress(int index)
         {
             handHasItem = itemInHand.HasItemData();
-            slotHasItem = playerInGameInventory.inGameInventory[index].HasItem();
+            slotHasItem = playerInGameInventory.inGameInventory[index].HasItemData();
 
             if (handHasItem == true)
             {

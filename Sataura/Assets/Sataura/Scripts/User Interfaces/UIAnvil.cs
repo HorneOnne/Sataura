@@ -115,7 +115,7 @@ namespace Sataura
                 for (int i = 0; i < anvil.requiredMaterialSlots.Count; i++)
                 {
                     materialSlots[i].gameObject.SetActive(true);
-                    if (anvil.filledMaterialSlots[i].HasItem() == false)
+                    if (anvil.filledMaterialSlots[i].HasItemData() == false)
                     {
                         materialSlots[i].SetData(anvil.requiredMaterialSlots[i], 0.5f);
                     }
@@ -310,7 +310,7 @@ namespace Sataura
         {
             int index = GetSlotIndex(clickedObject);
             bool handHasItem = itemInHand.HasItemData();
-            bool slotHasItem = anvil.filledMaterialSlots[index].HasItem();
+            bool slotHasItem = anvil.filledMaterialSlots[index].HasItemData();
 
 
             if (handHasItem == false)
@@ -364,7 +364,7 @@ namespace Sataura
         {
             int index = GetSlotIndex(clickedObject);
             bool handHasItem = itemInHand.HasItemData();
-            bool slotHasItem = anvil.filledMaterialSlots[index].HasItem();
+            bool slotHasItem = anvil.filledMaterialSlots[index].HasItemData();
 
 
             if (handHasItem == false)

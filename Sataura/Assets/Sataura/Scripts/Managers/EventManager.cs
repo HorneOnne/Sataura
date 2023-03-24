@@ -78,6 +78,11 @@ namespace Sataura
         public static event Action OnEnterUIItemSlot;
 
 
+        // Enemy 
+        public static event Action OnEnemiesChanged;
+
+
+
         public static void TriggerInventoryUpdatedEvent() => OnPlayerInventoryUpdated?.Invoke();
 
         public static void TriggerChestInventoryUpdatedEvent() => OnChestInventoryUpdated?.Invoke();
@@ -102,6 +107,11 @@ namespace Sataura
 
         public static void TriggerBoomerangReturnedEvent() => OnBoomerangReturned?.Invoke();
         public static void TriggerEnterUIItemSlotEvent() => OnEnterUIItemSlot?.Invoke();
+
+
+
+        // Enemy
+        public static void TriggerOnEnemyChangedEvent() => OnEnemiesChanged?.Invoke();
 
 
     }

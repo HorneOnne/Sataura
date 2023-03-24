@@ -23,7 +23,7 @@ MonoBehaviour:
     -+ 1.5 attack speed
 
 '
-  usageVelocity: 1.5
+  usageVelocity: 2
   currentLevel: 1
   maxLevel: 2
   upgradeRecipe:
@@ -34,5 +34,5 @@ MonoBehaviour:
       itemData: {fileID: 11400000, guid: cef6d1d1158119d4cb05ee659b6fe843, type: 2}
       quantity: 1
   damage: 10
-  knockback: 100
+  knockback: 6
   useType: 1

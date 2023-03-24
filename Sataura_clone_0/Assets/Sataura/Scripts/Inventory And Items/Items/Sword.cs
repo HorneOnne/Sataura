@@ -49,11 +49,6 @@ namespace Sataura
 
         private void UseType01(Player player, Vector2 mousePosition)
         {
-            /*if (mousePosition.x - transform.position.x > 0)
-                initialZAngle = 90;
-            else
-                initialZAngle = 0;*/
-
             initialZAngle = (mousePosition.x - transform.position.x > 0) ? 90 : 0;
 
             swordProjectilePrefab = GameDataManager.Instance.GetProjectilePrefab("PP_SwordProjectile_001");
@@ -65,6 +60,8 @@ namespace Sataura
             int itemID = GameDataManager.Instance.GetItemID(this.ItemSlot.ItemData);            
             swordProjectileObject.GetComponent<SwordProjectile_001>().SetDataServerRpc(itemID, true);            
             swordProjectileObject.GetComponent<SwordProjectile_001>().LoadSwordProjectileDataServerRpc(mousePosition);
+
+            SoundManager.Instance.PlaySound(SoundType.PlayerAttack);
         }
 
         private void UseType02(Player player, Vector2 mousePosition)

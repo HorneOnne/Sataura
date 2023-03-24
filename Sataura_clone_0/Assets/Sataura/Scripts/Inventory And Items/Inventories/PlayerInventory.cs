@@ -59,7 +59,7 @@ namespace Sataura
 
             for (int i = 0; i < inventory.Count; i++)
             {
-                if (inventory[i].HasItem() == false)
+                if (inventory[i].HasItemData() == false)
                 {
                     inventory[i].AddNewItem(itemData);
                     canAddItem = true;
@@ -98,7 +98,7 @@ namespace Sataura
             {
                 returnItemSlot = inventory[i].AddItemsFromAnotherSlot(copyItemSlot);
 
-                if (returnItemSlot.HasItem() == false)
+                if (returnItemSlot.HasItemData() == false)
                 {
                     break;
                 }
@@ -154,7 +154,7 @@ namespace Sataura
         {
             try
             {
-                inventory[slotIndex].HasItem();
+                inventory[slotIndex].HasItemData();
             }
             catch
             {
@@ -174,7 +174,7 @@ namespace Sataura
         {
             if (HasSlot(slotIndex))
             {
-                return inventory[slotIndex].HasItem();
+                return inventory[slotIndex].HasItemData();
             }
             return false;
         }
@@ -236,7 +236,7 @@ namespace Sataura
         {
             for (int i = 0; i < inventory.Count; i++)
             {
-                if (inventory[i].HasItem() == false)
+                if (inventory[i].HasItemData() == false)
                     continue;
 
                 if (inventory[i].GetItemType() == ItemType.Arrow)

@@ -9,6 +9,8 @@ namespace Sataura
 
         private void OnGUI()
         {
+            if (this == null) return;
+
             buttonStyle = new GUIStyle(GUI.skin.button);
             buttonStyle.fontSize = 12;
             buttonStyle.alignment = TextAnchor.MiddleCenter;
@@ -41,19 +43,19 @@ namespace Sataura
         private void StartHost()
         {
             NetworkManager.Singleton.StartHost();
-            this.enabled = false;
+            Destroy(this);
         }
 
         private void StartServer()
         {
             NetworkManager.Singleton.StartServer();
-            this.enabled = false;
+            Destroy(this);
         }
 
         private void StartClient()
         {
             NetworkManager.Singleton.StartClient();
-            this.enabled = false;
+            Destroy(this);
         }
     }
 

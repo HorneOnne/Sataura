@@ -106,7 +106,7 @@ namespace Sataura
         {
             try
             {
-                inventory[slotIndex].HasItem();
+                inventory[slotIndex].HasItemData();
             }
             catch
             {
@@ -126,7 +126,7 @@ namespace Sataura
         {
             if (HasSlot(slotIndex))
             {
-                return inventory[slotIndex].HasItem();
+                return inventory[slotIndex].HasItemData();
             }
             return false;
         }

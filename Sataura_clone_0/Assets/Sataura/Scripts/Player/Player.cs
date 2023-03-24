@@ -1,4 +1,6 @@
+using System.Collections;
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -73,9 +75,9 @@ namespace Sataura
 
         public override void OnNetworkSpawn()
         {
-            transform.position = new Vector2(200, 30);
+            Debug.Log("OnNetworkSpawn");
             PlayerInput = GetComponent<PlayerInput>();
-                    
+            
 
             if (IsOwner)
             {
@@ -108,11 +110,13 @@ namespace Sataura
             if (IsServer)
             {
                 handHoldItemInstance = Instantiate(handHoldItemToSpawn);
+                handHoldItemInstance.name = "Hand Hold Item";
                 handHoldItemNetworkObject = handHoldItemInstance.GetComponent<NetworkObject>();            
                 handHoldItemNetworkObject.Spawn();
                 handHoldItemNetworkObject.TrySetParent(this.transform);
                 handHoldItemNetworkObject.transform.localPosition = Vector3.zero;
             }
+    
 
             if (IsOwner)
             {
@@ -125,12 +129,24 @@ namespace Sataura
 
             if(IsOwner)
             {
-                CameraBounds.Instance.localPlayer = this.transform;
+                CameraBounds.Instance.localPlayer = this.transform;               
             }
- 
+
+            StartCoroutine(TeleportPlayerInPosition(new Vector2(200, 30), 0.3f));
+
+
+            
         }
 
- 
+        private IEnumerator TeleportPlayerInPosition(Vector2 position, float time)
+        {
+            playerMovement.Rb2D.isKinematic = true;
+            yield return new WaitForSeconds(time);
+            transform.position = position;
+            playerMovement.Rb2D.isKinematic = false;
+        }
+
+
 
     }  
 }
