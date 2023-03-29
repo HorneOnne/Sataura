@@ -3,7 +3,7 @@
 namespace Sataura
 {
     [CreateAssetMenu(fileName = "Boomerang", menuName = "UltimateItemSystem/Item/Weapons/Boomerang", order = 51)]
-    public class BoomerangData : UpgradeableItemData
+    public class BoomerangData : ItemData
     {
         [Header("BOOMERANG SETTINGS")]
         public int damage;

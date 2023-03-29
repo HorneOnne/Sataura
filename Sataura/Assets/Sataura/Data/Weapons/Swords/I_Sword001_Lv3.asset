@@ -18,14 +18,14 @@ MonoBehaviour:
   itemType: 4
   max_quantity: 1
   description: Base damage up by 5. Attack speed up by 10%.
-  usageVelocity: 2
+  usageVelocity: 3.5
   currentLevel: 3
   maxLevel: 5
   upgradeRecipe:
     materials: []
-    outputItem:
-      itemData: {fileID: 0}
-      quantity: 0
+    outputItemSlot:
+      itemData: {fileID: 11400000, guid: 454ec6d0676df884a9720f090b2ebbf9, type: 2}
+      quantity: 1
   damage: 10
   knockback: 10
-  useType: 2
+  useType: 1

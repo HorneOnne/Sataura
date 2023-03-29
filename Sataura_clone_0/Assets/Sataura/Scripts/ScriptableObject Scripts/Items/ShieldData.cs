@@ -2,8 +2,8 @@
 
 namespace Sataura
 {
-    [CreateAssetMenu(fileName = "New Sword Object", menuName = "UltimateItemSystem/Item/Equipment/Shield", order = 51)]
-    public class ShieldData : UpgradeableItemData
+    [CreateAssetMenu(fileName = "ShieldData", menuName = "UltimateItemSystem/Item/Equipment/Shield", order = 51)]
+    public class ShieldData : ItemData
     {
         [Header("Shield Data")]
         public int armor;

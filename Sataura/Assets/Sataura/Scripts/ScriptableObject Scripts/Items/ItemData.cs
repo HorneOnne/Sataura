@@ -22,6 +22,16 @@ namespace Sataura
         public float usageVelocity = 1.0f;
 
 
+        [Header("LEVEL")]
+        public int currentLevel;
+        public int maxLevel;
+
+
+        [Header("UPGRADE RECIPE")]
+        public ItemUpgradeRecipe upgradeRecipe;
+
+
+
         /// <summary>
         /// Determines whether this instance and another specified <see cref="ItemData"/> object have the same value.
         /// </summary>
@@ -36,6 +46,8 @@ namespace Sataura
             if (this.max_quantity != ((ItemData)other).max_quantity) return false;
             if (this.description != ((ItemData)other).description) return false;
             if (this.usageVelocity != ((ItemData)other).usageVelocity) return false;
+            if (this.currentLevel != ((ItemData)other).currentLevel) return false;
+            if (this.maxLevel != ((ItemData)other).maxLevel) return false;
 
             return true;
         }
@@ -53,10 +65,16 @@ namespace Sataura
             return itemA.Equals(itemB);
         }
 
+        public static bool IsSameName(ItemData itemA, ItemData itemB)
+        {
+            if (itemA == null || itemB == null) return false;
+            return itemA.itemName.Equals(itemB.itemName);
+        }
+
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(itemName, icon, itemCategory, itemType, max_quantity, description, usageVelocity);
+            return HashCode.Combine(itemName, icon, itemCategory, itemType, max_quantity, usageVelocity, currentLevel);
         }
     }
 }

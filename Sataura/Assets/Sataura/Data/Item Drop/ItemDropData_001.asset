@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemDrops:
   - itemDrop:
-      <ItemData>k__BackingField: {fileID: 11400000, guid: af35a522cd21d764fabe95092e687b5f, type: 2}
-      <ItemQuantity>k__BackingField: 10
-    dropRate: 0.001
+      <ItemData>k__BackingField: {fileID: 11400000, guid: 5548fa99cd0567a4fb8c04ed6b59b7d0, type: 2}
+      <ItemQuantity>k__BackingField: 1
+    dropRate: 0
   currencyDropFrom: 30
   currencyDropTo: 90
   exp: {fileID: 8071063141209586213, guid: ccbce2a4b09f2fd4d91f10dab693a3c0, type: 3}

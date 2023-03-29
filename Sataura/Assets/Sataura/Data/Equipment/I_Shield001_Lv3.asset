@@ -12,17 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c7ba5a5eeca694497fe30b95f40a67, type: 3}
   m_Name: I_Shield001_Lv3
   m_EditorClassIdentifier: 
+  itemName: Shield
   icon: {fileID: -1993677517, guid: 6ba96a71fee7a864cb341b3c20d014ce, type: 3}
   itemCategory: 0
-  itemType: 2
+  itemType: 1
   max_quantity: 1
   description: 
   usageVelocity: 1
-  currentLevel: 1
+  currentLevel: 3
   maxLevel: 5
   upgradeRecipe:
     materials: []
-    outputItem:
-      itemData: {fileID: 0}
-      quantity: 0
+    outputItemSlot:
+      itemData: {fileID: 11400000, guid: b120cad4ba90c9a4d9454a31d3861a4e, type: 2}
+      quantity: 1
   armor: 30

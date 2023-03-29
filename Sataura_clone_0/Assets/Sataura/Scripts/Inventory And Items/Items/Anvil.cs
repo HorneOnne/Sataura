@@ -227,12 +227,12 @@ namespace Sataura
             upgradeItemOutputSlot.ClearSlot();
 
 
-            if (upgradeItemInputSlot.ItemData is UpgradeableItemData == false) return;
+            if (upgradeItemInputSlot.ItemData is ItemData == false) return;
 
-            UpgradeableItemData itemData = (UpgradeableItemData)upgradeItemInputSlot.ItemData;
+            ItemData itemData = (ItemData)upgradeItemInputSlot.ItemData;
             ItemUpgradeRecipe recipe = itemData.upgradeRecipe;
 
-            upgradeItemOutputSlot = new ItemSlot(recipe.outputItem.itemData, recipe.outputItem.quantity);
+            upgradeItemOutputSlot = new ItemSlot(recipe.outputItemSlot.itemData, recipe.outputItemSlot.quantity);
             ItemUpgradeRecipe.RecipeSlot material;
             for (int i = 0; i < recipe.materials.Count; i++)
             {
@@ -322,7 +322,7 @@ namespace Sataura
             if (itemSlot.HasItemData() == false) return false;
             bool canAdd = false;
 
-            if (itemSlot.ItemData is UpgradeableItemData)
+            if (itemSlot.ItemData is ItemData)
             {
                 upgradeItemInputSlot = new ItemSlot(itemSlot);
                 canAdd = true;

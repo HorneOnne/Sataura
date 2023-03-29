@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 329cd0043012fee4f8d0a0a6cfd837c6, type: 3}
   m_Name: I_Bow001_Lv1
   m_EditorClassIdentifier: 
-  itemName: 
+  itemName: Bow
   icon: {fileID: 907304249, guid: d4d04b54f146fc9499ef61e7951f0861, type: 3}
   itemCategory: 1
   itemType: 3
@@ -31,7 +31,7 @@ MonoBehaviour:
     materials:
     - itemData: {fileID: 11400000, guid: 4a3a1a4e0f9f6af4990ffb1c3d710357, type: 2}
       quantity: 64
-    outputItem:
+    outputItemSlot:
       itemData: {fileID: 11400000, guid: e3801ee85895ce94a8f30e88dd194107, type: 2}
       quantity: 1
   baseAttackDamage: 6

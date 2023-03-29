@@ -88,6 +88,15 @@ namespace Sataura
             }
         }
 
+        public static ItemData GetUpgradeItemData(ItemData itemData)
+        {
+            return itemData.upgradeRecipe.outputItemSlot.itemData;
+        }
+
+        public static ItemSlot GetUpgradeItemSlot(ItemData itemData)
+        {
+            return new ItemSlot(itemData.upgradeRecipe.outputItemSlot.itemData,1);
+        }
     }
 }
 

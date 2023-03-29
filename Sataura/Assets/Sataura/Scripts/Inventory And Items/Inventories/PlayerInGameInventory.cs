@@ -33,13 +33,6 @@ namespace Sataura
 
         #endregion
 
-        // Initializes the inventory with empty item slots.
-
-        /*private void Start()
-        {
-            itemInHand = player.ItemInHand;
-            inGameInventory = inGameInventoryData.itemSlots;
-        }*/
 
         public override void OnNetworkSpawn()
         {
@@ -50,7 +43,7 @@ namespace Sataura
             }    
         }
 
-        private void FixedUpdate()
+        /*private void FixedUpdate()
         {
             if (IsServer == false) return;
 
@@ -75,7 +68,54 @@ namespace Sataura
             currentItemObject.GetComponent<NetworkObject>().TrySetParent(player.HandHoldItem);
             currentItemObject.transform.localPosition = Vector3.zero;
             currentItemObject.transform.localScale = Vector3.one;
+        }*/
+
+
+
+        // START Item level skill methods
+        // ========================
+        public bool HasBaseItem(ItemData baseItem)
+        {
+            int inventorySize = inGameInventory.Count;
+            for (int i = 0; i < inventorySize; i++)
+            {
+                if (ItemData.IsSameName(inGameInventory[i].ItemData, baseItem))
+                {
+                    return true;
+                }
+                   
+            }
+
+            return false;
         }
+
+        public int FindBaseItemIndex(ItemData baseItem)
+        {
+            int inventorySize = inGameInventory.Count;
+            for (int i = 0; i < inventorySize; i++)
+            {
+                if (ItemData.IsSameName(inGameInventory[i].ItemData, baseItem))
+                {
+                    return i;
+                }
+            }
+
+            throw new System.Exception($"Not found base item {baseItem} in PlayerInGameInventory.cs.");
+        }
+
+        public ItemData GetUpgradeVersionOfItem(ItemData itemData)
+        {
+            if(itemData.currentLevel < itemData.maxLevel)
+            {
+                return itemData.upgradeRecipe.outputItemSlot.itemData;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        // END Item level skill methods
+        // ========================
 
 
 
@@ -383,6 +423,7 @@ namespace Sataura
 
             return null;
         }
+       
     }
 
 }

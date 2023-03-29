@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bacdd2f0913e1c459f7ed73685d3f72, type: 3}
+  m_Name: I_Boot001_Lv4
+  m_EditorClassIdentifier: 
+  itemName: Boots
+  icon: {fileID: -2070934872, guid: 7fa8d1d0ec1d51442a0f7ed86f7ef164, type: 3}
+  itemCategory: 0
+  itemType: 2
+  max_quantity: 1
+  description: 
+  usageVelocity: 1
+  currentLevel: 4
+  maxLevel: 5
+  upgradeRecipe:
+    materials: []
+    outputItemSlot:
+      itemData: {fileID: 11400000, guid: eabeedf0399355b4786c72b5a35e951f, type: 2}
+      quantity: 1
+  adddedMovementSpeed: 10
+  addedJumpForce: 10

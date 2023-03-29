@@ -11,7 +11,7 @@ namespace Sataura
         public int totalEnemiesKilled;
 
         
-        private const int initialexperienceToNextLevelValue = 5;
+        private const int initialexperienceToNextLevelValue = 1;
         [Header("Level")]
         [SerializeField] private int level;
 

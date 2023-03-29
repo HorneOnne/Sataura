@@ -1,4 +1,5 @@
-using System;
+using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,7 +18,9 @@ namespace Sataura
 
 
         [Header("UI Upgrade Skills")]
-        [SerializeField] private UIUpgradeSkill[] uIUpgradeSkills = new UIUpgradeSkill[3]; 
+        [SerializeField] private GameObject uIUpgradeSkillPrefab;
+        [SerializeField] private Transform uIUpgradeSkillParent;
+        [SerializeField] private List<UIUpgradeSkill> uIUpgradeSkills = new List<UIUpgradeSkill>();
 
 
         [Header("Runtime References")]
@@ -33,17 +36,19 @@ namespace Sataura
         private void OnEnable()
         {
             IngameInformationManager.OnPlayerLevelUp += SetSliderLevelValue;
-            IngameInformationManager.OnPlayerLevelUp += UpdateLevelText;
+            UIUpgradeSkill.OnUpgradeButtonClicked += UpdateLevelText;
+            IngameInformationManager.OnPlayerLevelUp += FakeFullExpSliderWhenLevelUp;
 
             IngameInformationManager.OnPlayerLevelUp += GenerateUpgradeList;
-            
+
         }
 
 
         private void OnDisable()
         {
             IngameInformationManager.OnPlayerLevelUp -= SetSliderLevelValue;
-            IngameInformationManager.OnPlayerLevelUp -= UpdateLevelText;
+            UIUpgradeSkill.OnUpgradeButtonClicked -= UpdateLevelText;
+            IngameInformationManager.OnPlayerLevelUp -= FakeFullExpSliderWhenLevelUp;
 
             IngameInformationManager.OnPlayerLevelUp -= GenerateUpgradeList;
         }
@@ -63,7 +68,7 @@ namespace Sataura
 
         private void Update()
         {
-            if(Time.time - updateTimeCount >= updateTimeFrequency)
+            if (Time.time - updateTimeCount >= updateTimeFrequency)
                 updateTimeCount = Time.time;
             else
                 return;
@@ -72,7 +77,7 @@ namespace Sataura
             levelSlider.value = ingameInformationManager.Experience;
         }
 
-        private void UpdateLevelText()
+        public void UpdateLevelText()
         {
             levelText.text = ingameInformationManager.Level.ToString();
         }
@@ -84,7 +89,7 @@ namespace Sataura
             levelSlider.maxValue = ingameInformationManager.ExperienceToNextLevel;
         }
 
-        
+
         public void FakeFullExpSliderWhenLevelUp()
         {
             levelSlider.value = levelSlider.maxValue;
@@ -92,24 +97,25 @@ namespace Sataura
 
         private void GenerateUpgradeList()
         {
-            // Retrieve an array of all values in the enum
-            ItemType[] itemTypes = (ItemType[])Enum.GetValues(typeof(ItemType));
+            var upgradeItems = ItemEvolutionManager.Instance.GenerateUpgradeItemData(GameDataManager.Instance.players[0]);
 
-            // Iterate through the array using a foreach loop
-            foreach (ItemType itemType in itemTypes)
+            for(int i = 0; i < uIUpgradeSkills.Count; i++)
             {
-                Debug.Log(itemType);
-            }   
+                Destroy(uIUpgradeSkills[i].gameObject);
+            }
+            uIUpgradeSkills.Clear();
 
-            for (int i = 0; i < uIUpgradeSkills.Length; i++)
+
+            for (int i = 0; i < upgradeItems.Count; i++)
             {
-                if (uIUpgradeSkills[i] != null)
-                {
-                    ItemData itemData = GameDataManager.Instance.upgradeSkills[i];
-                    uIUpgradeSkills[i].UpdateData(itemData);
-                }
+                var uiUpgradeSkillObject = Instantiate(uIUpgradeSkillPrefab, uIUpgradeSkillParent);
+                uIUpgradeSkills.Add(uiUpgradeSkillObject.GetComponent<UIUpgradeSkill>());
+
+                var upgradeItem = upgradeItems.ElementAt(i);
+                uIUpgradeSkills[i].UpdateData(upgradeItem);
             }
         }
     }
 }
+
 

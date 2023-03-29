@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a49cb402b306c34bb2a6d317a03bd01, type: 3}
   m_Name: I_Boomerang001_Lv1
   m_EditorClassIdentifier: 
-  itemName: 
+  itemName: Boomerang
   icon: {fileID: 1296604942, guid: d4d04b54f146fc9499ef61e7951f0861, type: 3}
   itemCategory: 1
   itemType: 5
@@ -29,7 +29,7 @@ MonoBehaviour:
     materials:
     - itemData: {fileID: 11400000, guid: 4a3a1a4e0f9f6af4990ffb1c3d710357, type: 2}
       quantity: 64
-    outputItem:
+    outputItemSlot:
       itemData: {fileID: 11400000, guid: 43c76eba85fd69d4da650b527cdac8b5, type: 2}
       quantity: 1
   damage: 10

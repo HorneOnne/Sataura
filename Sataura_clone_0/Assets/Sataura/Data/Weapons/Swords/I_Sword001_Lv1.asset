@@ -23,9 +23,9 @@ MonoBehaviour:
   maxLevel: 5
   upgradeRecipe:
     materials: []
-    outputItem:
-      itemData: {fileID: 0}
-      quantity: 0
+    outputItemSlot:
+      itemData: {fileID: 11400000, guid: cef6d1d1158119d4cb05ee659b6fe843, type: 2}
+      quantity: 1
   damage: 10
   knockback: 6
   useType: 1

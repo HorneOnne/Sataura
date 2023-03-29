@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 329cd0043012fee4f8d0a0a6cfd837c6, type: 3}
   m_Name: I_Bow001_Lv3
   m_EditorClassIdentifier: 
-  itemName: 
+  itemName: Bow
   icon: {fileID: -1770940526, guid: d4d04b54f146fc9499ef61e7951f0861, type: 3}
   itemCategory: 1
   itemType: 3
@@ -32,9 +32,9 @@ MonoBehaviour:
   maxLevel: 5
   upgradeRecipe:
     materials: []
-    outputItem:
-      itemData: {fileID: 0}
-      quantity: 0
+    outputItemSlot:
+      itemData: {fileID: 11400000, guid: 37d9ba84e8c29b94582f61836e5db10f, type: 2}
+      quantity: 1
   baseAttackDamage: 18
   releaseSpeed: 25
-  useType: 3
+  useType: 1

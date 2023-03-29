@@ -99,8 +99,7 @@ namespace Sataura
 
 
 
-        [Header("Upgrade Skills Data")]
-        public List<ItemData> upgradeSkills;
+
 
         /// <summary>
         /// Initializes the item data and prefab dictionaries, and generates the recipe dictionaries.

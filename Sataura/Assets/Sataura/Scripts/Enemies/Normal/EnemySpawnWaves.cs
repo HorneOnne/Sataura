@@ -75,7 +75,7 @@ namespace Sataura
             }
             if(IngameInformationManager.Instance.currentTotalEnemiesIngame < 10)
             {
-                var enemyObject = Instantiate(pinkSlimePrefab, (Vector2)players[0].position + new Vector2(Random.Range(-30, 30),90), Quaternion.identity);
+                var enemyObject = Instantiate(pinkSlimePrefab, (Vector2)players[0].position + new Vector2(Random.Range(-30, 30),40), Quaternion.identity);
                 enemyObject.GetComponent<BaseEnemy>().SetFollowTarget(players[0]);
 
                 var enemyNetworkObject = enemyObject.GetComponent<NetworkObject>();
