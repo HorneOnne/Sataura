@@ -5,7 +5,7 @@ namespace Sataura
 {
     public class BoomerangProjectile_001 : NetworkProjectile, ICanCauseDamage
     {
-        private EdgeCollider2D edgeCollider2D;
+        private PolygonCollider2D polygonCollider2D;
         private BoomerangData boomerangData;
 
 
@@ -27,8 +27,8 @@ namespace Sataura
 
         public override void OnNetworkSpawn()
         {
-            edgeCollider2D = GetComponent<EdgeCollider2D>();
-            edgeCollider2D.isTrigger = true;
+            polygonCollider2D = GetComponent<PolygonCollider2D>();
+            polygonCollider2D.isTrigger = true;
         }
 
         public bool Throw(Player player, BoomerangData data)
@@ -42,8 +42,8 @@ namespace Sataura
             // Rereference if null
             if (rb == null)
                 rb = GetComponent<Rigidbody2D>();
-            if (edgeCollider2D == null)
-                edgeCollider2D = GetComponent<EdgeCollider2D>();
+            if (polygonCollider2D == null)
+                polygonCollider2D = GetComponent<PolygonCollider2D>();
 
 
 

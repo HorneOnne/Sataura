@@ -243,6 +243,7 @@ MonoBehaviour:
   sr: {fileID: 660097472547711170}
   enemyData: {fileID: 11400000, guid: 30a463074e95e3a49869d859414f7e5b, type: 2}
   itemDropData: {fileID: 11400000, guid: dac954a8d6edebd448d76d10ea1a8125, type: 2}
+  damagedPopupPrefab: {fileID: 2482577687471222703, guid: 894c71f07ccefd2478c51cfd0704ffa5, type: 3}
   <Cooldown>k__BackingField: 0.02
   currentHealth:
     m_InternalValue: 0

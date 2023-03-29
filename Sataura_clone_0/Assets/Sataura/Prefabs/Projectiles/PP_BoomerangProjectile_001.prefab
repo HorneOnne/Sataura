@@ -73,7 +73,7 @@ SpriteRenderer:
   m_SortingLayerID: -1804832047
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -1873988066, guid: 0804b8f0cd3b81241862b9b94a207c61, type: 3}
+  m_Sprite: {fileID: 1296604942, guid: d4d04b54f146fc9499ef61e7951f0861, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -81,7 +81,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
+  m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1 &3139863566514667555
@@ -94,9 +94,11 @@ GameObject:
   m_Component:
   - component: {fileID: 812603337781869168}
   - component: {fileID: 2942270104973382695}
-  - component: {fileID: 6081494857439053039}
+  - component: {fileID: 6177967488211677441}
   - component: {fileID: -4783284443509730044}
   - component: {fileID: -8973804671705556007}
+  - component: {fileID: 1124565093700580167}
+  - component: {fileID: 157806971296926205}
   m_Layer: 29
   m_Name: PP_BoomerangProjectile_001
   m_TagString: Item
@@ -141,8 +143,8 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!68 &6081494857439053039
-EdgeCollider2D:
+--- !u!60 &6177967488211677441
+PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -155,21 +157,21 @@ EdgeCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_EdgeRadius: 0
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
   m_Points:
-  - {x: -0.36456025, y: 0.47726375}
-  - {x: 0.091538996, y: 0.37560707}
-  - {x: 0.4348615, y: 0.052964628}
-  - {x: 0.45040783, y: -0.41055784}
-  - {x: 0.2647795, y: -0.46684957}
-  - {x: 0.22932605, y: -0.09841144}
-  - {x: -0.0025291145, y: 0.16889107}
-  - {x: -0.4068335, y: 0.21631399}
-  - {x: -0.37068385, y: 0.48371327}
-  m_AdjacentStartPoint: {x: 0, y: 0}
-  m_AdjacentEndPoint: {x: 0, y: 0}
-  m_UseAdjacentStartPoint: 0
-  m_UseAdjacentEndPoint: 0
+    m_Paths:
+    - - {x: 0.17878643, y: 0.34921739}
+      - {x: -0.2001535, y: 0.45204613}
+      - {x: -0.16584922, y: -0.47289854}
+      - {x: 0.25166684, y: -0.18684012}
 --- !u!114 &-4783284443509730044
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -184,7 +186,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <ItemData>k__BackingField: {fileID: 0}
   useGravity: 0
-  networkObject: {fileID: 0}
+  networkObject: {fileID: -8973804671705556007}
   spriteRenderer: {fileID: 0}
 --- !u!114 &-8973804671705556007
 MonoBehaviour:
@@ -202,3 +204,41 @@ MonoBehaviour:
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+--- !u!114 &1124565093700580167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3139863566514667555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SyncPositionX: 1
+  SyncPositionY: 1
+  SyncPositionZ: 0
+  SyncRotAngleX: 0
+  SyncRotAngleY: 0
+  SyncRotAngleZ: 1
+  SyncScaleX: 0
+  SyncScaleY: 0
+  SyncScaleZ: 0
+  PositionThreshold: 0.001
+  RotAngleThreshold: 0.01
+  ScaleThreshold: 0.01
+  InLocalSpace: 0
+  Interpolate: 1
+--- !u!114 &157806971296926205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3139863566514667555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80d7c879794dfda4687da0e400131852, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

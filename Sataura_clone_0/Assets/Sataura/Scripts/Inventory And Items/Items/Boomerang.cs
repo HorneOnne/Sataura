@@ -1,10 +1,9 @@
-﻿using UnityEngine;
+﻿using Unity.Netcode;
+using UnityEngine;
 
 namespace Sataura
 {
-    /// <summary>
-    /// A class representing a boomerang item in the game.
-    /// </summary>
+
     public class Boomerang : Item, ICanCauseDamage
     {
         //private GameObject boomerangProjectilePrefab;
@@ -13,10 +12,11 @@ namespace Sataura
         private bool isReturning = true;
         private BoomerangData boomerangData;
 
-        private void Awake()
-        {
-            //boomerangProjectilePrefab = GameDataManager.Instance.GetProjectilePrefab(boomerangProjectileObject);
-        }
+
+
+        [Header("References")]
+        [SerializeField] private GameObject boomerangProjectilePrefab;
+
 
 
         private void OnEnable()
@@ -43,18 +43,16 @@ namespace Sataura
                 case 1:
                     if (isReturning)
                     {
-                        isReturning = false;                   
-                        boomerangProjectileObject = BoomerangProjectileSpawner.Instance.Pool.Get().GetComponent<BoomerangProjectile_001>();
-                        //boomerangProjectileObject = Instantiate(boomerangProjectilePrefab, transform.position, Quaternion.identity).GetComponent<BoomerangProjectile_001>();
+                        isReturning = false;
+
+                        boomerangProjectileObject = Instantiate(boomerangProjectilePrefab, transform.position, Quaternion.identity).GetComponent<BoomerangProjectile_001>();
+                        boomerangProjectileObject.GetComponent<NetworkObject>().Spawn();
                         boomerangProjectileObject.SetData(this.ItemData);
                         boomerangProjectileObject.Throw(player, (BoomerangData)this.ItemData);
                     }
                     break;
                 case 2:
-                    boomerangProjectileObject = BoomerangProjectileSpawner.Instance.Pool.Get().GetComponent<BoomerangProjectile_001>();
-                    //boomerangProjectileObject = Instantiate(boomerangProjectilePrefab, transform.position, Quaternion.identity).GetComponent<BoomerangProjectile_001>();
-                    boomerangProjectileObject.SetData(this.ItemData);
-                    boomerangProjectileObject.Throw(player, (BoomerangData)this.ItemData);
+                    
                     break;
                 default:
                     break;

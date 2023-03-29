@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 4575248171634617230}
   - component: {fileID: 6601594393330603769}
   - component: {fileID: -7869621040656923333}
+  - component: {fileID: -1497619849439759522}
   m_Layer: 0
   m_Name: UIP_DamagePopup
   m_TagString: Untagged
@@ -185,37 +186,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae0b72cef28fa81488ec0f65e3909d04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  curve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.47750118
-      value: 0.4639247
-      inSlope: 3.1814394
-      outSlope: 3.1814394
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.031180412
-      outWeight: 0.17527616
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  speed: 1
+  networkObject: {fileID: 0}
+  damagePopupPrefab: {fileID: 2482577687471222703}
+--- !u!114 &-1497619849439759522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2482577687471222703}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 951099334
+  AlwaysReplicateAsRoot: 0
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1

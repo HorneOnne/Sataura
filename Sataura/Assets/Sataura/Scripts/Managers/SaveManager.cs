@@ -137,19 +137,7 @@ namespace Sataura
                 GameObject itemObject;
 
                 switch(itemData.itemType)
-                {
-                    case ItemType.Anvil:
-                        itemPrefab = GameDataManager.Instance.GetItemPrefab("IP_Anvil");
-                        itemObject = Instantiate(itemPrefab, itemPosition, Quaternion.Euler(itemRotation), itemContainerParent);
-                        itemObject.GetComponent<Anvil>().SetData(new ItemSlot(itemData, 1));
-                        itemObject.GetComponent<Anvil>().Placed(itemPosition);
-                        break;
-                    case ItemType.CombatDummy:
-                        itemPrefab = GameDataManager.Instance.GetItemPrefab("IP_CombatDummy");
-                        itemObject = Instantiate(itemPrefab, itemPosition, Quaternion.Euler(itemRotation), itemContainerParent);
-                        itemObject.GetComponent<CombatDummy>().SetData(new ItemSlot(itemData, 1)); 
-                        itemObject.GetComponent<CombatDummy>().Placed(itemPosition);
-                        break;
+                {  
                     default:
                         itemPrefab = GameDataManager.Instance.GetItemPrefab($"IP_ItemForDrop");
                         itemObject = Instantiate(itemPrefab, itemPosition, Quaternion.Euler(itemRotation), itemContainerParent);

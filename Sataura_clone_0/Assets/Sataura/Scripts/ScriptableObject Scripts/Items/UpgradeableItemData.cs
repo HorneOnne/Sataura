@@ -8,19 +8,11 @@ namespace Sataura
     /// </summary>
     public class UpgradeableItemData : ItemData
     {
-        /// <summary>
-        /// The current level of the item.
-        /// </summary>
+        [Header("LEVEL")]
         public int currentLevel;
-
-        /// <summary>
-        /// The maximum level the item can reach.
-        /// </summary>
         public int maxLevel;
 
-        /// <summary>
-        /// The recipe required to upgrade the item.
-        /// </summary>
+
         [Header("UPGRADE RECIPE")]
         public ItemUpgradeRecipe upgradeRecipe;
     }
@@ -46,14 +38,7 @@ namespace Sataura
         [System.Serializable]
         public struct RecipeSlot
         {
-            /// <summary>
-            /// The data for the item required in the upgrade recipe.
-            /// </summary>
             public ItemData itemData;
-
-            /// <summary>
-            /// The quantity of the item required in the upgrade recipe.
-            /// </summary>
             public int quantity;
 
             public RecipeSlot(ItemData itemData, int quantity)

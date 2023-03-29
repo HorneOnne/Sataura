@@ -3,7 +3,6 @@ using Unity.Netcode;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
 using System;
-using Unity.VisualScripting;
 
 namespace Sataura
 {
@@ -20,7 +19,6 @@ namespace Sataura
         [SerializeField] private Player player;
         private PlayerInventory playerInventory;
         private PlayerInGameInventory playerInGameInventory;
-        private PlayerEquipment playerEquipment;
         private ItemInHand itemInHand;
         private PlayerMovement playerMovement;
 
@@ -163,7 +161,7 @@ namespace Sataura
             {
                 playerInventory = player.PlayerInventory;
                 playerInGameInventory = player.PlayerInGameInventory;
-                playerEquipment = player.PlayerEquipment;
+                //playerEquipment = player.PlayerEquipment;
                 itemInHand = player.ItemInHand;
             }
         }
@@ -191,9 +189,13 @@ namespace Sataura
             currentUseItemIndex.Value = newIndex;
         }
 
+       
+
         private void Update()
         {
             if (!IsOwner) return;
+
+       
 
             for(int i = 0; i < selectItemBindingKeys.Count; i++)
             {
@@ -204,14 +206,6 @@ namespace Sataura
                     {
                         return;
                     }
-
-
-                    /*int oldIndex = currentUseItemIndex.Value;
-                    int newIndex = i;
-
-                    OnCurrentUseItemIndexChanged.Invoke(oldIndex, newIndex);
-                    currentUseItemIndex.Value = newIndex;*/
-
 
                     int oldIndex = currentUseItemIndex.Value;
                     int newIndex = i;
@@ -347,7 +341,7 @@ namespace Sataura
         /// </summary>
         private void StackItem()
         {
-            if (itemInHand.HasItemObject() == false) return;
+            if (itemInHand.HasHandHoldItemInServer() == false) return;
             //if (itemInHand.HasHandHoldItemInServer() == false) return;
 
             switch (itemInHand.ItemGetFrom.slotStoredType)
@@ -372,63 +366,7 @@ namespace Sataura
 
 
 
-        /// <summary>
-        /// Handles fast equipment of items with a utility key press.
-        /// </summary>
-        private void FastEquipItem()
-        {
-            if (PressUtilityKeyInput)
-            {
-                if (itemInHand.HasItemData() == false) return;
-                if (itemInHand.ItemGetFrom.slotStoredType == StoredType.PlayerInventory)
-                {
-                    ItemSlot equipItemSlot = itemInHand.GetSlot();
-                    ItemSlot currentEquipmentSlot = null;
-                    bool canEquip;
-
-                    switch (itemInHand.GetItemData().itemType)
-                    {
-                        case ItemType.Helm:
-                            if (playerEquipment.Helm.HasItemData() == true)
-                                currentEquipmentSlot = new ItemSlot(playerEquipment.Helm);
-                            canEquip = playerEquipment.Equip(ItemType.Helm, equipItemSlot);
-                            break;
-                        case ItemType.ChestArmor:
-                            if (playerEquipment.Chest.HasItemData() == true)
-                                currentEquipmentSlot = new ItemSlot(playerEquipment.Chest);
-                            canEquip = playerEquipment.Equip(ItemType.ChestArmor, equipItemSlot);
-                            break;
-                        case ItemType.Shield:
-                            if (playerEquipment.Shield.HasItemData() == true)
-                                currentEquipmentSlot = new ItemSlot(playerEquipment.Shield);
-                            canEquip = playerEquipment.Equip(ItemType.Shield, equipItemSlot);
-                            break;
-                        default:
-                            canEquip = false;
-                            break;
-                    }
-
-                    if (canEquip)
-                    {
-                        if (currentEquipmentSlot != null)
-                        {
-                            playerInventory.AddNewItemAt(itemInHand.ItemGetFrom.slotIndex, currentEquipmentSlot.ItemData);
-                        }
-                        itemInHand.RemoveItem();
-                        UIPlayerEquipment.Instance.UpdateEquipmentUI();
-                        EventManager.TriggerPlayerEquipmentChangedEvent();
-
-                    }
-                }
-            }
-        }
-
-
-
-
-
-
-
+       
 
         /// <summary>
         /// Open or close chest if single left clicked

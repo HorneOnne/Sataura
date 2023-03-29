@@ -7,46 +7,57 @@ namespace Sataura
     /// </summary>
     public class UIManager : Singleton<UIManager>
     {
-        [field: SerializeField] public GameObject PlayerInGameInventoryCanvas { get; private set; }
-        [field: SerializeField] public GameObject CreativeInventoryCanvas { get; private set; }
-        [field: SerializeField] public GameObject CraftingTableCanvas { get; private set; }
-        [field: SerializeField] public GameObject PlayerInformationCanvas { get; private set; }
-        [field: SerializeField] public GameObject PlayerEquipmentCanvas { get; private set; }
-        [field: SerializeField] public GameObject ChestInventoryCanvas { get; private set; }
-        [field: SerializeField] public GameObject AnvilCanvas { get; private set; }
-        [field: SerializeField] public GameObject ItemDescCanvas { get; private set; }
-        [field: SerializeField] public GameObject MenuCanvas { get; private set; }
+        [Header("Canvas")]
+        public GameObject playerInGameInventoryCanvas;
+        public GameObject creativeInventoryCanvas;
+        public GameObject playerInformationCanvas;
+        public GameObject chestInventoryCanvas;
+        public GameObject menuCanvas;
+
+        [Header("Panel")]
+        public GameObject upgradeItemSkillPanel;
+
+
+        private void OnEnable()
+        {
+            IngameInformationManager.OnPlayerLevelUp += OpenUpgradeItemSkillPanel;
+        }
+
+        private void OnDisable() 
+        {
+            IngameInformationManager.OnPlayerLevelUp -= OpenUpgradeItemSkillPanel;
+        }
 
 
         private void Awake()
         {
             // Activate all UI canvases on awake.
-            if(PlayerInGameInventoryCanvas != null)
-                PlayerInGameInventoryCanvas.SetActive(true);
+            if(playerInGameInventoryCanvas != null)
+                playerInGameInventoryCanvas.SetActive(true);
 
-            if(CreativeInventoryCanvas != null)
-                CreativeInventoryCanvas.SetActive(true);
+            if(creativeInventoryCanvas != null)
+                creativeInventoryCanvas.SetActive(true);
 
-            if (CraftingTableCanvas != null)
-                CraftingTableCanvas.SetActive(true);
-
-            if (PlayerInformationCanvas != null)
-                PlayerInformationCanvas.SetActive(true);
-
-            if (PlayerEquipmentCanvas != null)
-                PlayerEquipmentCanvas.SetActive(true);
-
-            if (ChestInventoryCanvas != null)
-                ChestInventoryCanvas.SetActive(true);
-
-            if (AnvilCanvas != null)
-                AnvilCanvas.SetActive(true);
-
-            if (ItemDescCanvas != null)
-                ItemDescCanvas.SetActive(true);
-
-            if (MenuCanvas != null)
-                MenuCanvas.SetActive(true);
+            if (menuCanvas != null)
+                menuCanvas.SetActive(true);     
         }
+
+
+
+        private void OpenUpgradeItemSkillPanel()
+        {
+            upgradeItemSkillPanel.SetActive(true);
+            UIIngameInformationManager.Instance.FakeFullExpSliderWhenLevelUp();
+            Time.timeScale = 0.0f;
+        }
+
+
+
+        public void CloseUpgradeItemSkillPanel()
+        {
+            upgradeItemSkillPanel.SetActive(false);        
+            Time.timeScale = 1.0f;
+        }
+
     }
 }

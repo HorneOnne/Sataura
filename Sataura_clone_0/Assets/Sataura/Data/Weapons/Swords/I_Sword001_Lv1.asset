@@ -12,27 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11fb6a7510fa58b499a26b35445b0d79, type: 3}
   m_Name: I_Sword001_Lv1
   m_EditorClassIdentifier: 
+  itemName: Wooden Sword
   icon: {fileID: 2051969137, guid: d4d04b54f146fc9499ef61e7951f0861, type: 3}
   itemCategory: 1
-  itemType: 5
+  itemType: 4
   max_quantity: 1
-  description: '~Sword01
-
-    -+ 10 attack damage
-
-    -+ 1.5 attack speed
-
-'
-  usageVelocity: 2
+  description: Gain wooden sword.
+  usageVelocity: 2.5
   currentLevel: 1
-  maxLevel: 2
+  maxLevel: 5
   upgradeRecipe:
-    materials:
-    - itemData: {fileID: 11400000, guid: 4a3a1a4e0f9f6af4990ffb1c3d710357, type: 2}
-      quantity: 10
+    materials: []
     outputItem:
-      itemData: {fileID: 11400000, guid: cef6d1d1158119d4cb05ee659b6fe843, type: 2}
-      quantity: 1
+      itemData: {fileID: 0}
+      quantity: 0
   damage: 10
   knockback: 6
   useType: 1

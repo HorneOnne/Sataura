@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 329cd0043012fee4f8d0a0a6cfd837c6, type: 3}
   m_Name: I_Bow001_Lv1
   m_EditorClassIdentifier: 
+  itemName: 
   icon: {fileID: 907304249, guid: d4d04b54f146fc9499ef61e7951f0861, type: 3}
   itemCategory: 1
-  itemType: 4
+  itemType: 3
   max_quantity: 1
   description: '~Bow001
 
@@ -25,7 +26,7 @@ MonoBehaviour:
 '
   usageVelocity: 1
   currentLevel: 1
-  maxLevel: 3
+  maxLevel: 5
   upgradeRecipe:
     materials:
     - itemData: {fileID: 11400000, guid: 4a3a1a4e0f9f6af4990ffb1c3d710357, type: 2}

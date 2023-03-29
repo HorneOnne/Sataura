@@ -11,7 +11,6 @@ namespace Sataura
         public int currencyDropFrom;
         public int currencyDropTo;
 
-
         /*
          * Base unit: Bronze
          * 
@@ -20,6 +19,10 @@ namespace Sataura
          * 
          * Ex: currency = 234 (2 sliver + 34 bronze)
          */
+
+        [Header("Exp")]
+        public Experience exp;
+        //public int exp;
     }
 
 }

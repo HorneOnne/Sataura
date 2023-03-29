@@ -7,43 +7,33 @@
     {
         // Armor
         ChestArmor,
-        Helm,
         Shield,
-        Shoes,
+        Boots,
 
         // Weapons
         Bow,
         Sword,
-        Axe,
-        Hammer,
         Boomerang,
-        MagicStaff,
 
         // Ammunition
         Arrow,
         Bullet,
 
-        // Consumables
+        /*// Consumables
         Buff,
         Consumption,
 
-        // Crafting materials
-        Material,
-
         // Furniture
         Chest,
-        Workbench,
-        Anvil,
 
         // Miscellaneous
         CombatDummy,
         Currency,
-        LightSource,
 
         Hook,
         Accessory,
 
-        Null,
+        Null,*/
 
 
     }

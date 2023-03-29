@@ -61,8 +61,8 @@ namespace Sataura
             itemDataManager = GameDataManager.Instance;
             LoadAllItems();
 
-            if (useCraftingSuggestion)
-                uiCraftingTableCanvas = UIManager.Instance.CraftingTableCanvas;
+            /*if (useCraftingSuggestion)
+                uiCraftingTableCanvas = UIManager.Instance.CraftingTableCanvas;*/
 
             AlreadyLoadReferences = true;
         }

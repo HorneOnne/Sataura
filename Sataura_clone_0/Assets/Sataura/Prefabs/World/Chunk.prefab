@@ -8532,7 +8532,7 @@ GameObject:
   - component: {fileID: -475569694055513137}
   m_Layer: 0
   m_Name: Chunk
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -8619,7 +8619,7 @@ GameObject:
   - component: {fileID: 6405270068761362243}
   m_Layer: 24
   m_Name: Platform
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -14686,7 +14686,7 @@ GameObject:
   - component: {fileID: 4235762180647731496}
   m_Layer: 31
   m_Name: Tiles
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647

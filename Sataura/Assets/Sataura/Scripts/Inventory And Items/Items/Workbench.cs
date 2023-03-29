@@ -20,7 +20,7 @@ namespace Sataura
  
         public override void OnNetworkSpawn()
         {
-            uiCraftingTableCanvas = UIManager.Instance.CraftingTableCanvas;
+            //uiCraftingTableCanvas = UIManager.Instance.CraftingTableCanvas;
         }
 
 

@@ -50,7 +50,7 @@ namespace Sataura
 
             // outputSlot Event
             Utilities.AddEvent(outputSlot, EventTriggerType.PointerClick, (baseEvent) => OnOutputSlotClick(baseEvent, outputSlot));
-            UIManager.Instance.CraftingTableCanvas.SetActive(false);
+            //UIManager.Instance.CraftingTableCanvas.SetActive(false);
         }
 
 

@@ -113,7 +113,7 @@ namespace Sataura
 
             // Update Inventory UI at the first time when start game.
             Invoke("UpdateInventoryUI", .1f);
-            UIManager.Instance.ChestInventoryCanvas.SetActive(false);
+            UIManager.Instance.chestInventoryCanvas.SetActive(false);
 
             AlreadyLoadReferences = true;
         }

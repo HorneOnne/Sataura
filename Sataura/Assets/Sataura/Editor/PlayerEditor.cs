@@ -13,7 +13,6 @@ namespace Sataura
 
         private SerializedProperty handleItemProperty;
         private SerializedProperty handleMovementProperty;
-        private SerializedProperty handleEquipmentProperty;
 
 
         private SerializedProperty canUseItemProperty;
@@ -31,8 +30,6 @@ namespace Sataura
         {
             handleItemProperty = serializedObject.FindProperty("handleItem");
             handleMovementProperty = serializedObject.FindProperty("handleMovement");
-            handleEquipmentProperty = serializedObject.FindProperty("handleEquipment");
-
 
             playerDataProperty = serializedObject.FindProperty("playerData");
             characterDataProperty = serializedObject.FindProperty("characterData");
@@ -108,16 +105,6 @@ namespace Sataura
                 GUILayout.BeginHorizontal();
                 GUILayout.Space(15);
                 EditorGUILayout.PropertyField(playerMovementyProperty);
-                GUILayout.EndHorizontal();
-            }
-
-
-            EditorGUILayout.PropertyField(handleEquipmentProperty);
-            if(handleEquipmentProperty.boolValue)
-            {
-                GUILayout.BeginHorizontal();
-                GUILayout.Space(15);
-                EditorGUILayout.PropertyField(playerEquipmentyProperty);
                 GUILayout.EndHorizontal();
             }
 

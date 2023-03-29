@@ -50,6 +50,36 @@ namespace Sataura
             }    
         }
 
+        private void FixedUpdate()
+        {
+            if (IsServer == false) return;
+
+            if(Input.GetKeyDown(KeyCode.M))
+            {
+                for (int i = 0; i < inGameInventoryData.itemSlots.Count; i++)
+                {
+                    int itemID = GameDataManager.Instance.GetItemID(inGameInventoryData.itemSlots[i].ItemData);
+                    if(itemID != -1)
+                    {
+                        InstantitateCurrentItemNetworkObjectServerRpc(itemID);
+                    }             
+                }
+            }
+            
+        }
+        [ServerRpc]
+        private void InstantitateCurrentItemNetworkObjectServerRpc(int itemID)
+        {
+            var currentItemObject = Utilities.InstantiateItemNetworkObject(itemID, 1);
+            currentItemObject.GetComponent<NetworkObject>().Spawn(true);
+            currentItemObject.GetComponent<NetworkObject>().TrySetParent(player.HandHoldItem);
+            currentItemObject.transform.localPosition = Vector3.zero;
+            currentItemObject.transform.localScale = Vector3.one;
+        }
+
+
+
+
         [ServerRpc]
         public void AddInHandItemSlotAtServerRpc(ulong clientId, int index)
         {

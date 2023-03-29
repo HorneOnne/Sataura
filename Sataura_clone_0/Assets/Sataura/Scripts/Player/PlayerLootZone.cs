@@ -43,6 +43,10 @@ namespace Sataura
                     if(IsServer)
                         collision.gameObject.GetComponent<NetworkObject>().Despawn();
                 }
+                else if(collectibleObject is Experience)
+                {
+                    collectibleObject.Collect(player);
+                }
             }
         }
 

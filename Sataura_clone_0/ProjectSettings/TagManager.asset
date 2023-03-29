@@ -37,7 +37,7 @@ TagManager:
   - Background
   - Platform
   - CameraBounds
-  - Currency
+  - Lootable
   - Item
   - Character
   - Projectile
@@ -50,7 +50,7 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Currency
+  - name: Lootable
     uniqueID: 1028821391
     locked: 0
   - name: Enemy
@@ -58,4 +58,10 @@ TagManager:
     locked: 0
   - name: Player
     uniqueID: 3523626263
+    locked: 0
+  - name: VFX
+    uniqueID: 1119011267
+    locked: 0
+  - name: UI
+    uniqueID: 1493540081
     locked: 0

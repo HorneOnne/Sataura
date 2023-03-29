@@ -14,7 +14,6 @@ namespace Sataura
         private const string projectilePrefabPrefix = "PP_";
         private const string enemyPrefabPrefix = "EP_";
         private const string itemDataPrefix = "I_";
-        private const string upgradeableItemDataPrefix = "UI_";
         private const string craftingRecipePrefix = "CR_";
 
 
@@ -84,7 +83,7 @@ namespace Sataura
         [Header("DUST DATA")]
         public List<ProjectileParticleData> projectileParticleDatas;
 
-        [Space(50)]
+        //[Space(50)]
         [Header("NETWORK OBJECT")]
         public List<GameObject> networkObjects;
 
@@ -95,6 +94,13 @@ namespace Sataura
         public Transform itemContainerParent;
 
 
+        [Header("Players")]
+        public Dictionary<ulong, Player> players = new Dictionary<ulong, Player>();
+
+
+
+        [Header("Upgrade Skills Data")]
+        public List<ItemData> upgradeSkills;
 
         /// <summary>
         /// Initializes the item data and prefab dictionaries, and generates the recipe dictionaries.
@@ -374,6 +380,13 @@ namespace Sataura
         public GameObject GetBronzeCoin() => bronzeCoinPrefab;
         public GameObject GetSliverCoin() => sliverCoinPrefab;
         public GameObject GetGoldCoin() => goldCoinPrefab;
+
+
+
+        public void AddNetworkPlayer(ulong clientId, Player player)
+        {
+            players.Add(clientId, player);
+        }
 
     }
 }

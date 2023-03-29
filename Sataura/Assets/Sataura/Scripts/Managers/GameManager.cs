@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using Cinemachine;
 using System.Collections.Generic;
-using Unity.Netcode;
 
 namespace Sataura
 {
@@ -18,7 +17,6 @@ namespace Sataura
         private void Awake()
         {
             Application.targetFrameRate = limitFps;
-
         }
 
     

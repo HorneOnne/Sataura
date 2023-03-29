@@ -82,11 +82,11 @@ namespace Sataura
         {
             bool canEquip = false;
 
-            if (equipItemSlot.ItemData.itemType == ItemType.Helm)
+            /*if (equipItemSlot.ItemData.itemType == ItemType.Helm)
             {
                 canEquip = true;
                 Helm = new ItemSlot(equipItemSlot);
-            }
+            }*/
 
             return canEquip;
         }
@@ -142,9 +142,9 @@ namespace Sataura
             bool canEquip;
             switch (itemType)
             {
-                case ItemType.Helm:
+                /*case ItemType.Helm:
                     canEquip = TryEquipHelm(equipItemSlot);
-                    break;
+                    break;*/
                 case ItemType.ChestArmor:
                     canEquip = TryEquipChest(equipItemSlot);
                     break;
@@ -168,8 +168,8 @@ namespace Sataura
         {
             switch (equipmentType)
             {
-                case ItemType.Helm:
-                    return Helm;
+                /*case ItemType.Helm:
+                    return Helm;*/
                 case ItemType.ChestArmor:
                     return Chest;
                 case ItemType.Shield:

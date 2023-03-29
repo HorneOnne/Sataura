@@ -77,7 +77,7 @@ namespace Sataura
  
         public override void OnNetworkSpawn()
         {
-            uiAnvilCanvas = UIManager.Instance.AnvilCanvas;
+            //uiAnvilCanvas = UIManager.Instance.AnvilCanvas;
             requiredMaterialSlots = new List<ItemSlot>();
             filledMaterialSlots = new List<ItemSlot>();
         }

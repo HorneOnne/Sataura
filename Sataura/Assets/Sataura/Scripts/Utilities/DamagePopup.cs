@@ -1,9 +1,10 @@
 using TMPro;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Sataura
 {
-    public class DamagePopup : MonoBehaviour
+    public class DamagePopup : NetworkBehaviour
     {
         private const float DISAPPEAR_TIMER_MAX = 1f;
         private float disappearTimer;
@@ -11,17 +12,24 @@ namespace Sataura
         private Vector3 moveVector;
         private TextMeshPro textMesh;
 
-        private bool wasReturnToPool;
+        [Header("Runtime References")]
+        [SerializeField] private NetworkObject networkObject;
+        [SerializeField] private GameObject damagePopupPrefab;
 
+   
         private void Awake()
         {
             textMesh = GetComponent<TextMeshPro>();
         }
 
+        public override void OnNetworkSpawn()
+        {
+            networkObject = GetComponent<NetworkObject>();
+            damagePopupPrefab = GameDataManager.Instance.GetItemPrefab("UIP_DamagePopup");
+        }
+
         public void SetUp(int damage, Color color, float size, Vector3 moveVector, Vector3 rotation)
         {
-            wasReturnToPool = false;
-
             this.textColor = color;
             textMesh.color = textColor;
             textMesh.fontSize = size;
@@ -69,15 +77,14 @@ namespace Sataura
 
 
 
-
-
         private void ReturnToPool()
         {
-            if (wasReturnToPool == true) return;
-
             ResetProperties();
-            DamagePopupSpawner.Instance.Pool.Release(this.gameObject);
-            wasReturnToPool = true;
+            //DamagePopupSpawner.Instance.Pool.Release(this.gameObject);
+            if (networkObject.IsSpawned)
+                networkObject.Despawn(false);
+
+            NetworkObjectPool.Singleton.ReturnNetworkObject(networkObject, damagePopupPrefab);
         }
 
         private void ResetProperties()

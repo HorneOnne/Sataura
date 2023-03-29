@@ -147,7 +147,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5207464967858103183}
   - component: {fileID: 5207464967858103184}
-  - component: {fileID: 5912903495902227307}
   m_Layer: 28
   m_Name: Model
   m_TagString: Untagged
@@ -199,30 +198,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.96, y: 2}
   m_EdgeRadius: 0
---- !u!114 &5912903495902227307
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5207464967858103182}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3ac4a770e04340545b4b680247544b1a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 5207464968289795732}
-  helmSr: {fileID: 5207464968426694067}
-  chestSr: {fileID: 5207464968280998305}
-  <Helm>k__BackingField:
-    <ItemData>k__BackingField: {fileID: 0}
-    <ItemQuantity>k__BackingField: 0
-  <Chest>k__BackingField:
-    <ItemData>k__BackingField: {fileID: 0}
-    <ItemQuantity>k__BackingField: 0
-  <Shield>k__BackingField:
-    <ItemData>k__BackingField: {fileID: 0}
-    <ItemQuantity>k__BackingField: 0
 --- !u!1 &5207464968012310429
 GameObject:
   m_ObjectHideFlags: 0
@@ -769,7 +744,6 @@ MonoBehaviour:
   itemInHand: {fileID: 8223764839905027213}
   playerMovement: {fileID: 6847856887161037802}
   playerInputHandler: {fileID: 6155473145235841608}
-  playerEquipment: {fileID: 5912903495902227307}
   handleItem: 1
   handleMovement: 1
   handleEquipment: 0
@@ -889,9 +863,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 5207464968289795732}
-  <CurrentMouseState>k__BackingField: 0
   utilityKeyBinding: 304
   dropItemKey: 116
+  selectItemBindingKeys: 310000003200000033000000340000003500000036000000370000003800000039000000
+  currentUseItemIndex:
+    m_InternalValue: -1
+  <CurrentMouseState>k__BackingField: 0
   canJump: 0
 --- !u!1 &9185397659400458250
 GameObject:
@@ -941,9 +918,6 @@ MonoBehaviour:
   itemSlot:
     <ItemData>k__BackingField: {fileID: 0}
     <ItemQuantity>k__BackingField: 0
-  itemSlotStruct:
-    itemID: 0
-    itemQuantity: 0
-  currentItem: {fileID: 0}
-  currentItemID:
-    m_InternalValue: 0
+  currentItemObject: {fileID: 0}
+  currentHoldHandItemID:
+    m_InternalValue: -1

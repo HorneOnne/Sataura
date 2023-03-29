@@ -8,7 +8,7 @@ namespace Sataura
 
         private void Start()
         {
-            UIManager.Instance.MenuCanvas.SetActive(false);
+            UIManager.Instance.menuCanvas.SetActive(false);
         }
 
         public void ReloadScene()

@@ -17,9 +17,6 @@ MonoBehaviour:
       <ItemData>k__BackingField: {fileID: 11400000, guid: af35a522cd21d764fabe95092e687b5f, type: 2}
       <ItemQuantity>k__BackingField: 10
     dropRate: 0.001
-  - itemDrop:
-      <ItemData>k__BackingField: {fileID: 11400000, guid: a6fd56d39c0e84d4fada9b54586bb1e6, type: 2}
-      <ItemQuantity>k__BackingField: 1
-    dropRate: 0.001
   currencyDropFrom: 30
   currencyDropTo: 90
+  exp: {fileID: 8071063141209586213, guid: ccbce2a4b09f2fd4d91f10dab693a3c0, type: 3}

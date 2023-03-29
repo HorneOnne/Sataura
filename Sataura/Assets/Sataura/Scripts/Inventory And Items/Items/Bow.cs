@@ -14,7 +14,7 @@ namespace Sataura
 
         [Header("Bow Properties")]
         private BowData bowItemData;
-        [SerializeField] private bool consumeArrow;
+        //[SerializeField] private bool consumeArrow;
 
 
         private ArrowData arrowItemData;
@@ -74,10 +74,10 @@ namespace Sataura
 
             }
 
-            if (consumeArrow)
+            /*if (consumeArrow)
             {
                 ConsumeArrowServerRpc((int)arrowSlotIndex);
-            }
+            }*/
 
             return true;
         }
@@ -147,7 +147,7 @@ namespace Sataura
         }
 
 
-        [ServerRpc]
+        /*[ServerRpc]
         private void ConsumeArrowServerRpc(int arrowIndex)
         {
             inGameInventory.inGameInventory[arrowIndex].RemoveItem();
@@ -177,8 +177,7 @@ namespace Sataura
             {
                 playerObject.PlayerInGameInventory.inGameInventory[arrowIndex].RemoveItem();
                 UIPlayerInGameInventory.Instance.UpdateInventoryUIAt(arrowIndex);
-            }
-            
-        }
+            }            
+        }*/
     }
 }

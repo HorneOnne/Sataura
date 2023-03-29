@@ -39,7 +39,7 @@ namespace Sataura
             anim = base.Model.GetComponent<Animator>();
             isOpen = false;
             chestInventory = GetComponent<ChestInventory>();
-            uiChestInventoryCanvas = UIManager.Instance.ChestInventoryCanvas;
+            uiChestInventoryCanvas = UIManager.Instance.chestInventoryCanvas;
         }
 
 

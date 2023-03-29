@@ -11,8 +11,12 @@ namespace Sataura
         private SwordData swordData;
 
         public NetworkObject swordNetworkObject;
-
         private float initialZAngle;
+
+
+        // Passive
+
+
         public override void OnNetworkSpawn()
         {
             swordProjectilePrefab = GameDataManager.Instance.GetProjectilePrefab("PP_SwordProjectile_001");
@@ -21,9 +25,7 @@ namespace Sataura
             if(IsServer)
             {
                 int itemID = GameDataManager.Instance.GetItemID(swordData);
-                SetDataServerRpc(itemID, 1);
-
-                
+                SetDataServerRpc(itemID, 1);       
             }
         }
 

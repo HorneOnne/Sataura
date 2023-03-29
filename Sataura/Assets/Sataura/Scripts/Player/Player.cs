@@ -1,14 +1,10 @@
 using System.Collections;
 using Unity.Netcode;
-using Unity.Netcode.Components;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace Sataura
 {
-    /// <summary>
-    /// Class that represents a player character.
-    /// </summary>
     public class Player : NetworkBehaviour
     {
         //[Header("CHARACTER REFERENCES")]
@@ -51,7 +47,7 @@ namespace Sataura
         [HideInInspector] public ItemInHand ItemInHand { get => itemInHand; }
         [HideInInspector] public PlayerMovement PlayerMovement { get => playerMovement; }
         [HideInInspector] public PlayerInputHandler PlayerInputHandler { get => playerInputHandler; }
-        [HideInInspector] public PlayerEquipment PlayerEquipment { get => playerEquipment; }
+        //[HideInInspector] public PlayerEquipment PlayerEquipment { get => playerEquipment; }
         [HideInInspector] public Transform HandHoldItem 
         {
             get 
@@ -75,9 +71,8 @@ namespace Sataura
 
         public override void OnNetworkSpawn()
         {
-            Debug.Log("OnNetworkSpawn");
             PlayerInput = GetComponent<PlayerInput>();
-            
+            GameDataManager.Instance.AddNetworkPlayer(NetworkManager.LocalClientId, this);
 
             if (IsOwner)
             {
@@ -86,9 +81,9 @@ namespace Sataura
                 
                 UIPlayerInGameInventory.Instance.SetPlayer(this);
                 UIItemInHand.Instance.SetPlayer(this);
-                UIPlayerEquipment.Instance.SetPlayer(this);
+                //UIPlayerEquipment.Instance.SetPlayer(this);
                 UICreativeInventory.Instance.SetPlayer(this);
-                UIChestInventory.Instance.SetPlayer(this);                                                
+                //UIChestInventory.Instance.SetPlayer(this);                                                
             }
 
 
@@ -122,9 +117,9 @@ namespace Sataura
             {
                 UIPlayerInGameInventory.Instance.LoadReferences();
                 UIItemInHand.Instance.LoadReferences();
-                UIPlayerEquipment.Instance.LoadReferences();
+                //UIPlayerEquipment.Instance.LoadReferences();
                 UICreativeInventory.Instance.LoadReferences();
-                UIChestInventory.Instance.LoadReferences();              
+                //UIChestInventory.Instance.LoadReferences();              
             }
 
             if(IsOwner)
@@ -132,7 +127,7 @@ namespace Sataura
                 CameraBounds.Instance.localPlayer = this.transform;               
             }
 
-            StartCoroutine(TeleportPlayerInPosition(new Vector2(200, 30), 0.3f));
+            StartCoroutine(TeleportPlayerInPosition(new Vector2(50, 30), 0.3f));
 
 
             

@@ -63,7 +63,7 @@ namespace Sataura
 
 
             // Deactivate the anvil UI canvas.
-            UIManager.Instance.AnvilCanvas.SetActive(false);
+            //UIManager.Instance.AnvilCanvas.SetActive(false);
         }
 
 
