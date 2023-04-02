@@ -22,7 +22,7 @@ namespace Sataura
 
 
         [Header("References")]
-        [SerializeField] protected NetworkObject networkObject;
+        public NetworkObject networkObject;
 
         protected ParticleControl particleControl;
         [HideInInspector] public SpriteRenderer spriteRenderer;
@@ -30,14 +30,21 @@ namespace Sataura
         protected GameDataManager itemDataManager;
 
 
+        #region Properties
+
+        #endregion
+
 
         private void Awake()
         {
             LoadComponents();
         }
 
-        
 
+        public override void OnNetworkSpawn()
+        {
+            networkObject = GetComponent<NetworkObject>();
+        }
 
         private void LoadComponents()
         {

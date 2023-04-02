@@ -13,16 +13,13 @@ MonoBehaviour:
   m_Name: I_Boomerang001_Lv4
   m_EditorClassIdentifier: 
   itemName: Boomerang
-  icon: {fileID: 613360448, guid: d4d04b54f146fc9499ef61e7951f0861, type: 3}
+  icon: {fileID: 986195305, guid: d4d04b54f146fc9499ef61e7951f0861, type: 3}
   itemCategory: 1
   itemType: 5
   max_quantity: 1
-  description: '~Boomerang001
-
-    -+ 10 attack damage
-
-    -+ 2.0 attack speed'
+  description: + 5 damage and 10 speed.
   usageVelocity: 2
+  usagePassiveVelocity: 1
   currentLevel: 4
   maxLevel: 5
   upgradeRecipe:
@@ -30,8 +27,8 @@ MonoBehaviour:
     outputItemSlot:
       itemData: {fileID: 11400000, guid: 85f11a099d612f747af53047f27a41ae, type: 2}
       quantity: 1
-  damage: 10
-  releaseSpeed: 30
-  timeToReturn: 2
+  damage: 20
+  releaseSpeed: 60
+  timeToReturn: 1.2
   rotateSpeed: 2
-  attackType: 1
+  attackType: 2

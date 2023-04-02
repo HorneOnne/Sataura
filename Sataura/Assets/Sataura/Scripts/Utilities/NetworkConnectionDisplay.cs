@@ -27,7 +27,7 @@ namespace Sataura
                 StartHost();
             }
 
-            Rect serverButtonRect = new Rect(Screen.width - buttonWidth - rightMargin, hostButtonRect.yMax + buttonSpacing, buttonWidth, buttonHeight);
+            /*Rect serverButtonRect = new Rect(Screen.width - buttonWidth - rightMargin, hostButtonRect.yMax + buttonSpacing, buttonWidth, buttonHeight);
             if (GUI.Button(serverButtonRect, "Server", buttonStyle))
             {
                 StartServer();
@@ -37,7 +37,7 @@ namespace Sataura
             if (GUI.Button(clientButtonRect, "Client", buttonStyle))
             {
                 StartClient();
-            }
+            }*/
         }
 
         private void StartHost()

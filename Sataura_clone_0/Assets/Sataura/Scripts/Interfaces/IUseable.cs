@@ -13,5 +13,6 @@ namespace Sataura
         /// <param name="player">The player using the object.</param>
         /// <returns>True if the object was successfully used, false otherwise.</returns>
         public bool Use(Player player, Vector2 mousePosition);
+        public void UsePassive(Player player, Vector2 mousePosition);
     }
 }

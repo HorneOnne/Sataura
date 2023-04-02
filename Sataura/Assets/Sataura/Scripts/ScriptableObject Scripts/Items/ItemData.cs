@@ -20,6 +20,7 @@ namespace Sataura
        
         [Tooltip("The usage velocity property indicates how quickly this item can be used within a specific timeframe. The value represents the number of times the item can be used in one second.")]
         public float usageVelocity = 1.0f;
+        public float usagePassiveVelocity = 1.0f;
 
 
         [Header("LEVEL")]
@@ -30,7 +31,10 @@ namespace Sataura
         [Header("UPGRADE RECIPE")]
         public ItemUpgradeRecipe upgradeRecipe;
 
-
+        public bool IsMaxLevel()
+        {
+            return currentLevel == maxLevel;
+        }
 
         /// <summary>
         /// Determines whether this instance and another specified <see cref="ItemData"/> object have the same value.

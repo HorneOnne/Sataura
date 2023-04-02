@@ -23,6 +23,7 @@ namespace Sataura
         [SerializeField] private PlayerMovement playerMovement;
         [SerializeField] private PlayerInputHandler playerInputHandler;
         [SerializeField] private PlayerEquipment playerEquipment;
+        [SerializeField] private PlayerUseItem playerUseItem;
 
 
 
@@ -47,7 +48,7 @@ namespace Sataura
         [HideInInspector] public ItemInHand ItemInHand { get => itemInHand; }
         [HideInInspector] public PlayerMovement PlayerMovement { get => playerMovement; }
         [HideInInspector] public PlayerInputHandler PlayerInputHandler { get => playerInputHandler; }
-        //[HideInInspector] public PlayerEquipment PlayerEquipment { get => playerEquipment; }
+        [HideInInspector] public PlayerUseItem PlayerUseItem { get => playerUseItem; }
         [HideInInspector] public Transform HandHoldItem 
         {
             get 
@@ -81,7 +82,6 @@ namespace Sataura
                 
                 UIPlayerInGameInventory.Instance.SetPlayer(this);
                 UIItemInHand.Instance.SetPlayer(this);
-                //UIPlayerEquipment.Instance.SetPlayer(this);
                 UICreativeInventory.Instance.SetPlayer(this);
                 //UIChestInventory.Instance.SetPlayer(this);                                                
             }
@@ -117,7 +117,6 @@ namespace Sataura
             {
                 UIPlayerInGameInventory.Instance.LoadReferences();
                 UIItemInHand.Instance.LoadReferences();
-                //UIPlayerEquipment.Instance.LoadReferences();
                 UICreativeInventory.Instance.LoadReferences();
                 //UIChestInventory.Instance.LoadReferences();              
             }
@@ -127,13 +126,13 @@ namespace Sataura
                 CameraBounds.Instance.localPlayer = this.transform;               
             }
 
-            StartCoroutine(TeleportPlayerInPosition(new Vector2(50, 30), 0.3f));
+            StartCoroutine(TeleportPlayerToPosition(new Vector2(50, 30), 0.3f));
 
 
             
         }
 
-        private IEnumerator TeleportPlayerInPosition(Vector2 position, float time)
+        private IEnumerator TeleportPlayerToPosition(Vector2 position, float time)
         {
             playerMovement.Rb2D.isKinematic = true;
             yield return new WaitForSeconds(time);

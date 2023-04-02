@@ -13,19 +13,20 @@ MonoBehaviour:
   m_Name: I_Sword001_Evo
   m_EditorClassIdentifier: 
   itemName: Wooden Sword
-  icon: {fileID: 2051969137, guid: d4d04b54f146fc9499ef61e7951f0861, type: 3}
+  icon: {fileID: 1715447060, guid: d4d04b54f146fc9499ef61e7951f0861, type: 3}
   itemCategory: 1
   itemType: 4
   max_quantity: 1
   description: Gain wooden sword.
-  usageVelocity: 2.5
+  usageVelocity: 5
+  usagePassiveVelocity: 1
   currentLevel: 1
-  maxLevel: 5
+  maxLevel: 1
   upgradeRecipe:
     materials: []
-    outputItem:
-      itemData: {fileID: 11400000, guid: cef6d1d1158119d4cb05ee659b6fe843, type: 2}
-      quantity: 1
+    outputItemSlot:
+      itemData: {fileID: 0}
+      quantity: 0
   damage: 10
   knockback: 6
   useType: 1

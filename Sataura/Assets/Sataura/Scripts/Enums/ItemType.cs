@@ -19,6 +19,8 @@
         Arrow,
         Bullet,
 
+        MagnetStone,
+
         /*// Consumables
         Buff,
         Consumption,

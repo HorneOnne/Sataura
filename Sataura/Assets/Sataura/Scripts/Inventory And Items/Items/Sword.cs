@@ -1,5 +1,4 @@
 using Unity.Netcode;
-using Unity.Netcode.Components;
 using UnityEngine;
 
 namespace Sataura
@@ -10,12 +9,12 @@ namespace Sataura
         private GameObject swordProjectileObject;
         private SwordData swordData;
 
-        public NetworkObject swordNetworkObject;
+        private NetworkObject swordNetworkObject;
         private float initialZAngle;
 
 
         // Passive
-
+        [SerializeField] private GameObject passiveProjectilePrefab;
 
         public override void OnNetworkSpawn()
         {
@@ -46,8 +45,27 @@ namespace Sataura
 
             return true;
         }
-        
-    
+
+
+
+        float usagePassiveTimeCount = 0.0f;
+        public override void UsePassive(Player player, Vector2 mousePosition)
+        {
+            if(Time.time - usagePassiveTimeCount > (1.0f / ItemData.usagePassiveVelocity))
+            {
+                usagePassiveTimeCount = Time.time;
+            }
+            else
+            {
+                return;
+            }
+
+            var passiveObject = Instantiate(passiveProjectilePrefab, player.transform.position, Quaternion.identity);
+            var passiveProjectile = passiveObject.GetComponent<NetworkProjectile>();
+            passiveProjectile.networkObject.Spawn();
+        }
+
+
 
         private void UseType01(Player player, Vector2 mousePosition)
         {

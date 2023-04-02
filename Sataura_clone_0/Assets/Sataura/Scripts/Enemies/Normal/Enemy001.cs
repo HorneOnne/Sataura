@@ -18,6 +18,7 @@ namespace Sataura
 
             var enemyPrefab = GameDataManager.Instance.GetEnemyPrefab("EP_Enemies001");
             networkObjectPool.ReturnNetworkObject(networkObject, enemyPrefab);
+
         }      
     }
 

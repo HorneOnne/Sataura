@@ -101,7 +101,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <ItemData>k__BackingField: {fileID: 0}
   useGravity: 0
-  networkObject: {fileID: 0}
+  networkObject: {fileID: 503436786407757704}
   spriteRenderer: {fileID: 0}
 --- !u!114 &503436786407757704
 MonoBehaviour:

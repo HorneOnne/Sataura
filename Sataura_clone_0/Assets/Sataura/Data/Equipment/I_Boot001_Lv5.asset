@@ -17,8 +17,9 @@ MonoBehaviour:
   itemCategory: 0
   itemType: 2
   max_quantity: 1
-  description: 
+  description: Grant you 80% movement speed and 40% jump force.
   usageVelocity: 1
+  usagePassiveVelocity: 1
   currentLevel: 5
   maxLevel: 5
   upgradeRecipe:
@@ -26,5 +27,5 @@ MonoBehaviour:
     outputItemSlot:
       itemData: {fileID: 0}
       quantity: 1
-  adddedMovementSpeed: 10
-  addedJumpForce: 10
+  hastePercent: 80
+  leapPercent: 40

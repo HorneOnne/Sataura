@@ -95,24 +95,28 @@ namespace Sataura
             levelSlider.value = levelSlider.maxValue;
         }
 
+   
+
         private void GenerateUpgradeList()
         {
-            var upgradeItems = ItemEvolutionManager.Instance.GenerateUpgradeItemData(GameDataManager.Instance.players[0]);
+            Debug.LogWarning("Optimize this.");
 
-            for(int i = 0; i < uIUpgradeSkills.Count; i++)
+            var upgradeItemDict = ItemEvolutionManager.Instance.GenerateUpgradeItemData(GameDataManager.Instance.players[0]);
+
+            for (int i = 0; i < uIUpgradeSkills.Count; i++)
             {
                 Destroy(uIUpgradeSkills[i].gameObject);
             }
             uIUpgradeSkills.Clear();
 
 
-            for (int i = 0; i < upgradeItems.Count; i++)
+            for (int i = 0; i < upgradeItemDict.Count; i++)
             {
                 var uiUpgradeSkillObject = Instantiate(uIUpgradeSkillPrefab, uIUpgradeSkillParent);
                 uIUpgradeSkills.Add(uiUpgradeSkillObject.GetComponent<UIUpgradeSkill>());
 
-                var upgradeItem = upgradeItems.ElementAt(i);
-                uIUpgradeSkills[i].UpdateData(upgradeItem);
+                ItemData upgradeItem = upgradeItemDict.ElementAt(i).Key;
+                uIUpgradeSkills[i].UpdateData(upgradeItem, upgradeItemDict.ElementAt(i).Value);
             }
         }
     }

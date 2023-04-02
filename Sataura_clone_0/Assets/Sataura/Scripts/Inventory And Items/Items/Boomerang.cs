@@ -52,7 +52,10 @@ namespace Sataura
                     }
                     break;
                 case 2:
-                    
+                    boomerangProjectileObject = Instantiate(boomerangProjectilePrefab, transform.position, Quaternion.identity).GetComponent<BoomerangProjectile_001>();
+                    boomerangProjectileObject.GetComponent<NetworkObject>().Spawn();
+                    boomerangProjectileObject.SetData(this.ItemData);
+                    boomerangProjectileObject.Throw(player, (BoomerangData)this.ItemData);
                     break;
                 default:
                     break;

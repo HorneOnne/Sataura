@@ -9,6 +9,7 @@ namespace Sataura
         [SerializeField] private float jumpForce = 3f;
         private float jumpDelay = 2.0f; // the delay in seconds before the player can jump again
         [SerializeField] private bool canJump = true; // a flag indicating whether the player can jump
+        [SerializeField] protected Animator anim;
 
         public override void MoveAI(Vector2 playerPosition)
         {
@@ -89,6 +90,8 @@ namespace Sataura
 
         public override void OnEnemyDead()
         {
+            base.OnEnemyDead();
+
             rb2D.velocity = Vector2.zero;
             anim.SetTrigger("Dead");
 

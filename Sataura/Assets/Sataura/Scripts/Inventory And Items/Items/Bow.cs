@@ -18,9 +18,12 @@ namespace Sataura
 
 
         private ArrowData arrowItemData;
-        private int? arrowSlotIndex;
+        //private int? arrowSlotIndex;
         private ItemSlot arrowSlotInPlayerInventory;
-        private GameObject arrowProjectilePrefab;
+
+        [Header("References")]
+        [SerializeField] private GameObject arrowProjectilePrefab;
+        [SerializeField] private ArrowData baseArrowData;
         private ArrowProjectile_001 arrowProjectileObject;
 
 
@@ -32,7 +35,7 @@ namespace Sataura
         public override void OnNetworkSpawn()
         {
             bowItemData = (BowData)this.ItemData;
-            arrowProjectilePrefab = GameDataManager.Instance.GetProjectilePrefab("PP_ArrowProjectile_001");
+            //arrowProjectilePrefab = GameDataManager.Instance.GetProjectilePrefab("PP_ArrowProjectile_001");
 
 
             if (IsServer)
@@ -47,10 +50,9 @@ namespace Sataura
         public override bool Use(Player player, Vector2 mousePosition)
         {                    
             inGameInventory = player.PlayerInGameInventory;
-            arrowSlotIndex = inGameInventory.FindArrowSlotIndex();
-
-            if (arrowSlotIndex == null) return false;
-            if (arrowProjectilePrefab == null) return false;
+            /*arrowSlotIndex = inGameInventory.FindArrowSlotIndex();
+            if (arrowSlotIndex == null) return false;*/
+            //if (arrowProjectilePrefab == null) return false;
 
             if (cachedClientIds == null || cachedClientIds.Length == 0)
             {
@@ -65,7 +67,7 @@ namespace Sataura
                     UseType01(mousePosition);
                     break;
                 case 2:
-                    UseType02();
+                    UseType02(mousePosition);
                     break;
                 case 3:
                     UseType03();    
@@ -93,43 +95,35 @@ namespace Sataura
 
             arrowProjectileObject = netObject.GetComponent<ArrowProjectile_001>();
             Utilities.RotateObjectTowardMouse2D(mousePosition, arrowProjectileObject.transform, -45);
-            arrowSlotInPlayerInventory = inGameInventory.inGameInventory[(int)arrowSlotIndex];
-            arrowItemData = (ArrowData)arrowSlotInPlayerInventory.ItemData;
            
-            int arrowID = GameDataManager.Instance.GetItemID(arrowItemData);
+            int arrowID = GameDataManager.Instance.GetItemID(baseArrowData);
             arrowProjectileObject.SetDataServerRpc(arrowID, true);
-            arrowProjectileObject.Shoot(bowItemData, arrowItemData); 
+            arrowProjectileObject.Shoot(bowItemData, baseArrowData); 
         }
 
 
-        private void UseType02()
+        private void UseType02(Vector2 mousePosition)
         {
             for (int i = 0; i < 2; i++)
             {
-                arrowProjectileObject = ArrowProjectileSpawner.Instance.Pool.Get().GetComponent<ArrowProjectile_001>();
-                arrowProjectileObject.transform.position = shootingPoints[i].position;
-                arrowProjectileObject.transform.rotation = transform.rotation;
-                arrowSlotInPlayerInventory = inGameInventory.inGameInventory[(int)arrowSlotIndex];
-                arrowItemData = (ArrowData)arrowSlotInPlayerInventory.ItemData;
+                arrowProjectilePrefab = GameDataManager.Instance.GetProjectilePrefab("PP_ArrowProjectile_001");
+                var netObject = NetworkObjectPool.Singleton.GetNetworkObject(arrowProjectilePrefab, shootingPoints[0].position, transform.rotation);
 
-                int arrowID = GameDataManager.Instance.GetItemID(arrowItemData);
+                if (netObject.IsSpawned == false)
+                    netObject.Spawn();
+
+                arrowProjectileObject = netObject.GetComponent<ArrowProjectile_001>();
+                Utilities.RotateObjectTowardMouse2D(mousePosition, arrowProjectileObject.transform, -45);
+
+                int arrowID = GameDataManager.Instance.GetItemID(baseArrowData);
                 arrowProjectileObject.SetDataServerRpc(arrowID, true);
-                arrowProjectileObject.Shoot(bowItemData, arrowItemData);
+                arrowProjectileObject.Shoot(bowItemData, baseArrowData);
             }
         }
 
         private void UseType03()
         {
-            for (int i = 0; i < 3; i++)
-            {
-                arrowProjectileObject = ArrowProjectileSpawner.Instance.Pool.Get().GetComponent<ArrowProjectile_001>();
-                arrowProjectileObject.transform.position = shootingPoints[i].position;
-                arrowProjectileObject.transform.rotation = transform.rotation;
-                arrowSlotInPlayerInventory = inGameInventory.inGameInventory[(int)arrowSlotIndex];
-                arrowItemData = (ArrowData)arrowSlotInPlayerInventory.ItemData;
-                arrowProjectileObject.SetData(arrowItemData);
-                arrowProjectileObject.Shoot(bowItemData, arrowItemData);
-            }
+           
         }
 
 

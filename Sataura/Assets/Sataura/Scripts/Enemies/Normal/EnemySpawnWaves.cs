@@ -8,6 +8,8 @@ namespace Sataura
     {
         [SerializeField] private GameObject enemyPrefab;
         [SerializeField] private GameObject pinkSlimePrefab;
+        [SerializeField] private GameObject batPrefab;
+
         private NetworkObjectPool networkObjectPool;
 
 
@@ -76,6 +78,16 @@ namespace Sataura
             if(IngameInformationManager.Instance.currentTotalEnemiesIngame < 10)
             {
                 var enemyObject = Instantiate(pinkSlimePrefab, (Vector2)players[0].position + new Vector2(Random.Range(-30, 30),40), Quaternion.identity);
+                enemyObject.GetComponent<BaseEnemy>().SetFollowTarget(players[0]);
+
+                var enemyNetworkObject = enemyObject.GetComponent<NetworkObject>();
+                enemyNetworkObject.Spawn();
+                IngameInformationManager.Instance.currentTotalEnemiesIngame++;
+            }
+
+            if (IngameInformationManager.Instance.currentTotalEnemiesIngame < 20)
+            {
+                var enemyObject = Instantiate(batPrefab, (Vector2)players[0].position + new Vector2(Random.Range(-30, 30), 60), Quaternion.identity);
                 enemyObject.GetComponent<BaseEnemy>().SetFollowTarget(players[0]);
 
                 var enemyNetworkObject = enemyObject.GetComponent<NetworkObject>();

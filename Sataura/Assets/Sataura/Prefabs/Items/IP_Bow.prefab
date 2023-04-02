@@ -204,7 +204,8 @@ MonoBehaviour:
   - {fileID: 6053728810762693054}
   - {fileID: 5324487877288481257}
   - {fileID: 976841328162000962}
-  consumeArrow: 1
+  arrowProjectilePrefab: {fileID: 4973538020444718908, guid: 9962602cb9502cc49a3bd5d756c92401, type: 3}
+  baseArrowData: {fileID: 11400000, guid: af35a522cd21d764fabe95092e687b5f, type: 2}
 --- !u!114 &1706659015833893685
 MonoBehaviour:
   m_ObjectHideFlags: 0

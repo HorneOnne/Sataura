@@ -17,12 +17,8 @@ MonoBehaviour:
   itemCategory: 1
   itemType: 5
   max_quantity: 1
-  description: '~Boomerang001
-
-    -+ 10 attack damage
-
-    -+ 2.0 attack speed'
-  usageVelocity: 3
+  description: + 1 Boomerang.
+  usageVelocity: 2
   currentLevel: 1
   maxLevel: 5
   upgradeRecipe:
@@ -32,8 +28,9 @@ MonoBehaviour:
     outputItemSlot:
       itemData: {fileID: 11400000, guid: 43c76eba85fd69d4da650b527cdac8b5, type: 2}
       quantity: 1
+  hasItemObject: 1
   damage: 10
-  releaseSpeed: 50
+  releaseSpeed: 40
   timeToReturn: 0.7
   rotateSpeed: 5
   attackType: 1

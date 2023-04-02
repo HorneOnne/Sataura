@@ -8,7 +8,6 @@ namespace Sataura
     public abstract class BaseEnemy : NetworkBehaviour, IDamageable, IShowDamage
     {
         [Header("Base properties")]
-        [SerializeField] protected Animator anim;
         [SerializeField] protected Rigidbody2D rb2D;
         [SerializeField] protected BoxCollider2D boxCollider2D;
         [SerializeField] protected SpriteRenderer sr;
@@ -65,7 +64,10 @@ namespace Sataura
             currentHealth.Value -= damaged;          
         }
 
-        public virtual void OnEnemyDead() { }
+        public virtual void OnEnemyDead() 
+        {
+            boxCollider2D.enabled = false;
+        }
 
         public bool IsOutOfHealth()
         {

@@ -66,7 +66,10 @@ namespace Sataura
             if (spriteRenderer == null)
                 LoadComponents();
 
-            spriteRenderer.sprite = ItemData.icon;          
+            if(ItemData != null)
+                spriteRenderer.sprite = ItemData.icon;       
+            else
+                spriteRenderer.sprite = null;
         }
 
 
@@ -101,6 +104,9 @@ namespace Sataura
             return true;
         }
 
-  
+        public virtual void UsePassive(Player player, Vector2 mousePosition)
+        {
+            return;
+        }
     }
 }

@@ -110,15 +110,15 @@ namespace Sataura
         #endregion Properties
         
 
+        
+
+
 
         #region Events handler
         private void OnEnable()
         {
             if (player.canUseItem)
             {
-                //EventManager.OnItemInHandChanged += ReInstantiateItem;
-                //EventManager.OnItemInHandChanged += FastEquipItem;
-
                 EventManager.OnItemInHandChanged += ResetOnCurrentUseItemIndex;
             }
 
@@ -128,9 +128,6 @@ namespace Sataura
         {
             if (player.canUseItem)
             {
-                //EventManager.OnItemInHandChanged -= ReInstantiateItem;
-                //EventManager.OnItemInHandChanged -= FastEquipItem;
-
                 EventManager.OnItemInHandChanged -= ResetOnCurrentUseItemIndex;
             }
         }
@@ -278,6 +275,8 @@ namespace Sataura
                         itemInHand.UseItemServerRpc(mousePosition);
                     }
                 }
+
+
 
             }
         }

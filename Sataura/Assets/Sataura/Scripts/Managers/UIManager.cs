@@ -35,8 +35,8 @@ namespace Sataura
             if(playerInGameInventoryCanvas != null)
                 playerInGameInventoryCanvas.SetActive(true);
 
-            if(creativeInventoryCanvas != null)
-                creativeInventoryCanvas.SetActive(true);
+            /*if(creativeInventoryCanvas != null)
+                creativeInventoryCanvas.SetActive(true);*/
 
             if (menuCanvas != null)
                 menuCanvas.SetActive(true);     

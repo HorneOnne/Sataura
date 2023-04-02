@@ -14,7 +14,7 @@ namespace Sataura
         [SerializeField] private Player player;
         [SerializeField] private Rigidbody2D rb;
         [SerializeField] Transform groundCheckPoint;
-        private CharacterData playerData;
+        private CharacterData characterData;
 
         [SerializeField] private PlayerInputHandler playerInputHandler;
 
@@ -42,14 +42,57 @@ namespace Sataura
 
 
 
-        private float platformRationalOffsetWaitTime;
+        private void OnEnable()
+        {
+   
+        }
+
+        private void OnDisable()
+        {
+            
+        }
+
 
         public override void OnNetworkSpawn()
         {
             playerInputHandler = player.PlayerInputHandler;
-            playerData = player.characterData;
+            characterData = player.characterData;
             FacingDirection = 1;
+
+            SetMovementSpeed();
+            SetJumpForce();
         }
+
+
+        [Header("Character properties")]
+        [SerializeField] private float currentMovementSpeed;
+        [SerializeField] private float currentMovementForceInAir;
+        [SerializeField] private float currentJumpForce;
+
+
+        public void SetMovementSpeed(BootData _bootData = null)
+        {
+            if(_bootData != null)
+            {
+                currentMovementSpeed = characterData.movementSpeed + (characterData.movementSpeed * _bootData.hastePercent / 100);
+                currentMovementForceInAir = characterData.movementForceInAir + (characterData.movementForceInAir * _bootData.hastePercent / 100);
+            }            
+            else
+            {
+                currentMovementSpeed = characterData.movementSpeed;
+                currentMovementForceInAir = characterData.movementForceInAir;
+            }
+                
+        }
+
+        public void SetJumpForce(BootData _bootData = null)
+        {
+            if (_bootData != null)
+                currentJumpForce = characterData.jumpForce + (characterData.jumpForce * _bootData.leapPercent/100);
+            else
+                currentJumpForce = characterData.jumpForce;
+        }
+
 
         private void FixedUpdate()
         {
@@ -118,7 +161,7 @@ namespace Sataura
         {
             if (movementInputVector.x != 0)
             {
-                rb.velocity = new Vector2(movementInputVector.x * playerData.movementSpeed, rb.velocity.y);
+                rb.velocity = new Vector2(movementInputVector.x * currentMovementSpeed, rb.velocity.y);
             }
             else
             {
@@ -147,16 +190,16 @@ namespace Sataura
             {
                 if (movementInputVector.x == 0)
                 {
-                    rb.velocity = new Vector2(rb.velocity.x * playerData.airDragMultiplier, rb.velocity.y);
+                    rb.velocity = new Vector2(rb.velocity.x * characterData.airDragMultiplier, rb.velocity.y);
                 }
                 else
                 {
-                    Vector2 forceToAdd = new Vector2(playerData.movementForceInAir * movementInputVector.x, rb.velocity.y);
+                    Vector2 forceToAdd = new Vector2(currentMovementForceInAir * movementInputVector.x, rb.velocity.y);
                     rb.velocity = forceToAdd;
 
-                    if (Mathf.Abs(rb.velocity.x) > playerData.maxMovementSpeed)
+                    if (Mathf.Abs(rb.velocity.x) > characterData.maxMovementSpeed)
                     {
-                        rb.velocity = new Vector2(playerData.maxMovementSpeed * movementInputVector.x, rb.velocity.y);
+                        rb.velocity = new Vector2(characterData.maxMovementSpeed * movementInputVector.x, rb.velocity.y);
                     }
                 }
             }
@@ -165,25 +208,25 @@ namespace Sataura
 
         public void HandleJump()
         {
-            rb.velocity = new Vector2(rb.velocity.x, playerData.jumpForce);
+            rb.velocity = new Vector2(rb.velocity.x, currentJumpForce);
         }
 
 
         private void HandleSetMaxVelocity()
         {
-            if (rb.velocity.y > playerData.maxJumpVelocity)
-                rb.velocity = new Vector2(rb.velocity.x, playerData.maxJumpVelocity);
-            if (rb.velocity.y < playerData.maxFallVelocity)
-                rb.velocity = new Vector2(rb.velocity.x, playerData.maxFallVelocity);
+            if (rb.velocity.y > characterData.maxJumpVelocity)
+                rb.velocity = new Vector2(rb.velocity.x, characterData.maxJumpVelocity);
+            if (rb.velocity.y < characterData.maxFallVelocity)
+                rb.velocity = new Vector2(rb.velocity.x, characterData.maxFallVelocity);
         }
 
 
         private void HandleAddGravityMultiplier()
         {
             if (rb.velocity.y < 0)
-                rb.velocity += Vector2.up * Physics2D.gravity * playerData.fallMultiplier;
+                rb.velocity += Vector2.up * Physics2D.gravity * characterData.fallMultiplier;
             else if (rb.velocity.y > 0)
-                rb.velocity += Vector2.up * Physics2D.gravity * playerData.lowMultiplier;
+                rb.velocity += Vector2.up * Physics2D.gravity * characterData.lowMultiplier;
         }
 
         public void FlipCharacterFace(float XInput)

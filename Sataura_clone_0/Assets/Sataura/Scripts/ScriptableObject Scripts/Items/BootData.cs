@@ -6,7 +6,7 @@ namespace Sataura
     public class BootData : ItemData
     {
         [Header("Boot Data")]
-        public int adddedMovementSpeed;
-        public float addedJumpForce;
+        public int hastePercent;
+        public float leapPercent;
     }
 }

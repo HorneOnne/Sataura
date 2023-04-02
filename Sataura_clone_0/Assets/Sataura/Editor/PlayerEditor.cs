@@ -24,7 +24,7 @@ namespace Sataura
         private SerializedProperty itemInHandyProperty;
         private SerializedProperty playerMovementyProperty;
         private SerializedProperty playerInputHandleryProperty;
-        private SerializedProperty playerEquipmentyProperty;
+        private SerializedProperty playerUseItemProperty;
 
         private void OnEnable()
         {
@@ -43,7 +43,7 @@ namespace Sataura
             itemInHandyProperty = serializedObject.FindProperty("itemInHand");
             playerMovementyProperty = serializedObject.FindProperty("playerMovement");
             playerInputHandleryProperty = serializedObject.FindProperty("playerInputHandler");
-            playerEquipmentyProperty = serializedObject.FindProperty("playerEquipment");
+            playerUseItemProperty = serializedObject.FindProperty("playerUseItem");
         }
 
         public override void OnInspectorGUI()
@@ -58,13 +58,12 @@ namespace Sataura
 
 
 
-            
-
+       
             EditorGUILayout.PropertyField(playerDataProperty);
             EditorGUILayout.PropertyField(characterDataProperty);
 
             EditorGUILayout.PropertyField(playerInputHandleryProperty);
-
+            
             EditorGUILayout.PropertyField(handleItemProperty);          
             if (handleItemProperty.boolValue)
             {
@@ -77,6 +76,12 @@ namespace Sataura
                 GUILayout.Space(15);
                 EditorGUILayout.PropertyField(playerInGameInventoryProperty);
                 GUILayout.EndHorizontal();
+
+                GUILayout.BeginHorizontal();
+                GUILayout.Space(15);
+                EditorGUILayout.PropertyField(playerUseItemProperty);
+                GUILayout.EndHorizontal();
+
 
                 GUILayout.BeginHorizontal();
                 GUILayout.Space(15);

@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.Linq;
 using Unity.Netcode;
+using System;
 
 namespace Sataura
 {
@@ -15,9 +16,12 @@ namespace Sataura
         [Header("INVENTORY SETTINGS")]
         // The list of all item slots in the inventory.
         public List<ItemSlot> inGameInventory;
-        //[SerializeField] private InventoryData inGameInventoryData;
+
+        [Header("Runtime References")]
         public InventoryData inGameInventoryData;
 
+
+       
         #region Properties
         //public int Capacity { get { return inGameInventoryData.itemSlots.Count; } }
         public int Capacity 
@@ -40,39 +44,80 @@ namespace Sataura
             {
                 itemInHand = player.ItemInHand;
                 inGameInventory = inGameInventoryData.itemSlots;
-            }    
-        }
-
-        /*private void FixedUpdate()
-        {
-            if (IsServer == false) return;
-
-            if(Input.GetKeyDown(KeyCode.M))
-            {
-                for (int i = 0; i < inGameInventoryData.itemSlots.Count; i++)
-                {
-                    int itemID = GameDataManager.Instance.GetItemID(inGameInventoryData.itemSlots[i].ItemData);
-                    if(itemID != -1)
-                    {
-                        InstantitateCurrentItemNetworkObjectServerRpc(itemID);
-                    }             
-                }
             }
+
             
         }
-        [ServerRpc]
-        private void InstantitateCurrentItemNetworkObjectServerRpc(int itemID)
+
+        
+   
+
+        /*#region Use Passive Item
+        public void CreateAllPassiveItemObjectInInventory()
         {
-            var currentItemObject = Utilities.InstantiateItemNetworkObject(itemID, 1);
-            currentItemObject.GetComponent<NetworkObject>().Spawn(true);
-            currentItemObject.GetComponent<NetworkObject>().TrySetParent(player.HandHoldItem);
-            currentItemObject.transform.localPosition = Vector3.zero;
-            currentItemObject.transform.localScale = Vector3.one;
-        }*/
+            for(int i = 0; i < inGameInventory.Count; i++)
+            {
+                if (inGameInventory[i].HasItemData() == false)
+                    continue;
+
+                if (inGameInventory[i].ItemData is BootData)
+                {
+                    Debug.Log("Has boots data");
+                    player.PlayerMovement.SetBootsEquipProperties((BootData)inGameInventory[i].ItemData);
+                    
+                }
+                    
+
+                var itemPrefab = GameDataManager.Instance.GetItemPrefab($"IP_{inGameInventory[i].ItemData.itemType}");
+                if(itemPrefab != null)
+                {
+                    Debug.Log(itemPrefab.name);
+                    var obj = Instantiate(itemPrefab, transform.position, Quaternion.identity);
+                    var itemObj = obj.GetComponent<Item>();
+                    itemObj.SetData(inGameInventory[i]);
+                    itemObj.spriteRenderer.enabled = false;
+                    itemObj.GetComponent<NetworkObject>().Spawn();
+                    passiveItems.Add(itemObj);
+                }
+                
+            }
+        }
+
+        public void ClearAllPassiveItemObjectInInventory()
+        {
+            for (int i = 0; i < passiveItems.Count; i++)
+            {
+                passiveItems[i].GetComponent<NetworkObject>().Despawn();
+            }
+            passiveItems.Clear();
+        }
+
+
+        public float updateInterval = 0.05f; // the interval between updates in seconds
+        private float lastUpdateTime; // the time the method was last called
+        private void Update()
+        { 
+            if (Time.time - lastUpdateTime > updateInterval)
+            {
+                lastUpdateTime = Time.time;
+                // run update logic here
+                //......
+                for (int i = 0; i < passiveItems.Count; i++)
+                {
+                    if(ItemEvolutionManager.Instance.IsEvoItem(passiveItems[i].ItemData))
+                    {
+                        passiveItems[i].UsePassive(player, Vector2.zero);
+                    }                    
+                }
+            }
+
+        }
+
+        #endregion Use Passive Item*/
 
 
 
-        // START Item level skill methods
+        /*// START Item level skill methods
         // ========================
         public bool HasBaseItem(ItemData baseItem)
         {
@@ -85,7 +130,6 @@ namespace Sataura
                 }
                    
             }
-
             return false;
         }
 
@@ -114,8 +158,26 @@ namespace Sataura
                 return null;
             }
         }
+
+
+        public bool HasEvoOfBaseItem(ItemData baseItem)
+        {
+            int inventorySize = inGameInventory.Count;
+            for (int i = 0; i < inventorySize; i++)
+            {
+                if (inGameInventory[i].HasItemData() == false)
+                    continue;
+
+                if(inGameInventory[i].ItemData.Equals(ItemEvolutionManager.Instance.GetEvolutionItem(baseItem)))
+                {
+                    return true;
+                }
+
+            }
+            return false;
+        }
         // END Item level skill methods
-        // ========================
+        // ========================*/
 
 
 
@@ -193,7 +255,7 @@ namespace Sataura
                         }
                     }
                 }
-            }
+            }            
 
             return canAddItem;
         }

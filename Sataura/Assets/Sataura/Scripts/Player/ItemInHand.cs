@@ -66,10 +66,12 @@ namespace Sataura
             {
                 EventManager.OnItemInHandChanged += ReInstantiateItem;
                 currentHoldHandItemID.OnValueChanged += OnInHandItemIDChanged;
+                player.PlayerInputHandler.currentUseItemIndex.OnValueChanged += OnCurrentUseIndexItemIDChanged;
 
-                player.PlayerInputHandler.currentUseItemIndex.OnValueChanged += OnCurrentUseIndexItemIDChanged;               
+
+                // Optimize
+                UIUpgradeSkill.OnUpgradeButtonClicked += UpdateCurrentItemObjectData;
             }
-
         }
 
 
@@ -79,15 +81,15 @@ namespace Sataura
             {
                 EventManager.OnItemInHandChanged -= ReInstantiateItem;
                 currentHoldHandItemID.OnValueChanged -= OnInHandItemIDChanged;
-
                 player.PlayerInputHandler.currentUseItemIndex.OnValueChanged -= OnCurrentUseIndexItemIDChanged;
+
+
+                // Optimize
+                UIUpgradeSkill.OnUpgradeButtonClicked -= UpdateCurrentItemObjectData;
             }
         }
 
-        /*private void Start()
-        {
-            uiItemInHand = UIItemInHand.Instance;
-        }*/
+      
 
         public override void OnNetworkSpawn()
         {
@@ -95,6 +97,16 @@ namespace Sataura
             playerInputHandler = player.PlayerInputHandler;
         }
 
+
+        public void UpdateCurrentItemObjectData()
+        {
+            Debug.LogWarning("Optimize here.");
+            if(currentItemObject != null)
+            {
+                var playerIngameInventory = player.PlayerInGameInventory;
+                currentItemObject.SetData(playerIngameInventory.inGameInventory[playerInputHandler.currentUseItemIndex.Value]); 
+            }
+        }
 
         public bool HasItemObjectInServer(InventoryData inventoryData)
         {
@@ -477,10 +489,7 @@ namespace Sataura
         {
             return currentItemObject;
         }
-
-
-       
-
+   
 
         /// <summary>
         /// Checks whether the player currently has an item data in their hand or not.
@@ -654,8 +663,8 @@ namespace Sataura
         private void ReInstantiateItem()
         {
             if (!IsOwner) return;
-
             DespawnCurrentInHandNetworkObjectServerRpc();
+ 
             bool hasItemData = HasItemData();
             if (hasItemData)
             {
@@ -726,14 +735,13 @@ namespace Sataura
             {
                 return;
             }
-                
+          
 
             int itemID = GameDataManager.Instance.GetItemID(player.PlayerInGameInventory.inGameInventory[playerInputHandler.currentUseItemIndex.Value].ItemData);
             if (itemID == -1) return;
+
             InstantitateCurrentItemNetworkObjectServerRpc(NetworkManager.LocalClientId, itemID, 1);
         }
-
-  
     }
 }
 
