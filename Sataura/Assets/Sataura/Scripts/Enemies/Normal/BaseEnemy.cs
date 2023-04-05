@@ -52,7 +52,7 @@ namespace Sataura
         {
             if (!IsServer) return;
 
-            if (Time.time - timeElapse >= 0.035f)
+            if (Time.time - timeElapse >= 0.04f)
             {
                 timeElapse = Time.time;
                 MoveAI(playerTranform.position);
@@ -98,6 +98,11 @@ namespace Sataura
                     
                     if (IsOutOfHealth())
                     {
+                        rb2D.velocity = Vector2.zero;
+                        Vector2 direction = transform.position - collision.transform.position;
+                        direction.Normalize();
+                        rb2D.AddForce(direction * 100, ForceMode2D.Impulse);
+
                         isDead = true;
                         OnEnemyDead();
                         DropItem();

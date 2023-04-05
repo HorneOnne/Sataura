@@ -16,7 +16,6 @@ namespace Sataura
         private const string itemDataPrefix = "I_";
         private const string craftingRecipePrefix = "CR_";
 
-
         /// <summary>
         /// A list of all the item data.
         /// </summary>
@@ -116,6 +115,11 @@ namespace Sataura
 
         private void Start()
         {
+            if(NetworkManager.Singleton == null)
+            {
+                return;
+            }
+
             for (int i = 0; i < networkObjects.Count; i++)
             {
                 NetworkManager.Singleton.AddNetworkPrefab(networkObjects[i]);
@@ -204,6 +208,8 @@ namespace Sataura
 
         private void GenerateEnemyPrefabDictionary()
         {
+            if (enemyPrefabs.Count == 0) return;
+
             for (int i = 0; i < enemyPrefabs.Count; i++)
             {
                 if (enemyPrefabs[i] != null && enemyPrefabByNameDict.ContainsKey(enemyPrefabs[i].name))

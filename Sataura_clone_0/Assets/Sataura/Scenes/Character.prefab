@@ -76,9 +76,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 4961727775803394989}
-  <CurrentMouseState>k__BackingField: 0
   utilityKeyBinding: 304
   dropItemKey: 116
+  selectItemBindingKeys: 310000003200000033000000340000003500000036000000370000003800000039000000
+  currentUseItemIndex:
+    m_InternalValue: -1
+  <CurrentMouseState>k__BackingField: 0
+  canJump: 0
 --- !u!1 &7952288526522966490
 GameObject:
   m_ObjectHideFlags: 0
@@ -128,7 +132,18 @@ MonoBehaviour:
   rb: {fileID: 7279802175544915447}
   groundCheckPoint: {fileID: 8703207013837335970}
   playerInputHandler: {fileID: 0}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  platformLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  groundCheckRadius: 0
   isGrounded: 0
+  isOnPlatform: 0
+  currentMovementSpeed: 0
+  currentMovementForceInAir: 0
+  currentJumpForce: 0
 --- !u!1 &8833271547610160947
 GameObject:
   m_ObjectHideFlags: 0
@@ -280,18 +295,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57c48072f6b9e5248956ac58e2fe1fea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  handHoldItem: {fileID: 0}
+  handHoldItemToSpawn: {fileID: 0}
   playerData: {fileID: 11400000, guid: 69fb33f4da30ffb4eb53dcccd243fed1, type: 2}
+  characterData: {fileID: 11400000, guid: 065c071c566b4e4408dd38924ce3b03e, type: 2}
   playerInventory: {fileID: 0}
   playerInGameInventory: {fileID: 0}
   itemInHand: {fileID: 0}
   playerMovement: {fileID: 6424316758150495484}
   playerInputHandler: {fileID: 6903975491997409301}
   playerEquipment: {fileID: 0}
+  playerUseItem: {fileID: 0}
   handleItem: 0
   handleMovement: 1
   handleEquipment: 0
   canUseItem: 0
+  clientID:
+    m_InternalValue: 0
 --- !u!114 &5893294475097680329
 MonoBehaviour:
   m_ObjectHideFlags: 0

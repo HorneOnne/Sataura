@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
+using System.Collections.Generic;
 
 namespace Sataura
 {
@@ -96,6 +97,35 @@ namespace Sataura
         public static ItemSlot GetUpgradeItemSlot(ItemData itemData)
         {
             return new ItemSlot(itemData.upgradeRecipe.outputItemSlot.itemData,1);
+        }
+
+        public static Color HexToColor(string hexCode)
+        {
+            Color color;
+            if (ColorUtility.TryParseHtmlString(hexCode, out color))
+            {
+                return color;
+            }
+            else
+            {
+                // If the conversion fails, return white color
+                return Color.white;
+            }
+        }
+
+        public static InventoryData ConvertInventoryDataStructToInventoryData(InventoryStruct inventoryDataStruct)
+        {
+            InventoryData inventoryData = ScriptableObject.CreateInstance<InventoryData>();
+            inventoryData.itemSlots = new List<ItemSlot>();
+
+            for (int i = 0; i < inventoryDataStruct.itemDatas.Count; i++)
+            {
+                int id = inventoryDataStruct.itemDatas[i].itemID;
+                int quantity = inventoryDataStruct.itemDatas[i].itemQuantity;
+                inventoryData.itemSlots.Add(new ItemSlot(GameDataManager.Instance.GetItemData(id), quantity));
+            }
+
+            return inventoryData;
         }
     }
 }

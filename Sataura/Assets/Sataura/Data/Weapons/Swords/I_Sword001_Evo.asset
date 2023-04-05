@@ -28,5 +28,5 @@ MonoBehaviour:
       itemData: {fileID: 0}
       quantity: 0
   damage: 10
-  knockback: 6
+  knockback: 10
   useType: 1

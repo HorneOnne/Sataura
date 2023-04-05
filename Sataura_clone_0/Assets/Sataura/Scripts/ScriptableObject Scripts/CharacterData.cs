@@ -1,47 +1,22 @@
-using UnityEngine;
+﻿using UnityEngine;
+using System.Numerics;
 
 namespace Sataura
 {
     [CreateAssetMenu(fileName = "CharacterData", menuName = "Sataura/Player/CharacterData")]
+    [System.Serializable]
     public class CharacterData : ScriptableObject
     {
-        [Header("Movement Properties")]
-        public float movementSpeed;
-        public float movementForceInAir;
-        public float airDragMultiplier;
+        [Header("Character Data")]
+        public string characterName;
+        public CharacterMovementData characterMovementData;
 
-        /// <summary>
-        /// The force applied when jumping.
-        /// </summary>
-        [Header("Jump Properties")]    
-        public float jumpForce;
+        [Header("Inventory Data")]
+        public InventoryData playerInventoryData;
+        public InventoryData ingameInventoryData;
 
-        /// <summary>
-        /// The time in seconds the player can hang on a platform edge.
-        /// </summary>
-        [Header("Better platform experience properties")]    
-        public float hangTime;
-
-        /// <summary>
-        /// The length of the jump buffer in seconds.
-        /// </summary>
-        public float jumpBufferLength = 0.1f;
-
-
-        /// <summary>
-        /// The multiplier applied to the player's falling velocity.
-        /// </summary>
-        [Header("Fall Properties")]
-        public float fallMultiplier;
-
-        /// <summary>
-        /// The low multiplier applied to the player's falling velocity when pressing the jump button.
-        /// </summary>
-        public float lowMultiplier;
-
-        [Header("Velocity Limit Properties")]
-        public float maxMovementSpeed;
-        public float maxJumpVelocity;
-        public float maxFallVelocity;
+        [Header("Currency")]
+        public string currencyString;
+        public BigInteger currency;       
     }
 }

@@ -87,7 +87,7 @@ namespace Sataura
             {
                 throw new System.Exception($"Not found prefab name IP_ItemForDrop in GameDataManager.cs");
             }
-            var itemObject = Instantiate(itemPrefab, position, Quaternion.Euler(rotation), SaveManager.Instance.itemContainerParent);
+            var itemObject = Instantiate(itemPrefab, position, Quaternion.Euler(rotation));
             itemObject.GetComponent<ItemForDrop>().Set(itemSlotDrop);
             itemObject.transform.localScale = new Vector3(2, 2, 1);
 

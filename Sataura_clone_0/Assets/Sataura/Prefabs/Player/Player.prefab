@@ -741,8 +741,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   handHoldItemToSpawn: {fileID: 9095001263188952735, guid: 7aeb687f08e46694fad7fb871a78a1f9, type: 3}
-  playerData: {fileID: 11400000, guid: 7517087262a8edc449f61c02688dc494, type: 2}
-  characterData: {fileID: 11400000, guid: 69fb33f4da30ffb4eb53dcccd243fed1, type: 2}
+  playerData: {fileID: 11400000, guid: 69fb33f4da30ffb4eb53dcccd243fed1, type: 2}
+  characterData: {fileID: 11400000, guid: 065c071c566b4e4408dd38924ce3b03e, type: 2}
   playerInventory: {fileID: 0}
   playerInGameInventory: {fileID: 5207464967594749307}
   itemInHand: {fileID: 8223764839905027213}
@@ -839,6 +839,7 @@ MonoBehaviour:
   player: {fileID: 5207464968289795732}
   passiveItems: []
   bootData: {fileID: 0}
+  bootsGO: {fileID: 0}
   updateInterval: 0.05
 --- !u!1 &6718347646597124920
 GameObject:

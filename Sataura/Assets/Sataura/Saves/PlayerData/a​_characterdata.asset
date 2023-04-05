@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7f11ce6a06fe5646bda3a398c6fff9a, type: 3}
+  m_Name: "a\u200B_characterdata"
+  m_EditorClassIdentifier: 
+  characterName: "a\u200B"
+  characterMovementData: {fileID: 11400000, guid: aa019962c5253834bba12115d32b77ff, type: 2}
+  playerInventoryData: {fileID: 11400000, guid: e7bef76700731124d879b1ab208540ce, type: 2}
+  ingameInventoryData: {fileID: 11400000, guid: a2bf2e94e8647c44a9c05208e72781cb, type: 2}
+  currencyString: 

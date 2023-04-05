@@ -9,7 +9,7 @@ namespace Sataura
         private static Dictionary<SoundType, float> soundTimerDictionary;
         public SoundAudioClip[] soundAudioClips;
 
-        private GameObject oneShotGameObject;
+        [SerializeField] private GameObject oneShotGameObject;
         private AudioSource oneShotAudioSource;
 
         private void Awake()
@@ -22,6 +22,7 @@ namespace Sataura
             soundTimerDictionary = new Dictionary<SoundType, float>();
             soundTimerDictionary[SoundType.EnemyHit] = 0.0f;
             soundTimerDictionary[SoundType.EnemyDie] = 0.0f;
+            soundTimerDictionary[SoundType.MainMenuBtnHover] = 0.0f;
         }
 
         public void PlaySound(SoundType soundType)
@@ -32,6 +33,11 @@ namespace Sataura
                 oneShotGameObject = new GameObject("Sound");
                 oneShotAudioSource = oneShotGameObject.AddComponent<AudioSource>();
             }
+            else
+            {
+                oneShotAudioSource = oneShotGameObject.GetComponent<AudioSource>();
+            }
+
             oneShotAudioSource.PlayOneShot(GetAudioClip(soundType));
         }
 
@@ -97,6 +103,20 @@ namespace Sataura
                     {
                         float lastTimePlayed = soundTimerDictionary[soundType];
                         float maxTimePlay = .05f;
+                        if (lastTimePlayed + maxTimePlay < Time.time)
+                        {
+                            soundTimerDictionary[soundType] = Time.time;
+                            return true;
+                        }
+                        return false;
+                    }
+                    else
+                        return false;
+                case SoundType.MainMenuBtnHover:
+                    if (soundTimerDictionary.ContainsKey(soundType))
+                    {
+                        float lastTimePlayed = soundTimerDictionary[soundType];
+                        float maxTimePlay = .1f;
                         if (lastTimePlayed + maxTimePlay < Time.time)
                         {
                             soundTimerDictionary[soundType] = Time.time;

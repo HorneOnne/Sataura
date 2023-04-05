@@ -1,0 +1,1 @@
+{"movementSpeed":5.0,"movementForceInAir":6.0,"airDragMultiplier":0.10000000149011612,"jumpForce":30.0,"hangTime":0.10000000149011612,"jumpBufferLength":0.20000000298023225,"fallMultiplier":0.2800000011920929,"lowMultiplier":0.2199999988079071,"maxMovementSpeed":100.0,"maxJumpVelocity":100.0,"maxFallVelocity":-100.0}

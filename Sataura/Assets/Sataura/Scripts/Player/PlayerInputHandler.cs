@@ -134,10 +134,8 @@ namespace Sataura
         #endregion
 
 
-
-
-
         public bool canJump;
+
 
         public override void OnNetworkSpawn()
         {
@@ -217,7 +215,6 @@ namespace Sataura
                 JumpInput = playerInputAction.Player.Jump.ReadValue<float>();
                 MovementInput = playerInputAction.Player.Movement.ReadValue<Vector2>();
                 RotateWeaponInput = playerInputAction.Player.RotateWeapon.ReadValue<Vector2>();
-
 
                 if (playerMovement.isGrounded || playerMovement.isOnPlatform)
                     hangCounter = player.characterData.hangTime;

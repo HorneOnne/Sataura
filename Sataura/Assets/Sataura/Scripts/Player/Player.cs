@@ -15,8 +15,8 @@ namespace Sataura
 
 
         [Header("CHARACTER DATA")]
-        public PlayerData playerData;
-        public CharacterData characterData;
+        public CharacterData playerData;
+        public CharacterMovementData characterData;
         [SerializeField] private PlayerInventory playerInventory;
         [SerializeField] private PlayerInGameInventory playerInGameInventory;
         [SerializeField] private ItemInHand itemInHand;

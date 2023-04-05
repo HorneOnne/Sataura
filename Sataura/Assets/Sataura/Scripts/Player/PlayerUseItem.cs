@@ -1,6 +1,8 @@
 ﻿using Unity.Netcode;
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.InputSystem;
+using System;
 
 namespace Sataura
 {
@@ -10,6 +12,7 @@ namespace Sataura
         [SerializeField] private Player player;
         private PlayerInGameInventory playerInGameInv;
         private PlayerMovement playerMovement;
+        private ItemEvolutionManager itemEvolutionManager;
         
         [Header("Passive Items")]
         [SerializeField] List<Item> passiveItems = new List<Item>();
@@ -17,15 +20,26 @@ namespace Sataura
 
         [Header("Item Properties")]
         [SerializeField] private BootData bootData;
+        [SerializeField] private Boots bootsGO;
+        private bool IsBootEvo;
 
+
+
+        private PlayerInputAction playerInputAction;
 
         public override void OnNetworkSpawn()
         {
             playerInGameInv = player.PlayerInGameInventory;
             playerMovement = player.PlayerMovement;
+            itemEvolutionManager = ItemEvolutionManager.Instance;
 
-            Invoke(nameof(SettingsWhenSpawnPlayer), 1f);     
+            Invoke(nameof(SettingsWhenSpawnPlayer), 1f);
+
+            playerInputAction = new PlayerInputAction();
+            playerInputAction.Player.Enable();
+            playerInputAction.Player.Jump.performed += DoubleJumpHandle;
         }
+
 
         private void SetBootsEquipProperties(BootData _bootData = null)
         {
@@ -51,19 +65,11 @@ namespace Sataura
             {
                 if (playerInGameInv.inGameInventory[i].HasItemData() == false)
                     continue;
-
-                if (playerInGameInv.inGameInventory[i].ItemData is BootData)
-                {
-                    Debug.Log("Has boots data");
-                    SetBootsEquipProperties((BootData)playerInGameInv.inGameInventory[i].ItemData);
-                    
-                }
-                    
-
+        
+                   
                 var itemPrefab = GameDataManager.Instance.GetItemPrefab($"IP_{playerInGameInv.inGameInventory[i].ItemData.itemType}");
                 if(itemPrefab != null)
                 {
-                    Debug.Log(itemPrefab.name);
                     var obj = Instantiate(itemPrefab, transform.position, Quaternion.identity);
                     var itemObj = obj.GetComponent<Item>();
                     itemObj.SetData(playerInGameInv.inGameInventory[i]);
@@ -71,7 +77,24 @@ namespace Sataura
                     itemObj.GetComponent<NetworkObject>().Spawn();
                     passiveItems.Add(itemObj);
                 }
-                
+
+                if (playerInGameInv.inGameInventory[i].ItemData is BootData)
+                {
+                    Debug.Log($"Has boots data: {i}");
+                    SetBootsEquipProperties((BootData)playerInGameInv.inGameInventory[i].ItemData);
+                    IsBootEvo = itemEvolutionManager.IsEvoItem(bootData);
+
+                    for(int j = 0; j < passiveItems.Count; j++)
+                    {
+                        if (passiveItems[j] is Boots)
+                        {
+                            bootsGO = passiveItems[j].GetComponent<Boots>();
+                            break;
+                        }
+                    }
+                    
+                }
+
             }
         }
 
@@ -96,13 +119,20 @@ namespace Sataura
                 //......
                 for (int i = 0; i < passiveItems.Count; i++)
                 {
-                    if(ItemEvolutionManager.Instance.IsEvoItem(passiveItems[i].ItemData))
+                    if(itemEvolutionManager.IsEvoItem(passiveItems[i].ItemData))
                     {
                         passiveItems[i].UsePassive(player, Vector2.zero);
                     }                    
                 }
             }
+      
+        }
 
+
+        private void DoubleJumpHandle(InputAction.CallbackContext obj)
+        {
+            if (IsBootEvo == false) return;
+            bootsGO.DoubleJump(player);             
         }
 
         #endregion Use Passive Item
@@ -158,7 +188,7 @@ namespace Sataura
                 if (playerInGameInv.inGameInventory[i].HasItemData() == false)
                     continue;
 
-                if (playerInGameInv.inGameInventory[i].ItemData.Equals(ItemEvolutionManager.Instance.GetEvolutionItem(baseItem)))
+                if (playerInGameInv.inGameInventory[i].ItemData.Equals(itemEvolutionManager.GetEvolutionItem(baseItem)))
                 {
                     return true;
                 }

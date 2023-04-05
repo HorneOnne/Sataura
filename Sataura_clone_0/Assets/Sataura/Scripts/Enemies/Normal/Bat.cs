@@ -10,14 +10,13 @@ namespace Sataura
         private float fpsCounter = 0f;
         private int animationStep;
 
- 
+
 
         public override void MoveAI(Vector2 target)
-        {
+        {           
             Vector2 direction = target - (Vector2)transform.position;
             direction.Normalize();
             rb2D.MovePosition((Vector2)transform.position + direction * 10 * Time.fixedDeltaTime);
-
 
             // Fly anim
             fpsCounter += Time.deltaTime;
@@ -34,6 +33,10 @@ namespace Sataura
                 fpsCounter = 0.0f;
             }
         }
+
+
+
+
 
         protected override void ReturnToNetworkPool()
         {

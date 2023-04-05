@@ -34,7 +34,7 @@ namespace Sataura
             if (fpsCounter >= 1 / fps)
             {
                 animationStep++;
-                if(animationStep == textures.Length)
+                if (animationStep == textures.Length)
                 {
                     animationStep = 0;
                 }

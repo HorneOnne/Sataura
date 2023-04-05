@@ -8,35 +8,58 @@ namespace Sataura
     [System.Serializable]
     public class SaveData
     {
-        public string path = Application.dataPath + "/UltimateItemSystem/Saves/";
-        public PlayerInventoryStruct playerInventoryData;
-        public ItemOnGroundSaveData itemOnGroundData;
-        public WorldChest worldChest;
+        public string path = Application.dataPath + "/Sataura/Saves/PlayerData";
+
+        //private List<CharacterData> charactersData;
+
+        private CharacterData characterData;
+        //private CharacterDataStruct charactersDataStruct;
 
 
-        public SaveData(PlayerInventory playerInventory, List<Item> itemsOnGround, List<Chest> chestObjects)
+        public SaveData(CharacterData characterData)
         {
-            playerInventoryData = new PlayerInventoryStruct(playerInventory);
-            itemOnGroundData = new ItemOnGroundSaveData(itemsOnGround);
-            worldChest = new WorldChest(chestObjects);            
+            this.characterData = characterData;
         }
+
+
 
         public void SaveAllData()
         {
-            Save(playerInventoryData, "playerInventory");
-            Save(itemOnGroundData, "itemsOnGround");
-            Save(worldChest, "chestInventory");
+            Save(characterData.characterMovementData, "characterMovementData");
+            Save(characterData.ingameInventoryData, "inGameInventoryData");
+            Save(characterData.playerInventoryData, "playerInventoryData");
         }
 
         public void LoadAllData()
         {
-            playerInventoryData = Load<PlayerInventoryStruct>("playerInventory");
-            itemOnGroundData = Load<ItemOnGroundSaveData>("itemsOnGround");
-            worldChest = Load<WorldChest>("chestInventory");
+            string jsonString = LoadJsonString("inGameInventoryData");
+            JsonUtility.FromJsonOverwrite(jsonString, characterData.ingameInventoryData);
+
+            jsonString = "";
+            jsonString = LoadJsonString("playerInventoryData");
+            JsonUtility.FromJsonOverwrite(jsonString, characterData.playerInventoryData);
+
+            jsonString = "";
+            jsonString = LoadJsonString("characterMovementData");
+            JsonUtility.FromJsonOverwrite(jsonString, characterData.characterMovementData);
         }
 
 
-        public void Save<T>(T objectToSave, string key)
+        /*public CharacterData GetCharacterData()
+        {
+            characterData = new CharacterData();
+
+            characterData.characterName = charactersDataStruct.characterName;
+            characterData.characterMovementData = charactersDataStruct.characterMovementData;
+            characterData.characterName = charactersDataStruct.characterName;
+
+            return characterData;
+        }*/
+
+
+
+        #region Private Save/Load methods
+        private void Save<T>(T objectToSave, string key)
         {
             Directory.CreateDirectory(path);
             string jsonString = JsonUtility.ToJson(objectToSave);
@@ -48,7 +71,7 @@ namespace Sataura
             Debug.Log($"Saved at path: {path}{key}.json");
         }
 
-        public T Load<T>(string key)
+        private T Load<T>(string key)
         {
             T returnValue = default(T);
             if (File.Exists($"{path}{key}.json"))
@@ -66,9 +89,30 @@ namespace Sataura
             {
                 Debug.Log("NOT FOUND FILE.");
             }
-
             return returnValue;
         }
+
+        private string LoadJsonString(string key)
+        {
+            string returnString = "";
+            if (File.Exists($"{path}{key}.json"))
+            {
+                string jsonString = "";
+                // LOAD DATA
+                using (StreamReader sr = new StreamReader($"{path}{key}.json"))
+                {
+                    jsonString = sr.ReadToEnd();
+                    Debug.Log("Loaded.");
+                }
+                returnString = jsonString;
+            }
+            else
+            {
+                Debug.Log("NOT FOUND FILE.");
+            }
+            return returnString;
+        }
+        #endregion
 
     }
 }

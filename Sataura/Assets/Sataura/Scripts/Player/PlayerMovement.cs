@@ -13,8 +13,8 @@ namespace Sataura
         [Header("REFERENCES")]
         [SerializeField] private Player player;
         [SerializeField] private Rigidbody2D rb;
-        [SerializeField] Transform groundCheckPoint;
-        private CharacterData characterData;
+        [SerializeField] public Transform groundCheckPoint;
+        private CharacterMovementData characterData;
 
         [SerializeField] private PlayerInputHandler playerInputHandler;
 
@@ -24,6 +24,9 @@ namespace Sataura
         public LayerMask platformLayer;
         public float groundCheckRadius;
 
+        // Ground check
+        public bool isGrounded;
+        public bool isOnPlatform;
 
 
         #region Properties
@@ -32,27 +35,19 @@ namespace Sataura
         /// Gets the direction the player is facing.
         /// </summary>
         public sbyte FacingDirection { get; private set; }
-        #endregion Properties   
+         
 
         public Vector2 CurrentVelocity { get { return rb.velocity; } }
         public Rigidbody2D Rb2D { get { return rb; } }
-
-        public bool isGrounded;
-        public bool isOnPlatform;
-
-
-
-        private void OnEnable()
-        {
-   
-        }
-
-        private void OnDisable()
-        {
-            
-        }
+        
+        
+        // Double jump Properties
+        public int NumOfJumps { get; private set; } = 0;
+        #endregion Properties  
 
 
+     
+     
         public override void OnNetworkSpawn()
         {
             playerInputHandler = player.PlayerInputHandler;
@@ -93,6 +88,16 @@ namespace Sataura
                 currentJumpForce = characterData.jumpForce;
         }
 
+        private void Update()
+        {
+            isGrounded = IsGrounded();
+            isOnPlatform = IsOnPlatform();
+
+            if(Rb2D.velocity.y <= 0.1 && isGrounded)
+            {
+                NumOfJumps = 0;
+            }
+        }
 
         private void FixedUpdate()
         {
@@ -101,11 +106,7 @@ namespace Sataura
             // Movement 
             // =========================================================================
             if(player.handleMovement)
-            {
-                isGrounded = IsGrounded();
-                isOnPlatform = IsOnPlatform();
-
-
+            {                
                 HandleMovementOnGround(player.PlayerInputHandler.MovementInput);
 
                 // Movement in AIR
@@ -119,6 +120,7 @@ namespace Sataura
                     playerInputHandler.canJump = false;
                 }
 
+                        
 
                 if(playerInputHandler.MovementInput.y < 0)
                 {
@@ -208,6 +210,7 @@ namespace Sataura
 
         public void HandleJump()
         {
+            NumOfJumps++;
             rb.velocity = new Vector2(rb.velocity.x, currentJumpForce);
         }
 
