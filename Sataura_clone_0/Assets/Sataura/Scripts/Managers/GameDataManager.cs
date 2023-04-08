@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Unity.Netcode;
-using UnityEditor;
 using UnityEngine;
 
 namespace Sataura
@@ -96,7 +95,7 @@ namespace Sataura
         [Header("Players")]
         public Dictionary<ulong, Player> players = new Dictionary<ulong, Player>();
 
-
+        public GameObject singleModePlayer;
 
 
 
@@ -104,7 +103,9 @@ namespace Sataura
         /// Initializes the item data and prefab dictionaries, and generates the recipe dictionaries.
         /// </summary>
         private void Awake()
-        {            
+        {
+            DontDestroyOnLoad(this.gameObject);
+
             GenerateItemDataDict();
             GenerateItemPrefabDictionary();
             GenerateProjectilePrefabDictionary();
@@ -119,6 +120,12 @@ namespace Sataura
             {
                 return;
             }
+
+            
+            /*for (int i = 0; i < networkObjects.Count; i++)
+            {
+                NetworkManager.Singleton.RemoveNetworkPrefab(networkObjects[i]);
+            }*/
 
             for (int i = 0; i < networkObjects.Count; i++)
             {

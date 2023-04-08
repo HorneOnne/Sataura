@@ -11,11 +11,6 @@ namespace Sataura
             UIManager.Instance.menuCanvas.SetActive(false);
         }
 
-        public void ReloadScene()
-        {
-            int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
-            SceneManager.LoadScene(currentSceneIndex, LoadSceneMode.Single);
-        }
 
         public void Save()
         {

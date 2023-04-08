@@ -4,8 +4,8 @@
     public struct CharacterDataStruct
     {
         public string characterName;
-        public CharacterMovementData characterMovementData;
 
+        public CharacterMovementDataStruct characterMovementData;
         public InventoryStruct playerInventoryData;
         public InventoryStruct ingameInventoryData;
 

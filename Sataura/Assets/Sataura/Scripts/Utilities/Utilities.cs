@@ -127,6 +127,25 @@ namespace Sataura
 
             return inventoryData;
         }
+
+        public static CharacterMovementData ConvertStructToCharacterMovementData(CharacterMovementDataStruct characterMovementDataStruct)
+        {
+            var characterMovementData = ScriptableObject.CreateInstance<CharacterMovementData>();
+
+            characterMovementData.movementSpeed = characterMovementDataStruct.movementSpeed;
+            characterMovementData.movementForceInAir = characterMovementDataStruct.movementForceInAir;
+            characterMovementData.airDragMultiplier = characterMovementDataStruct.airDragMultiplier;
+            characterMovementData.jumpForce = characterMovementDataStruct.jumpForce;
+            characterMovementData.hangTime = characterMovementDataStruct.hangTime;
+            characterMovementData.jumpBufferLength = characterMovementDataStruct.jumpBufferLength;
+            characterMovementData.fallMultiplier = characterMovementDataStruct.fallMultiplier;
+            characterMovementData.lowMultiplier = characterMovementDataStruct.lowMultiplier;
+            characterMovementData.maxMovementSpeed = characterMovementDataStruct.maxMovementSpeed;
+            characterMovementData.maxJumpVelocity = characterMovementDataStruct.maxJumpVelocity;
+            characterMovementData.maxFallVelocity = characterMovementDataStruct.maxFallVelocity;
+
+            return characterMovementData;
+        }
     }
 }
 

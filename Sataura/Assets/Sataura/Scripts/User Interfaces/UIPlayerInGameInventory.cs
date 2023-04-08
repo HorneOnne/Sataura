@@ -6,10 +6,15 @@ using System;
 
 namespace Sataura
 {
-    public class UIPlayerInGameInventory : Singleton<UIPlayerInGameInventory>
+    public partial class UIPlayerInGameInventory : Singleton<UIPlayerInGameInventory>
     {
-        [Header("REFERENCES")]
+        public PlayerType playerType;
+
+        [Header("Runtime References")]
         [SerializeField] private Player player;
+        [SerializeField] private ItemSelectionPlayer itemSelectionPlayer;
+
+
         private PlayerInGameInventory playerInGameInventory;
         private PlayerInputHandler playerInputHandler;
         private ItemInHand itemInHand;
@@ -70,13 +75,27 @@ namespace Sataura
         private bool alreadyLoadReferences;
         public void LoadReferences()
         {
-            itemInHand = player.ItemInHand;
-            playerInGameInventory = player.PlayerInGameInventory;
-            playerInputHandler = player.PlayerInputHandler;
             dragType = DragType.Swap;
+            int inventorySize = 0;
+            if (playerType == PlayerType.IngamePlayer)
+            {
+                itemInHand = player.ItemInHand;
+                playerInGameInventory = player.PlayerInGameInventory;
+                playerInputHandler = player.PlayerInputHandler;
 
+                inventorySize = player.characterData.ingameInventoryData.itemSlots.Count;
+            }
+            else if(playerType == PlayerType.ItemSelectionPlayer)
+            {
+                itemInHand = itemSelectionPlayer.ItemInHand;
+                playerInGameInventory = itemSelectionPlayer.PlayerInGameInventory;
+                playerInputHandler = itemSelectionPlayer.PlayerInputHandler;
 
-            for (int i = 0; i < playerInGameInventory.Capacity; i++)
+                inventorySize = itemSelectionPlayer.characterData.ingameInventoryData.itemSlots.Count;
+            }
+
+            
+            for (int i = 0; i < inventorySize; i++)
             {
                 GameObject slotObject = Instantiate(itemSlotPrefab, this.transform);
                 slotObject.transform.localScale = Vector3.one * scaleUI;
@@ -97,9 +116,14 @@ namespace Sataura
             Invoke("UpdateInventoryUI", .1f);
         }
 
-        public void SetPlayer(Player player)
+        public void SetPlayer(GameObject playerObject)
         {
-            this.player = player;
+            if(playerType == PlayerType.IngamePlayer)
+                this.player = playerObject.GetComponent<Player>();
+
+
+            if (playerType == PlayerType.ItemSelectionPlayer)
+                this.itemSelectionPlayer = playerObject.GetComponent<ItemSelectionPlayer>();
         }
 
         private void Update()

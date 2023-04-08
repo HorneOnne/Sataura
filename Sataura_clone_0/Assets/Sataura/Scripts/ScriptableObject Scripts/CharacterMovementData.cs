@@ -3,7 +3,6 @@ using UnityEngine;
 namespace Sataura
 {
     [CreateAssetMenu(fileName = "CharacterMovementData", menuName = "Sataura/Player/CharacterMovementData")]
-    [System.Serializable]
     public class CharacterMovementData : ScriptableObject
     {
         [Header("Movement Properties")]

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -10,51 +11,29 @@ namespace Sataura
     {
         public string path = Application.dataPath + "/Sataura/Saves/PlayerData";
 
-        //private List<CharacterData> charactersData;
 
-        private CharacterData characterData;
-        //private CharacterDataStruct charactersDataStruct;
+        private AccountDataStruct accountData;
 
-
-        public SaveData(CharacterData characterData)
+        public SaveData(List<CharacterDataStruct> charactersDataStruct)
         {
-            this.characterData = characterData;
+            this.accountData.charactersDataStruct = charactersDataStruct;
         }
 
-
-
         public void SaveAllData()
-        {
-            Save(characterData.characterMovementData, "characterMovementData");
-            Save(characterData.ingameInventoryData, "inGameInventoryData");
-            Save(characterData.playerInventoryData, "playerInventoryData");
+        {   
+            Save(accountData, "accountData");
         }
 
         public void LoadAllData()
         {
-            string jsonString = LoadJsonString("inGameInventoryData");
-            JsonUtility.FromJsonOverwrite(jsonString, characterData.ingameInventoryData);
-
-            jsonString = "";
-            jsonString = LoadJsonString("playerInventoryData");
-            JsonUtility.FromJsonOverwrite(jsonString, characterData.playerInventoryData);
-
-            jsonString = "";
-            jsonString = LoadJsonString("characterMovementData");
-            JsonUtility.FromJsonOverwrite(jsonString, characterData.characterMovementData);
+            accountData = Load<AccountDataStruct>("accountData");
         }
 
-
-        /*public CharacterData GetCharacterData()
+        public AccountDataStruct GetSaveData()
         {
-            characterData = new CharacterData();
+            return accountData;
+        }
 
-            characterData.characterName = charactersDataStruct.characterName;
-            characterData.characterMovementData = charactersDataStruct.characterMovementData;
-            characterData.characterName = charactersDataStruct.characterName;
-
-            return characterData;
-        }*/
 
 
 
@@ -114,6 +93,14 @@ namespace Sataura
         }
         #endregion
 
+
+
+    }
+
+    [System.Serializable]
+    public struct AccountDataStruct
+    {
+        public List<CharacterDataStruct> charactersDataStruct;
     }
 }
 

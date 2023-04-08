@@ -12,11 +12,14 @@ namespace Sataura
     public class PlayerInputHandler : NetworkBehaviour
     {
         // Event
-        public static event Action<int,int> OnCurrentUseItemIndexChanged;
-
+        public static event Action<int, int> OnCurrentUseItemIndexChanged;
+        public PlayerType playerType;
 
         [Header("REFERENCES")]
         [SerializeField] private Player player;
+        [SerializeField] private ItemSelectionPlayer itemSelectionPlayer;
+
+
         private PlayerInventory playerInventory;
         private PlayerInGameInventory playerInGameInventory;
         private ItemInHand itemInHand;
@@ -35,7 +38,7 @@ namespace Sataura
         /// The time left for the player to hang in the air after leaving the ground.
         /// </summary>
         private float hangCounter;
-     
+
         /// <summary>
         /// The time in seconds between clicks to register as a double click.
         /// </summary>
@@ -108,28 +111,36 @@ namespace Sataura
         /// </summary>
         [field: SerializeField] public PointerState CurrentMouseState { get; private set; }
         #endregion Properties
-        
 
-        
+
+
 
 
 
         #region Events handler
         private void OnEnable()
         {
-            if (player.canUseItem)
+            if (playerType == PlayerType.IngamePlayer)
             {
-                EventManager.OnItemInHandChanged += ResetOnCurrentUseItemIndex;
+                if (player.canUseItem)
+                {
+                    EventManager.OnItemInHandChanged += ResetOnCurrentUseItemIndex;
+                }
             }
+
 
         }
 
         private void OnDisable()
         {
-            if (player.canUseItem)
+            if (playerType == PlayerType.IngamePlayer)
             {
-                EventManager.OnItemInHandChanged -= ResetOnCurrentUseItemIndex;
+                if (player.canUseItem)
+                {
+                    EventManager.OnItemInHandChanged -= ResetOnCurrentUseItemIndex;
+                }
             }
+
         }
         #endregion
 
@@ -139,31 +150,39 @@ namespace Sataura
 
         public override void OnNetworkSpawn()
         {
-            playerInputAction = new PlayerInputAction();
-            playerInputAction.Player.Enable();
-            jump = playerInputAction.Player.Jump;
-            jump.Enable();
-            jump.performed += Jump;
-
-
-            if (player.handleMovement)
+            if (playerType == PlayerType.IngamePlayer)
             {
-                playerMovement = player.PlayerMovement;
+                playerInputAction = new PlayerInputAction();
+                playerInputAction.Player.Enable();
+                jump = playerInputAction.Player.Jump;
+                jump.Enable();
+                jump.performed += Jump;
+
+
+                if (player.handleMovement)
+                {
+                    playerMovement = player.PlayerMovement;
+                }
+
+                if (player.handleItem)
+                {
+                    playerInventory = player.PlayerInventory;
+                    playerInGameInventory = player.PlayerInGameInventory;
+                    itemInHand = player.ItemInHand;
+                }
             }
 
-
-            if (player.handleItem)
+            if (playerType == PlayerType.ItemSelectionPlayer)
             {
-                playerInventory = player.PlayerInventory;
-                playerInGameInventory = player.PlayerInGameInventory;
-                //playerEquipment = player.PlayerEquipment;
-                itemInHand = player.ItemInHand;
+                playerInventory = itemSelectionPlayer.PlayerInventory;
+                playerInGameInventory = itemSelectionPlayer.PlayerInGameInventory;
+                itemInHand = itemSelectionPlayer.ItemInHand;
             }
         }
 
         private void Jump(InputAction.CallbackContext context)
         {
-            jumpBufferCount = player.characterData.jumpBufferLength;
+            jumpBufferCount = player.characterData.characterMovementData.jumpBufferLength;
         }
 
 
@@ -171,111 +190,133 @@ namespace Sataura
         {
             OnCurrentUseItemIndexChanged.Invoke(currentUseItemIndex.Value, -1);
 
-            if(IsServer)
+            if (IsServer)
             {
                 currentUseItemIndex.Value = -1;
             }
-            
+
         }
 
         [ServerRpc]
         private void AAServerRpc(int oldIndex, int newIndex)
-        {        
+        {
             currentUseItemIndex.Value = newIndex;
         }
 
-       
+
 
         private void Update()
         {
             if (!IsOwner) return;
 
-       
-
-            for(int i = 0; i < selectItemBindingKeys.Count; i++)
+            if(playerType == PlayerType.IngamePlayer)
             {
-                if (Input.GetKeyDown(selectItemBindingKeys[i]))
+                for (int i = 0; i < selectItemBindingKeys.Count; i++)
                 {
-                    // Do nothing if player holding item in hand.
-                    if(itemInHand.HasHandHoldItemInServer())
+                    if (Input.GetKeyDown(selectItemBindingKeys[i]))
                     {
-                        return;
+                        // Do nothing if player holding item in hand.
+                        if (itemInHand.HasHandHoldItemInServer())
+                        {
+                            return;
+                        }
+
+                        int oldIndex = currentUseItemIndex.Value;
+                        int newIndex = i;
+                        OnCurrentUseItemIndexChanged.Invoke(oldIndex, newIndex);
+                        AAServerRpc(oldIndex, newIndex);
+                    }
+                }
+
+
+                if (player.handleMovement)
+                {
+                    JumpInput = playerInputAction.Player.Jump.ReadValue<float>();
+                    MovementInput = playerInputAction.Player.Movement.ReadValue<Vector2>();
+                    RotateWeaponInput = playerInputAction.Player.RotateWeapon.ReadValue<Vector2>();
+
+                    if (playerMovement.isGrounded || playerMovement.isOnPlatform)
+                        hangCounter = player.characterData.characterMovementData.hangTime;
+                    else
+                        hangCounter -= Time.deltaTime;
+
+
+
+                    // calculate Jump Buffer
+                    if (jumpBufferCount >= 0)
+                    {
+                        jumpBufferCount -= Time.deltaTime;
                     }
 
-                    int oldIndex = currentUseItemIndex.Value;
-                    int newIndex = i;
-                    OnCurrentUseItemIndexChanged.Invoke(oldIndex, newIndex);
-                    AAServerRpc(oldIndex, newIndex);
-                }
-            }
-    
 
-            if (player.handleMovement)
-            {
-                JumpInput = playerInputAction.Player.Jump.ReadValue<float>();
-                MovementInput = playerInputAction.Player.Movement.ReadValue<Vector2>();
-                RotateWeaponInput = playerInputAction.Player.RotateWeapon.ReadValue<Vector2>();
-
-                if (playerMovement.isGrounded || playerMovement.isOnPlatform)
-                    hangCounter = player.characterData.hangTime;
-                else
-                    hangCounter -= Time.deltaTime;
-
-
-
-                // calculate Jump Buffer
-                if (jumpBufferCount >= 0)
-                {
-                    jumpBufferCount -= Time.deltaTime;
-                }
-
-
-                if (jumpBufferCount > 0 && hangCounter > 0)
-                {
-                    canJump = true;
-                    jumpBufferCount = 0;
-                }     
-            }
-
-
-            if (player.handleItem)
-            {
-                PressUtilityKeyInput = Input.GetKey(utilityKeyBinding);
-
-                if (Input.GetKeyDown(dropItemKey))
-                {
-                    if (itemInHand.GetItemObject() != null)
+                    if (jumpBufferCount > 0 && hangCounter > 0)
                     {
-                        mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                        itemInHand.GetItemObject().Drop(player, mousePosition, Vector3.zero, true);
-                        itemInHand.ClearSlot();
+                        canJump = true;
+                        jumpBufferCount = 0;
                     }
                 }
 
 
                 if (player.handleItem)
                 {
-                    HandleMouseEvents();
+                    PressUtilityKeyInput = Input.GetKey(utilityKeyBinding);
+
+                    if (Input.GetKeyDown(dropItemKey))
+                    {
+                        if (itemInHand.GetItemObject() != null)
+                        {
+                            mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                            itemInHand.GetItemObject().Drop(player, mousePosition, Vector3.zero, true);
+                            itemInHand.ClearSlot();
+                        }
+                    }
 
 
-                    if (CurrentMouseState == PointerState.DoubleLeftClick)
+                    if (player.handleItem)
                     {
-                        StackItem();
-                    }
-                    else if (CurrentMouseState == PointerState.SingleLeftClick)
-                    {
-                        OpenCloseChest();
-                    }
-                    else if (CurrentMouseState == PointerState.LeftPress)
-                    {
-                        mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                        itemInHand.UseItemServerRpc(mousePosition);
+                        HandleMouseEvents();
+
+
+                        if (CurrentMouseState == PointerState.DoubleLeftClick)
+                        {
+                            StackItem();
+                        }
+                        else if (CurrentMouseState == PointerState.SingleLeftClick)
+                        {
+                            OpenCloseChest();
+                        }
+                        else if (CurrentMouseState == PointerState.LeftPress)
+                        {
+                            mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                            itemInHand.UseItemServerRpc(mousePosition);
+                        }
                     }
                 }
-
-
-
             }
+
+
+            if (playerType == PlayerType.ItemSelectionPlayer)
+            {
+                PressUtilityKeyInput = Input.GetKey(utilityKeyBinding);
+                HandleMouseEvents();
+
+
+                if (CurrentMouseState == PointerState.DoubleLeftClick)
+                {
+                    StackItem();
+                }
+                else if (CurrentMouseState == PointerState.SingleLeftClick)
+                {
+                    //OpenCloseChest();
+                }
+                else if (CurrentMouseState == PointerState.LeftPress)
+                {
+                    mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                    itemInHand.UseItemServerRpc(mousePosition);
+                }
+            }
+
+
         }
 
 
@@ -345,9 +386,9 @@ namespace Sataura
                 case StoredType.PlayerInventory:
                     playerInventory.StackItem();
                     break;
-                case StoredType.ChestInventory:
+                /*case StoredType.ChestInventory:
                     player.currentOpenChest.Inventory.StackItem();
-                    break;
+                    break;*/
                 case StoredType.CraftingTable:
                     CraftingTable.Instance.StackItem();
                     break;
@@ -362,7 +403,7 @@ namespace Sataura
 
 
 
-       
+
 
         /// <summary>
         /// Open or close chest if single left clicked
@@ -388,13 +429,6 @@ namespace Sataura
                 }
                 chest.Toggle(player);
             }
-        }
-
-
-
-        public float GetTimeLeftGround()
-        {
-            return Mathf.Abs(hangCounter - player.characterData.hangTime);
         }
     }
 }

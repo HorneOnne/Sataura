@@ -33,16 +33,27 @@ namespace Sataura
         {
             if (!IsServer) return;
 
-            NetworkManager.OnClientConnectedCallback += SetLocalClient;
+            NetworkManager.OnClientConnectedCallback += SetClient;
+
+
+            SetLocalClient();
             CreateChunk(new Vector2Int(0, 0));
             UpdateWorld();
         }
 
-        private void SetLocalClient(ulong clientId)
+        public void SetClient(ulong clientId)
         {
             players.Add(NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.transform);
             lastPlayerPosition.Add(new Vector2(0, 0));
         }
+
+        public void SetLocalClient()
+        {
+            //players.Add(GameDataManager.Instance.singleModePlayer.transform);
+            players.Add(NetworkManager.Singleton.LocalClient.PlayerObject.transform);
+            lastPlayerPosition.Add(new Vector2(0, 0));
+        }
+
 
 
 

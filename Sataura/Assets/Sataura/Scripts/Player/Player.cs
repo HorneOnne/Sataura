@@ -15,8 +15,7 @@ namespace Sataura
 
 
         [Header("CHARACTER DATA")]
-        public CharacterData playerData;
-        public CharacterMovementData characterData;
+        public CharacterData characterData;
         [SerializeField] private PlayerInventory playerInventory;
         [SerializeField] private PlayerInGameInventory playerInGameInventory;
         [SerializeField] private ItemInHand itemInHand;
@@ -49,41 +48,45 @@ namespace Sataura
         [HideInInspector] public PlayerMovement PlayerMovement { get => playerMovement; }
         [HideInInspector] public PlayerInputHandler PlayerInputHandler { get => playerInputHandler; }
         [HideInInspector] public PlayerUseItem PlayerUseItem { get => playerUseItem; }
-        [HideInInspector] public Transform HandHoldItem 
+        [HideInInspector]
+        public Transform HandHoldItem
         {
-            get 
+            get
             {
                 if (handHoldItemInstance == null)
                     return null;
                 else
                     return handHoldItemInstance.transform;
             }
-        } 
-        [HideInInspector] public PlayerInput PlayerInput { get; private set; }
+        }
         #endregion
 
-      
+
         public NetworkVariable<int> clientID = new NetworkVariable<int>();
 
 
-        // Events
-
-
+        private void Awake()
+        {
+            //characterData = SaveManager.charactersData[SaveManager.selectionCharacterDataIndex];
+        }
 
         public override void OnNetworkSpawn()
         {
-            PlayerInput = GetComponent<PlayerInput>();
             GameDataManager.Instance.AddNetworkPlayer(NetworkManager.LocalClientId, this);
 
             if (IsOwner)
             {
                 // Camera
-                GameManager.Instance.CinemachineVirtualCamera.Follow = this.transform;
+                if(GameManager.Instance.CinemachineVirtualCamera != null)
+                    GameManager.Instance.CinemachineVirtualCamera.Follow = this.transform;
+
+                UIPlayerInGameInventory.Instance.SetPlayer(this.gameObject);
+                UIItemInHand.Instance.SetPlayer(this.gameObject);     
                 
-                UIPlayerInGameInventory.Instance.SetPlayer(this);
-                UIItemInHand.Instance.SetPlayer(this);
-                UICreativeInventory.Instance.SetPlayer(this);
-                //UIChestInventory.Instance.SetPlayer(this);                                                
+                /*if(UIPlayerInventory.Instance != null)
+                {
+                    UIPlayerInventory.Instance.SetPlayer(this);
+                }*/
             }
 
 
@@ -93,43 +96,49 @@ namespace Sataura
             {
                 clientID.Value = NetworkManager.Singleton.ConnectedClientsIds.Count - 1;
             }
-            if (IsServer || IsOwner)
-            {
-                if (playerInGameInventory.inGameInventoryData == null)
-                    playerInGameInventory.inGameInventoryData = GameManager.Instance.inGameInventories[clientID.Value];
-            }
             // ===========================================
 
 
-          
+
             if (IsServer)
             {
                 handHoldItemInstance = Instantiate(handHoldItemToSpawn);
                 handHoldItemInstance.name = "Hand Hold Item";
-                handHoldItemNetworkObject = handHoldItemInstance.GetComponent<NetworkObject>();            
+                handHoldItemNetworkObject = handHoldItemInstance.GetComponent<NetworkObject>();
                 handHoldItemNetworkObject.Spawn();
                 handHoldItemNetworkObject.TrySetParent(this.transform);
                 handHoldItemNetworkObject.transform.localPosition = Vector3.zero;
             }
-    
+
 
             if (IsOwner)
             {
-                UIPlayerInGameInventory.Instance.LoadReferences();
-                UIItemInHand.Instance.LoadReferences();
-                UICreativeInventory.Instance.LoadReferences();
-                //UIChestInventory.Instance.LoadReferences();              
+                if(UIPlayerInGameInventory.Instance != null)
+                {
+                    UIPlayerInGameInventory.Instance.LoadReferences();
+                }
+                    
+
+                if (UIItemInHand.Instance != null)
+                    UIItemInHand.Instance.LoadReferences();
+
+
+                /*if (UIPlayerInventory.Instance != null)
+                {
+                    UIPlayerInventory.Instance.LoadReferences();
+                }  */             
             }
 
-            if(IsOwner)
+            if (IsOwner)
             {
-                CameraBounds.Instance.localPlayer = this.transform;               
+                CameraBounds.Instance.localPlayer = this.transform;
             }
 
             StartCoroutine(TeleportPlayerToPosition(new Vector2(50, 30), 0.3f));
 
 
-            
+
+
         }
 
         private IEnumerator TeleportPlayerToPosition(Vector2 position, float time)
@@ -142,5 +151,5 @@ namespace Sataura
 
 
 
-    }  
+    }
 }

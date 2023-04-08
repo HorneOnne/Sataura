@@ -12,14 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7f11ce6a06fe5646bda3a398c6fff9a, type: 3}
   m_Name: CharacterData
   m_EditorClassIdentifier: 
-  movementSpeed: 5
-  movementForceInAir: 6
-  airDragMultiplier: 0.1
-  jumpForce: 30
-  hangTime: 0.1
-  jumpBufferLength: 0.2
-  fallMultiplier: 0.28
-  lowMultiplier: 0.22
-  maxMovementSpeed: 100
-  maxJumpVelocity: 100
-  maxFallVelocity: -100
+  characterName: 
+  characterMovementData: {fileID: 11400000, guid: 065c071c566b4e4408dd38924ce3b03e, type: 2}
+  playerInventoryData: {fileID: 11400000, guid: e1665995ce0dc4743a9bea1adfa0dfcf, type: 2}
+  ingameInventoryData: {fileID: 11400000, guid: e256f04e3679a454fa6287ef91d26ba7, type: 2}
+  currencyString: 

@@ -68,12 +68,12 @@ namespace Sataura
         public void Collect(Player player)
         {
             // Start Testing purpose
-            if (player.playerData.currencyString == "")
-                player.playerData.currency = 0;
+            if (player.characterData.currencyString == "")
+                player.characterData.currency = 0;
             // End Testing purpose
 
-            player.playerData.currency += new BigInteger(TotalCurrency);
-            player.playerData.currencyString = AA(player.playerData.currency);
+            player.characterData.currency += new BigInteger(TotalCurrency);
+            player.characterData.currencyString = AA(player.characterData.currency);
         }
 
         private string AA(BigInteger veryLargeNumber)

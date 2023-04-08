@@ -6,8 +6,11 @@ namespace Sataura
 {
     public class UIPlayerInventory : Singleton<UIPlayerInventory>
     {
+        public PlayerType playerType;
         [Header("REFERENCES")]
         public Player player;
+        [SerializeField] private ItemSelectionPlayer itemSelectionPlayer;
+
         private PlayerInventory playerInventory;
         private PlayerInputHandler playerInputHandler;
         private ItemInHand itemInHand;
@@ -31,7 +34,7 @@ namespace Sataura
         [Header("INVENTORY SETTINGS")]
         public DragType dragType;
         [SerializeField] private float pressIntervalTime = 1.0f;
-        
+
 
         // CACHED
         private bool handHasItem;
@@ -50,15 +53,41 @@ namespace Sataura
         }
 
 
-        private void Start()
+        public void SetPlayer(GameObject playerObject)
         {
-            itemInHand = player.ItemInHand;
-            playerInventory = player.PlayerInventory;
-            playerInputHandler = player.PlayerInputHandler;
+            if (playerType == PlayerType.IngamePlayer)
+                this.player = playerObject.GetComponent<Player>();
+
+
+            if (playerType == PlayerType.ItemSelectionPlayer)
+                this.itemSelectionPlayer = playerObject.GetComponent<ItemSelectionPlayer>();
+        }
+
+        public void LoadReferences()
+        {
+            
             dragType = DragType.Swap;
 
+            int inventorySize = 0;
+            if (playerType == PlayerType.IngamePlayer)
+            {
+                itemInHand = player.ItemInHand;
+                playerInventory = player.PlayerInventory;
+                playerInputHandler = player.PlayerInputHandler;
 
-            for (int i = 0; i < playerInventory.Capacity; i++)
+                inventorySize = player.characterData.ingameInventoryData.itemSlots.Count;
+            }
+            else if (playerType == PlayerType.ItemSelectionPlayer)
+            {
+                itemInHand = itemSelectionPlayer.ItemInHand;
+                playerInventory = itemSelectionPlayer.PlayerInventory;
+                playerInputHandler = itemSelectionPlayer.PlayerInputHandler;
+
+                inventorySize = itemSelectionPlayer.characterData.playerInventoryData.itemSlots.Count;
+            }
+
+
+            for (int i = 0; i < inventorySize; i++)
             {
                 GameObject slotObject = Instantiate(itemSlotPrefab, this.transform);
                 slotObject.transform.localScale = Vector3.one * scaleUI;
@@ -81,6 +110,9 @@ namespace Sataura
 
         private void Update()
         {
+            if (itemInHand == null)
+                return;
+
             if (itemInHand.HasItemData())
             {
                 if (playerInputHandler.CurrentMouseState == PointerState.RightPressAfterWait)
@@ -110,7 +142,7 @@ namespace Sataura
         public void UpdateInventoryUIAt(int index)
         {
             UIItemSlot uiSlot = itemSlotList[index].GetComponent<UIItemSlot>();
-            uiSlot.SetData(playerInventory.inventory[index]);
+            uiSlot.SetData(playerInventory.playerInventory[index]);
         }
 
         // LOGIC 
@@ -192,30 +224,30 @@ namespace Sataura
 
                 if (playerInventory.HasItem(index))
                 {
-                    bool isSameItem = ItemData.IsSameItem(playerInventory.inventory[index].ItemData, itemInHand.GetItemData());
+                    bool isSameItem = ItemData.IsSameItem(playerInventory.playerInventory[index].ItemData, itemInHand.GetItemData());
                     if (isSameItem)
                     {
-                        ItemSlot remainItems = playerInventory.inventory[index].AddItemsFromAnotherSlot(itemInHand.GetSlot());
+                        ItemSlot remainItems = playerInventory.playerInventory[index].AddItemsFromAnotherSlot(itemInHand.GetSlot());
                         itemInHand.SetItem(remainItems, index, StoredType.PlayerInventory, true);
                     }
                     else
                     {
-                        itemInHand.Swap(ref playerInventory.inventory, index, StoredType.PlayerInventory, true);
+                        itemInHand.Swap(ref playerInventory.playerInventory, index, StoredType.PlayerInventory, true);
 
                         if (dragType == DragType.Swap)
                         {
                             int startingSlotIndex = GetItemSlotIndex(startingSlotDrag);
-                            if (playerInventory.inventory[startingSlotIndex].HasItemData() == false)
+                            if (playerInventory.playerInventory[startingSlotIndex].HasItemData() == false)
                             {
                                 startingSlotDrag = null;
-                                itemInHand.Swap(ref playerInventory.inventory, startingSlotIndex, StoredType.PlayerInventory, true);
+                                itemInHand.Swap(ref playerInventory.playerInventory, startingSlotIndex, StoredType.PlayerInventory, true);
                             }
                         }
                     }
                 }
                 else
                 {
-                    itemInHand.Swap(ref playerInventory.inventory, index, StoredType.PlayerInventory, true);
+                    itemInHand.Swap(ref playerInventory.playerInventory, index, StoredType.PlayerInventory, true);
                 }
 
                 UpdateInventoryUI();
@@ -230,7 +262,7 @@ namespace Sataura
         private void OnLeftClick(int index)
         {
             handHasItem = itemInHand.HasItemData();
-            slotHasItem = playerInventory.inventory[index].HasItemData();
+            slotHasItem = playerInventory.playerInventory[index].HasItemData();
 
             if (handHasItem == false)
             {
@@ -241,27 +273,27 @@ namespace Sataura
                 else
                 {
                     //Debug.Log("HAND: EMPTY \t SLOT: HAS ITEM");
-                    itemInHand.Swap(ref playerInventory.inventory, index, StoredType.PlayerInventory, true);
+                    itemInHand.Swap(ref playerInventory.playerInventory, index, StoredType.PlayerInventory, true);
                 }
             }
             else
             {
                 if (slotHasItem == false)
                 {
-                    itemInHand.Swap(ref playerInventory.inventory, index, StoredType.PlayerInventory, true);
+                    itemInHand.Swap(ref playerInventory.playerInventory, index, StoredType.PlayerInventory, true);
                 }
                 else
                 {
                     //Debug.Log("HAND: HAS ITEM \t SLOT: HAS ITEM");
-                    bool isSameItem = ItemData.IsSameItem(playerInventory.inventory[index].ItemData, itemInHand.GetItemData());
+                    bool isSameItem = ItemData.IsSameItem(playerInventory.playerInventory[index].ItemData, itemInHand.GetItemData());
                     if (isSameItem)
                     {
-                        ItemSlot remainItems = playerInventory.inventory[index].AddItemsFromAnotherSlot(itemInHand.GetSlot());
+                        ItemSlot remainItems = playerInventory.playerInventory[index].AddItemsFromAnotherSlot(itemInHand.GetSlot());
                         itemInHand.SetItem(remainItems, index, StoredType.PlayerInventory, true);
                     }
                     else
                     {
-                        itemInHand.Swap(ref playerInventory.inventory, index, StoredType.PlayerInventory, true);
+                        itemInHand.Swap(ref playerInventory.playerInventory, index, StoredType.PlayerInventory, true);
                     }
                 }
             }
@@ -270,7 +302,7 @@ namespace Sataura
         private void OnRightClick(int index)
         {
             handHasItem = itemInHand.HasItemData();
-            slotHasItem = playerInventory.inventory[index].HasItemData();
+            slotHasItem = playerInventory.playerInventory[index].HasItemData();
 
             if (handHasItem == false)
             {
@@ -281,7 +313,7 @@ namespace Sataura
                 else
                 {
                     //Debug.Log("HAND: EMPTY \t SLOT: HAS ITEM");
-                    itemInHand.SplitItemSlotQuantityInInventory(ref playerInventory.inventory, index);
+                    itemInHand.SplitItemSlotQuantityInInventory(ref playerInventory.playerInventory, index);
                 }
             }
             else
@@ -313,7 +345,7 @@ namespace Sataura
         private void OnRightPress(int index)
         {
             handHasItem = itemInHand.HasItemData();
-            slotHasItem = playerInventory.inventory[index].HasItemData();
+            slotHasItem = playerInventory.playerInventory[index].HasItemData();
 
             if (handHasItem == true)
             {

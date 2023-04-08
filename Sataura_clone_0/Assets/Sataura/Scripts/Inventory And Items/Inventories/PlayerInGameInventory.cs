@@ -2,14 +2,17 @@
 using UnityEngine;
 using System.Linq;
 using Unity.Netcode;
-using System;
 
 namespace Sataura
 {
     public class PlayerInGameInventory : NetworkBehaviour
     {
+        public PlayerType playerType;
+
         [Header("REFERENCES")]
         [SerializeField] private Player player;
+        [SerializeField] private ItemSelectionPlayer itemSelectionPlayer;
+
         private ItemInHand itemInHand;
 
 
@@ -42,144 +45,36 @@ namespace Sataura
         {
             if(IsOwner || IsServer)
             {
-                itemInHand = player.ItemInHand;
+                if(playerType == PlayerType.IngamePlayer)
+                {
+                    //inGameInventoryData = player.characterData.ingameInventoryData;
+                    itemInHand = player.ItemInHand;
+                    //inGameInventory = inGameInventoryData.itemSlots;
+                }
+
+                if (playerType == PlayerType.ItemSelectionPlayer)
+                {
+                    //inGameInventoryData = itemSelectionPlayer.characterData.ingameInventoryData;
+                    itemInHand = itemSelectionPlayer.ItemInHand;
+                    //inGameInventory = inGameInventoryData.itemSlots;
+                }
+            }          
+        }
+
+        public void UpdateCharacterData()
+        {
+            if (playerType == PlayerType.IngamePlayer)
+            {
+                inGameInventoryData = player.characterData.ingameInventoryData;
                 inGameInventory = inGameInventoryData.itemSlots;
             }
 
-            
-        }
-
-        
-   
-
-        /*#region Use Passive Item
-        public void CreateAllPassiveItemObjectInInventory()
-        {
-            for(int i = 0; i < inGameInventory.Count; i++)
+            if (playerType == PlayerType.ItemSelectionPlayer)
             {
-                if (inGameInventory[i].HasItemData() == false)
-                    continue;
-
-                if (inGameInventory[i].ItemData is BootData)
-                {
-                    Debug.Log("Has boots data");
-                    player.PlayerMovement.SetBootsEquipProperties((BootData)inGameInventory[i].ItemData);
-                    
-                }
-                    
-
-                var itemPrefab = GameDataManager.Instance.GetItemPrefab($"IP_{inGameInventory[i].ItemData.itemType}");
-                if(itemPrefab != null)
-                {
-                    Debug.Log(itemPrefab.name);
-                    var obj = Instantiate(itemPrefab, transform.position, Quaternion.identity);
-                    var itemObj = obj.GetComponent<Item>();
-                    itemObj.SetData(inGameInventory[i]);
-                    itemObj.spriteRenderer.enabled = false;
-                    itemObj.GetComponent<NetworkObject>().Spawn();
-                    passiveItems.Add(itemObj);
-                }
-                
+                inGameInventoryData = itemSelectionPlayer.characterData.ingameInventoryData;
+                inGameInventory = inGameInventoryData.itemSlots;
             }
         }
-
-        public void ClearAllPassiveItemObjectInInventory()
-        {
-            for (int i = 0; i < passiveItems.Count; i++)
-            {
-                passiveItems[i].GetComponent<NetworkObject>().Despawn();
-            }
-            passiveItems.Clear();
-        }
-
-
-        public float updateInterval = 0.05f; // the interval between updates in seconds
-        private float lastUpdateTime; // the time the method was last called
-        private void Update()
-        { 
-            if (Time.time - lastUpdateTime > updateInterval)
-            {
-                lastUpdateTime = Time.time;
-                // run update logic here
-                //......
-                for (int i = 0; i < passiveItems.Count; i++)
-                {
-                    if(ItemEvolutionManager.Instance.IsEvoItem(passiveItems[i].ItemData))
-                    {
-                        passiveItems[i].UsePassive(player, Vector2.zero);
-                    }                    
-                }
-            }
-
-        }
-
-        #endregion Use Passive Item*/
-
-
-
-        /*// START Item level skill methods
-        // ========================
-        public bool HasBaseItem(ItemData baseItem)
-        {
-            int inventorySize = inGameInventory.Count;
-            for (int i = 0; i < inventorySize; i++)
-            {
-                if (ItemData.IsSameName(inGameInventory[i].ItemData, baseItem))
-                {
-                    return true;
-                }
-                   
-            }
-            return false;
-        }
-
-        public int FindBaseItemIndex(ItemData baseItem)
-        {
-            int inventorySize = inGameInventory.Count;
-            for (int i = 0; i < inventorySize; i++)
-            {
-                if (ItemData.IsSameName(inGameInventory[i].ItemData, baseItem))
-                {
-                    return i;
-                }
-            }
-
-            throw new System.Exception($"Not found base item {baseItem} in PlayerInGameInventory.cs.");
-        }
-
-        public ItemData GetUpgradeVersionOfItem(ItemData itemData)
-        {
-            if(itemData.currentLevel < itemData.maxLevel)
-            {
-                return itemData.upgradeRecipe.outputItemSlot.itemData;
-            }
-            else
-            {
-                return null;
-            }
-        }
-
-
-        public bool HasEvoOfBaseItem(ItemData baseItem)
-        {
-            int inventorySize = inGameInventory.Count;
-            for (int i = 0; i < inventorySize; i++)
-            {
-                if (inGameInventory[i].HasItemData() == false)
-                    continue;
-
-                if(inGameInventory[i].ItemData.Equals(ItemEvolutionManager.Instance.GetEvolutionItem(baseItem)))
-                {
-                    return true;
-                }
-
-            }
-            return false;
-        }
-        // END Item level skill methods
-        // ========================*/
-
-
 
 
         [ServerRpc]
@@ -467,12 +362,7 @@ namespace Sataura
             }
         }
 
-
-        /// <summary>
-        /// Finds the index of the first slot containing an arrow in the inventory, or returns null if no such slot exists.
-        /// </summary>
-        /// <returns>The index of the arrow slot, or null if no arrow slot exists.</returns>
-        public int? FindArrowSlotIndex()
+        /*public int? FindArrowSlotIndex()
         {
             for (int i = 0; i < inGameInventory.Count; i++)
             {
@@ -484,7 +374,7 @@ namespace Sataura
             }
 
             return null;
-        }
+        }*/
        
     }
 

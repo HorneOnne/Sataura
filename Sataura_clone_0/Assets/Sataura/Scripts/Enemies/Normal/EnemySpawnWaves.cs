@@ -27,6 +27,9 @@ namespace Sataura
 
             if(IsServer)
             {
+                if (players.Contains(NetworkManager.Singleton.LocalClient.PlayerObject.transform) == false)
+                    players.Add(NetworkManager.Singleton.LocalClient.PlayerObject.transform);
+
                 IngameInformationManager.Instance.currentTotalEnemiesIngame = 0;
             }
         }
@@ -41,7 +44,9 @@ namespace Sataura
             if (!IsServer) return;
 
             Debug.Log($"Client id: {clientId} is connected.");
-            players.Add(NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.transform);
+            
+            if(players.Contains(NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.transform) == false)
+                players.Add(NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.transform);
         }
 
         private void Update()
@@ -73,8 +78,12 @@ namespace Sataura
 
             if(Time.time < 2.0f)
             {
+                Debug.Log(GameDataManager.Instance.players.Count);
                 return;
             }
+
+            if (players.Count == 0) return;
+
             if(IngameInformationManager.Instance.currentTotalEnemiesIngame < 10)
             {
                 var enemyObject = Instantiate(pinkSlimePrefab, (Vector2)players[0].position + new Vector2(Random.Range(-30, 30),40), Quaternion.identity);

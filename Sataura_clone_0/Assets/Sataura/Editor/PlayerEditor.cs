@@ -7,9 +7,7 @@ namespace Sataura
     [CustomEditor(typeof(Player))]
     public class PlayerEditor : Editor
     {
-        private SerializedProperty playerDataProperty;
         private SerializedProperty characterDataProperty;
-
 
         private SerializedProperty handleItemProperty;
         private SerializedProperty handleMovementProperty;
@@ -31,7 +29,6 @@ namespace Sataura
             handleItemProperty = serializedObject.FindProperty("handleItem");
             handleMovementProperty = serializedObject.FindProperty("handleMovement");
 
-            playerDataProperty = serializedObject.FindProperty("playerData");
             characterDataProperty = serializedObject.FindProperty("characterData");
 
             canUseItemProperty = serializedObject.FindProperty("canUseItem");
@@ -57,9 +54,6 @@ namespace Sataura
             EditorGUI.EndDisabledGroup();
 
 
-
-       
-            EditorGUILayout.PropertyField(playerDataProperty);
             EditorGUILayout.PropertyField(characterDataProperty);
 
             EditorGUILayout.PropertyField(playerInputHandleryProperty);

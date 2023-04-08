@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Numerics;
+using System;
 
 namespace Sataura
 {
@@ -17,6 +18,29 @@ namespace Sataura
 
         [Header("Currency")]
         public string currencyString;
-        public BigInteger currency;       
+        public BigInteger currency;
+
+        public override bool Equals(object other)
+        {
+            if (other == null || !(other is CharacterData))
+            {
+                return false;
+            }
+
+            CharacterData otherCharacterData = (CharacterData)other;
+
+            // Compare all relevant fields for equality
+            return characterName == otherCharacterData.characterName &&
+                   characterMovementData == otherCharacterData.characterMovementData &&
+                   playerInventoryData == otherCharacterData.playerInventoryData &&
+                   ingameInventoryData == otherCharacterData.ingameInventoryData &&
+                   currencyString == otherCharacterData.currencyString &&
+                   currency == otherCharacterData.currency;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(characterName, characterMovementData, playerInventoryData, ingameInventoryData, currencyString);
+        }
     }
 }
