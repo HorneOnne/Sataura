@@ -49,7 +49,7 @@ GameObject:
   - component: {fileID: 6009745326441535115}
   m_Layer: 22
   m_Name: EP_Bat
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -245,7 +245,44 @@ MonoBehaviour:
   currentHealth:
     m_InternalValue: 0
   dropRate: 0.5
-  sprites:
+  flySprites:
   - {fileID: 1763511353, guid: 78d101641879b6d4497963e3a7d2274f, type: 3}
   - {fileID: -1486193064, guid: 78d101641879b6d4497963e3a7d2274f, type: 3}
+  dieSprites:
+  - {fileID: -508757107, guid: 7c05ba215c68c6849be5f9f3d565a079, type: 3}
+  - {fileID: -1472759926, guid: 7c05ba215c68c6849be5f9f3d565a079, type: 3}
+  - {fileID: 1237348270, guid: 7c05ba215c68c6849be5f9f3d565a079, type: 3}
+  - {fileID: -1067881115, guid: 7c05ba215c68c6849be5f9f3d565a079, type: 3}
+  - {fileID: -1547185694, guid: 7c05ba215c68c6849be5f9f3d565a079, type: 3}
+  - {fileID: -242306161, guid: 7c05ba215c68c6849be5f9f3d565a079, type: 3}
+  - {fileID: -1626350759, guid: 7c05ba215c68c6849be5f9f3d565a079, type: 3}
+  - {fileID: -1275068015, guid: 7c05ba215c68c6849be5f9f3d565a079, type: 3}
+  - {fileID: -1934194533, guid: 7c05ba215c68c6849be5f9f3d565a079, type: 3}
+  - {fileID: 1345811098, guid: 7c05ba215c68c6849be5f9f3d565a079, type: 3}
+  - {fileID: -1507084786, guid: 7c05ba215c68c6849be5f9f3d565a079, type: 3}
+  - {fileID: -1572502629, guid: 7c05ba215c68c6849be5f9f3d565a079, type: 3}
+  - {fileID: -669039440, guid: 7c05ba215c68c6849be5f9f3d565a079, type: 3}
+  - {fileID: -107715910, guid: 7c05ba215c68c6849be5f9f3d565a079, type: 3}
+  - {fileID: -76636744, guid: 7c05ba215c68c6849be5f9f3d565a079, type: 3}
+  - {fileID: 1939817780, guid: 7c05ba215c68c6849be5f9f3d565a079, type: 3}
+  - {fileID: 903863542, guid: 7c05ba215c68c6849be5f9f3d565a079, type: 3}
+  - {fileID: 73134978, guid: 7c05ba215c68c6849be5f9f3d565a079, type: 3}
+  - {fileID: -1634621630, guid: 7c05ba215c68c6849be5f9f3d565a079, type: 3}
+  - {fileID: -1898560222, guid: 7c05ba215c68c6849be5f9f3d565a079, type: 3}
+  - {fileID: -670339270, guid: 7c05ba215c68c6849be5f9f3d565a079, type: 3}
+  - {fileID: 1041037287, guid: 7c05ba215c68c6849be5f9f3d565a079, type: 3}
+  - {fileID: -619692839, guid: 7c05ba215c68c6849be5f9f3d565a079, type: 3}
+  - {fileID: -186812078, guid: 7c05ba215c68c6849be5f9f3d565a079, type: 3}
+  - {fileID: 1225313376, guid: 7c05ba215c68c6849be5f9f3d565a079, type: 3}
+  - {fileID: 1979528102, guid: 7c05ba215c68c6849be5f9f3d565a079, type: 3}
+  - {fileID: -2006931889, guid: 7c05ba215c68c6849be5f9f3d565a079, type: 3}
+  - {fileID: 827319385, guid: 7c05ba215c68c6849be5f9f3d565a079, type: 3}
+  - {fileID: -618121445, guid: 7c05ba215c68c6849be5f9f3d565a079, type: 3}
+  - {fileID: -622835521, guid: 7c05ba215c68c6849be5f9f3d565a079, type: 3}
+  - {fileID: -2141272302, guid: 7c05ba215c68c6849be5f9f3d565a079, type: 3}
+  - {fileID: -716077895, guid: 7c05ba215c68c6849be5f9f3d565a079, type: 3}
+  - {fileID: -1171962048, guid: 7c05ba215c68c6849be5f9f3d565a079, type: 3}
+  - {fileID: 614795728, guid: 7c05ba215c68c6849be5f9f3d565a079, type: 3}
+  - {fileID: -1408943197, guid: 7c05ba215c68c6849be5f9f3d565a079, type: 3}
+  - {fileID: 1948574612, guid: 7c05ba215c68c6849be5f9f3d565a079, type: 3}
   fps: 30

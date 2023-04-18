@@ -101,7 +101,7 @@ namespace Sataura
         {
             Debug.LogWarning("Optimize this.");
 
-            var upgradeItemDict = ItemEvolutionManager.Instance.GenerateUpgradeItemData(GameDataManager.Instance.players[0]);
+            var upgradeItemDict = ItemEvolutionManager.Instance.GenerateUpgradeItemData(GameDataManager.Instance.singleModePlayer.GetComponent<Player>());
 
             for (int i = 0; i < uIUpgradeSkills.Count; i++)
             {

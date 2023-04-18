@@ -18,9 +18,21 @@ namespace Sataura
 
 
         [SerializeField] private GameObject damagedPopupPrefab;
+        protected bool isDeath = false;
+
 
         #region Properties
-        [field: SerializeField] public float Cooldown { get; set; }
+        [field: SerializeField] public float Cooldown { get; set; }     
+        public int EnemyDamaged 
+        { 
+            get 
+            {
+                if (enemyData != null)
+                    return enemyData.damage;
+                else
+                    return 0;
+            } 
+        }
         #endregion
 
 
@@ -67,6 +79,7 @@ namespace Sataura
         public virtual void OnEnemyDead() 
         {
             boxCollider2D.enabled = false;
+            isDead = true;
         }
 
         public bool IsOutOfHealth()

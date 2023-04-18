@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: I_Sword001_Lv4
   m_EditorClassIdentifier: 
   itemName: Wooden Sword
-  icon: {fileID: 2038466776, guid: d4d04b54f146fc9499ef61e7951f0861, type: 3}
+  icon: {fileID: -32673853, guid: f8109b945a6108247856cfb2c2e34ad6, type: 3}
   itemCategory: 1
   itemType: 4
   max_quantity: 1
   description: Base damage up by 5. Attack speed up by 10%.
-  usageVelocity: 4
+  usageVelocity: 3.025
   usagePassiveVelocity: 1
   currentLevel: 4
   maxLevel: 5
@@ -27,6 +27,6 @@ MonoBehaviour:
     outputItemSlot:
       itemData: {fileID: 11400000, guid: 297e403bad90bee4babfd0428e9e7ee5, type: 2}
       quantity: 1
-  damage: 10
+  damage: 25
   knockback: 10
   useType: 1

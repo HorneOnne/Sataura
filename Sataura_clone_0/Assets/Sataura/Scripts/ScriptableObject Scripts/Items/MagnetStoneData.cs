@@ -6,6 +6,6 @@ namespace Sataura
     public class MagnetStoneData : ItemData
     {
         [Header("MagnetStone Properties")]
-        public int attraction;
+        public float lootRadius;
     }
 }

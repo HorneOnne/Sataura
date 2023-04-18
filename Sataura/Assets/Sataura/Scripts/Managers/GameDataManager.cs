@@ -15,9 +15,12 @@ namespace Sataura
         private const string itemDataPrefix = "I_";
         private const string craftingRecipePrefix = "CR_";
 
-        /// <summary>
-        /// A list of all the item data.
-        /// </summary>
+
+        [Header("VFX")]
+        public GameObject levelUpVFX;
+        public GameObject bloodTearVFX_001;
+
+
         [Header("ITEM DATA")]
         [SerializeField] List<ItemData> itemData;
 
@@ -99,6 +102,7 @@ namespace Sataura
 
 
 
+
         /// <summary>
         /// Initializes the item data and prefab dictionaries, and generates the recipe dictionaries.
         /// </summary>
@@ -110,27 +114,33 @@ namespace Sataura
             GenerateItemPrefabDictionary();
             GenerateProjectilePrefabDictionary();
             GenerateEnemyPrefabDictionary();
-            InitializeRecipes();  
-        }
+            InitializeRecipes();
 
-
-        private void Start()
-        {
-            if(NetworkManager.Singleton == null)
+            if (NetworkManager.Singleton == null)
             {
                 return;
             }
 
-            
-            /*for (int i = 0; i < networkObjects.Count; i++)
-            {
-                NetworkManager.Singleton.RemoveNetworkPrefab(networkObjects[i]);
-            }*/
 
             for (int i = 0; i < networkObjects.Count; i++)
             {
                 NetworkManager.Singleton.AddNetworkPrefab(networkObjects[i]);
             }
+        }
+
+
+        private void Start()
+        {
+           /* if (NetworkManager.Singleton == null)
+            {
+                return;
+            }
+
+
+            for (int i = 0; i < networkObjects.Count; i++)
+            {
+                NetworkManager.Singleton.AddNetworkPrefab(networkObjects[i]);
+            }*/
         }
 
         /// <summary>
@@ -397,7 +407,8 @@ namespace Sataura
 
         public void AddNetworkPlayer(ulong clientId, Player player)
         {
-            players.Add(clientId, player);
+            if (players.ContainsKey(clientId) == false)
+                players.Add(clientId, player);
         }
 
     }

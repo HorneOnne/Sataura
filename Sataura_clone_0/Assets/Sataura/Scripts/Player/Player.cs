@@ -23,6 +23,9 @@ namespace Sataura
         [SerializeField] private PlayerInputHandler playerInputHandler;
         [SerializeField] private PlayerEquipment playerEquipment;
         [SerializeField] private PlayerUseItem playerUseItem;
+        private IngameInformationManager ingameInformationManager;
+
+
 
 
 
@@ -73,6 +76,7 @@ namespace Sataura
         public override void OnNetworkSpawn()
         {
             GameDataManager.Instance.AddNetworkPlayer(NetworkManager.LocalClientId, this);
+            GameDataManager.Instance.singleModePlayer = this.gameObject;
 
             if (IsOwner)
             {
@@ -80,13 +84,15 @@ namespace Sataura
                 if(GameManager.Instance.CinemachineVirtualCamera != null)
                     GameManager.Instance.CinemachineVirtualCamera.Follow = this.transform;
 
+                ingameInformationManager = IngameInformationManager.Instance;
+
                 UIPlayerInGameInventory.Instance.SetPlayer(this.gameObject);
-                UIItemInHand.Instance.SetPlayer(this.gameObject);     
-                
-                /*if(UIPlayerInventory.Instance != null)
-                {
-                    UIPlayerInventory.Instance.SetPlayer(this);
-                }*/
+                UIItemInHand.Instance.SetPlayer(this.gameObject);
+
+
+                // Update inventory data.
+                PlayerInventory.UpdateCharacterData();
+                PlayerInGameInventory.UpdateCharacterData();
             }
 
 
@@ -113,7 +119,8 @@ namespace Sataura
 
             if (IsOwner)
             {
-                if(UIPlayerInGameInventory.Instance != null)
+                
+                if (UIPlayerInGameInventory.Instance != null)
                 {
                     UIPlayerInGameInventory.Instance.LoadReferences();
                 }
@@ -135,10 +142,6 @@ namespace Sataura
             }
 
             StartCoroutine(TeleportPlayerToPosition(new Vector2(50, 30), 0.3f));
-
-
-
-
         }
 
         private IEnumerator TeleportPlayerToPosition(Vector2 position, float time)
@@ -147,6 +150,11 @@ namespace Sataura
             yield return new WaitForSeconds(time);
             transform.position = position;
             playerMovement.Rb2D.isKinematic = false;
+        }
+
+        public bool IsGameOver()
+        {
+            return ingameInformationManager.IsGameOver();
         }
 
 

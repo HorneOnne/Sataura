@@ -19,6 +19,7 @@ MonoBehaviour:
   max_quantity: 1
   description: Character picks up items from further away.
   usageVelocity: 1
+  usagePassiveVelocity: 1
   currentLevel: 1
   maxLevel: 5
   upgradeRecipe:
@@ -26,4 +27,4 @@ MonoBehaviour:
     outputItemSlot:
       itemData: {fileID: 11400000, guid: bfa7f14fc724c9748bf6e84aa6218656, type: 2}
       quantity: 1
-  attraction: 0
+  lootRadius: 6.65

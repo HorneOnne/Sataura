@@ -34,20 +34,35 @@ namespace Sataura
             rb2D.isKinematic = true;
         }
 
-
-
-        public void Collect(Player player)
+        bool canCollect = false;
+        Transform player;
+        private void FixedUpdate()
         {
-            IngameInformationManager.Instance.GainExperience(expValue);
-            networkObject.Despawn();
+            if (canCollect == false) return;
+  
+
+            var dir = player.position - transform.position;
+            float distance = dir.magnitude;
+            //float distance = Vector2.Distance(player.transform.position, transform.position);
+
+            if (distance < 2.0f)
+            {
+                IngameInformationManager.Instance.GainExperience(expValue);
+                networkObject.Despawn();
+            }
+            else
+            {
+                rb2D.velocity = dir.normalized * 20f;
+            }
         }
 
-        private void OnCollisionEnter2D(Collision2D collision)
+        
+        public void Collect(Player player)
         {
-            if(collision.gameObject.CompareTag("Ground"))
-            {
-                rb2D.isKinematic = true;
-            }
+            //Debug.Log("Collect");
+            canCollect = true;
+            this.player = player.transform;
+            rb2D.isKinematic = true;
         }
     }
 }

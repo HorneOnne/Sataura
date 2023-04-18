@@ -90,6 +90,7 @@ namespace Sataura
 
         private void Update()
         {
+            if (player.IsGameOver()) return;
             isGrounded = IsGrounded();
             isOnPlatform = IsOnPlatform();
 

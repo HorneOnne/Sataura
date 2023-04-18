@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: I_Sword001_Evo
   m_EditorClassIdentifier: 
   itemName: Wooden Sword
-  icon: {fileID: 1715447060, guid: d4d04b54f146fc9499ef61e7951f0861, type: 3}
+  icon: {fileID: -963774631, guid: f8109b945a6108247856cfb2c2e34ad6, type: 3}
   itemCategory: 1
   itemType: 4
   max_quantity: 1

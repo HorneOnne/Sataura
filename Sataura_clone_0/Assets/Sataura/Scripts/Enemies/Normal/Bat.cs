@@ -5,7 +5,9 @@ namespace Sataura
 {
     public class Bat : FlyingEnemy
     {
-        [SerializeField] private Sprite[] sprites;
+        [SerializeField] private Sprite[] flySprites;
+        [SerializeField] private Sprite[] dieSprites;
+
         [SerializeField] private float fps = 30f;
         private float fpsCounter = 0f;
         private int animationStep;
@@ -13,7 +15,25 @@ namespace Sataura
 
 
         public override void MoveAI(Vector2 target)
-        {           
+        {
+            fpsCounter += Time.deltaTime;
+            if (isDead)
+            {
+                if (fpsCounter >= 1 / fps)
+                {
+                    animationStep++;
+                    if (animationStep == dieSprites.Length)
+                    {
+                        animationStep = 0;
+                        sr.enabled = false;
+                    }
+
+                    sr.sprite = dieSprites[animationStep];
+                    fpsCounter = 0.0f;
+                }
+                return;
+            }
+
             Vector2 direction = target - (Vector2)transform.position;
             direction.Normalize();
             rb2D.MovePosition((Vector2)transform.position + direction * 10 * Time.fixedDeltaTime);
@@ -23,13 +43,12 @@ namespace Sataura
             if (fpsCounter >= 1 / fps)
             {
                 animationStep++;
-                if (animationStep == sprites.Length)
+                if (animationStep == flySprites.Length)
                 {
                     animationStep = 0;
                 }
 
-                sr.sprite = sprites[animationStep];
-
+                sr.sprite = flySprites[animationStep];
                 fpsCounter = 0.0f;
             }
         }
@@ -46,36 +65,14 @@ namespace Sataura
 
 
 
-        
-
+       
         public override void OnEnemyDead()
         {
-            base.OnEnemyDead();
-
+            animationStep = 0;
+            base.OnEnemyDead();           
             rb2D.velocity = Vector2.zero;
-
-            StartCoroutine(ChangeValueOverTime(1.5f, 0f, .5f));
+            //StartCoroutine(ChangeValueOverTime(1.5f, 0f, .5f));
             SoundManager.Instance.PlaySound(SoundType.EnemyDie, enemyData.dieSFX);
-        }
-
-
-        private float currentValue = 1f;
-
-        private IEnumerator ChangeValueOverTime(float startValue, float endValue, float duration)
-        {
-            float elapsedTime = 0f;
-
-            while (elapsedTime < duration)
-            {
-                elapsedTime += Time.deltaTime;
-                currentValue = Mathf.Lerp(startValue, endValue, elapsedTime / duration);
-
-                sr.material.SetFloat("_Dissolve_Amount", currentValue);
-
-                yield return null;
-            }
-
-            currentValue = endValue;
         }
     }
 

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 namespace Sataura
@@ -46,11 +47,16 @@ namespace Sataura
 
         private void OpenUpgradeItemSkillPanel()
         {
+            StartCoroutine(WaitOpenUpgradeItemSkillPanel(2f));
+        }
+
+        private IEnumerator WaitOpenUpgradeItemSkillPanel(float time)
+        {
+            yield return new WaitForSeconds(time);
             upgradeItemSkillPanel.SetActive(true);
             UIIngameInformationManager.Instance.FakeFullExpSliderWhenLevelUp();
             Time.timeScale = 0.0f;
         }
-
 
 
         public void CloseUpgradeItemSkillPanel()

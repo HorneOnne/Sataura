@@ -43,7 +43,7 @@ namespace Sataura
         {
             if (!IsServer) return;
 
-            Debug.Log($"Client id: {clientId} is connected.");
+            //Debug.Log($"Client id: {clientId} is connected.");
             
             if(players.Contains(NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.transform) == false)
                 players.Add(NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.transform);
@@ -63,46 +63,56 @@ namespace Sataura
 
                 //GenerateCircleWaveEnemies(players[0].position);
 
-                Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                for (int i = 0; i < 1; i++)
-                {              
-                    var enemyObject = Instantiate(pinkSlimePrefab, mousePos, Quaternion.identity);
+                GenerateSquareWaveEnemies(players[0]);
+
+            }
+
+            if(Time.time < 2.0f)
+            {
+                return;
+            }
+            if (players.Count == 0) return;
+
+
+            return;
+            if(CountdownTimer.Instance.TimeLeft > 15 * 60)
+            {
+                if (IngameInformationManager.Instance.currentTotalEnemiesIngame < 10)
+                {
+                    var enemyObject = Instantiate(pinkSlimePrefab, (Vector2)players[0].position + new Vector2(Random.Range(-30, 30), 40), Quaternion.identity);
                     enemyObject.GetComponent<BaseEnemy>().SetFollowTarget(players[0]);
 
                     var enemyNetworkObject = enemyObject.GetComponent<NetworkObject>();
                     enemyNetworkObject.Spawn();
                     IngameInformationManager.Instance.currentTotalEnemiesIngame++;
                 }
-               
             }
-
-            if(Time.time < 2.0f)
+            else if (CountdownTimer.Instance.TimeLeft > 14 * 60)
             {
-                Debug.Log(GameDataManager.Instance.players.Count);
-                return;
+                if (IngameInformationManager.Instance.currentTotalEnemiesIngame < 20)
+                {
+                    var enemyObject = Instantiate(pinkSlimePrefab, (Vector2)players[0].position + new Vector2(Random.Range(-30, 30), 40), Quaternion.identity);
+                    enemyObject.GetComponent<BaseEnemy>().SetFollowTarget(players[0]);
+
+                    var enemyNetworkObject = enemyObject.GetComponent<NetworkObject>();
+                    enemyNetworkObject.Spawn();
+                    IngameInformationManager.Instance.currentTotalEnemiesIngame++;
+                }
             }
-
-            if (players.Count == 0) return;
-
-            if(IngameInformationManager.Instance.currentTotalEnemiesIngame < 10)
+            else
             {
-                var enemyObject = Instantiate(pinkSlimePrefab, (Vector2)players[0].position + new Vector2(Random.Range(-30, 30),40), Quaternion.identity);
-                enemyObject.GetComponent<BaseEnemy>().SetFollowTarget(players[0]);
+                if (IngameInformationManager.Instance.currentTotalEnemiesIngame < 20)
+                {
+                    var enemyObject = Instantiate(batPrefab, (Vector2)players[0].position + new Vector2(Random.Range(-30, 30), 60), Quaternion.identity);
+                    enemyObject.GetComponent<BaseEnemy>().SetFollowTarget(players[0]);
 
-                var enemyNetworkObject = enemyObject.GetComponent<NetworkObject>();
-                enemyNetworkObject.Spawn();
-                IngameInformationManager.Instance.currentTotalEnemiesIngame++;
+                    var enemyNetworkObject = enemyObject.GetComponent<NetworkObject>();
+                    enemyNetworkObject.Spawn();
+                    IngameInformationManager.Instance.currentTotalEnemiesIngame++;
+                }
             }
 
-            if (IngameInformationManager.Instance.currentTotalEnemiesIngame < 20)
-            {
-                var enemyObject = Instantiate(batPrefab, (Vector2)players[0].position + new Vector2(Random.Range(-30, 30), 60), Quaternion.identity);
-                enemyObject.GetComponent<BaseEnemy>().SetFollowTarget(players[0]);
-
-                var enemyNetworkObject = enemyObject.GetComponent<NetworkObject>();
-                enemyNetworkObject.Spawn();
-                IngameInformationManager.Instance.currentTotalEnemiesIngame++;
-            }
+            
         }
 
         /*float getEnemiesAroundTimeElapse = 0.0f;
@@ -150,10 +160,8 @@ namespace Sataura
 
         private GameObject Spawn(Vector2 position, Quaternion rotation)
         {
-            var enemyNetObject = networkObjectPool.GetNetworkObject(enemyPrefab, position, rotation);
-            enemyNetObject.Spawn();
-
-            return enemyNetObject.gameObject;
+            var enemyObject = Instantiate(pinkSlimePrefab, position, rotation);
+            return enemyObject;
         }
 
 
@@ -197,15 +205,20 @@ namespace Sataura
 
         private float spacing = 10;
         private int pointsPerSide = 3;
-        public void GenerateSquareWaveEnemies()
+        public void GenerateSquareWaveEnemies(Transform playerTransform)
         {
             float x = -spacing * (numPoints / 2);
             float y = spacing * (numPoints / 2);
 
             for (int i = 0; i < numPoints; i++)
             {
-                var e = Spawn(new Vector2(x, y), Quaternion.identity);
-                currentEnemyWave.Add(e.GetComponent<Enemy001>());
+                var e = Spawn(playerTransform.position + new Vector3(x, y, 0), Quaternion.identity);
+                currentEnemyWave.Add(e.GetComponent<Slime>());
+                e.GetComponent<BaseEnemy>().SetFollowTarget(players[0]);
+
+                var enemyNetworkObject = e.GetComponent<NetworkObject>();
+                enemyNetworkObject.Spawn();
+                IngameInformationManager.Instance.currentTotalEnemiesIngame++;
 
                 if ((i + 1) % pointsPerSide == 0)
                 {

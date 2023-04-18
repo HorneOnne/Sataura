@@ -94,7 +94,6 @@ namespace Sataura
                 inventorySize = itemSelectionPlayer.characterData.ingameInventoryData.itemSlots.Count;
             }
 
-            
             for (int i = 0; i < inventorySize; i++)
             {
                 GameObject slotObject = Instantiate(itemSlotPrefab, this.transform);
@@ -119,7 +118,10 @@ namespace Sataura
         public void SetPlayer(GameObject playerObject)
         {
             if(playerType == PlayerType.IngamePlayer)
+            {
                 this.player = playerObject.GetComponent<Player>();
+            }
+                
 
 
             if (playerType == PlayerType.ItemSelectionPlayer)

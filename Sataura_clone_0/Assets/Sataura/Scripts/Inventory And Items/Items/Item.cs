@@ -23,7 +23,7 @@ namespace Sataura
 
         public override void OnNetworkSpawn()
         {
-            Debug.Log("OnNetworkSpawn");
+            //Debug.Log("OnNetworkSpawn");
             LoadComponents();
         }
 

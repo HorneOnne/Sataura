@@ -34,13 +34,13 @@ namespace Sataura
 
         public void Save()
         {
-            List<CharacterDataStruct> characterDataStructs = new List<CharacterDataStruct>();    
-            for(int i = 0; i < charactersData.Count;i++)
+            List<CharacterDataStruct> characterDataStructs = new List<CharacterDataStruct>();
+            for (int i = 0; i < charactersData.Count; i++)
             {
-                characterDataStructs.Add(new CharacterDataStruct 
-                { 
+                characterDataStructs.Add(new CharacterDataStruct
+                {
                     characterName = charactersData[i].characterName,
-                    characterMovementData= new CharacterMovementDataStruct(charactersData[i].characterMovementData),
+                    characterMovementData = new CharacterMovementDataStruct(charactersData[i].characterMovementData),
                     ingameInventoryData = new InventoryStruct(charactersData[i].ingameInventoryData),
                     playerInventoryData = new InventoryStruct(charactersData[i].playerInventoryData),
                 });
@@ -61,7 +61,7 @@ namespace Sataura
                 return;
 
             charactersData = new List<CharacterData>();
-            for(int i = 0; i < accountData.charactersDataStruct.Count; i++)
+            for (int i = 0; i < accountData.charactersDataStruct.Count; i++)
             {
                 var characterData = ScriptableObject.CreateInstance<CharacterData>();
                 characterData.name = accountData.charactersDataStruct[i].characterName;
@@ -70,7 +70,7 @@ namespace Sataura
                 characterData.ingameInventoryData = Utilities.ConvertInventoryDataStructToInventoryData(accountData.charactersDataStruct[i].ingameInventoryData);
                 characterData.playerInventoryData = Utilities.ConvertInventoryDataStructToInventoryData(accountData.charactersDataStruct[i].playerInventoryData);
                 characterData.currencyString = accountData.charactersDataStruct[i].currencyString;
-                
+
                 charactersData.Add(characterData);
             }
 
@@ -81,12 +81,19 @@ namespace Sataura
         private void OnApplicationQuit()
         {
             Debug.Log("OnApplicationQuit");
+            if (GameDataManager.Instance.singleModePlayer == null)
+                return;
+
 
             if (GameDataManager.Instance.singleModePlayer.GetComponent<MainMenuPlayer>() != null)
-                charactersData[selectionCharacterDataIndex] = GameDataManager.Instance.singleModePlayer.GetComponent<MainMenuPlayer>().characterData;
+                if (GameDataManager.Instance.singleModePlayer.GetComponent<MainMenuPlayer>().characterData != null)
+                    charactersData[selectionCharacterDataIndex] = Instantiate(GameDataManager.Instance.singleModePlayer.GetComponent<MainMenuPlayer>().characterData);
 
             if (GameDataManager.Instance.singleModePlayer.GetComponent<Player>() != null)
-                charactersData[selectionCharacterDataIndex] = GameDataManager.Instance.singleModePlayer.GetComponent<Player>().characterData;
+                if (GameDataManager.Instance.singleModePlayer.GetComponent<Player>().characterData != null)
+                    charactersData[selectionCharacterDataIndex] = Instantiate(GameDataManager.Instance.singleModePlayer.GetComponent<Player>().characterData);
+
+            //Debug.Log($"OnApplicationQuit: {charactersData.Count} \t {charactersData[0] == null}");
 
             Save();
         }

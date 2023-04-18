@@ -5,30 +5,67 @@ namespace Sataura
 {
     public class Slime : GroundEnemy
     {
+        [SerializeField] private Sprite[] moveSprites;
+        [SerializeField] private Sprite[] dieSprites;
+
         [Header("Jump")]
         [SerializeField] private float jumpForce = 3f;
         private float jumpDelay = 2.0f; // the delay in seconds before the player can jump again
         [SerializeField] private bool canJump = true; // a flag indicating whether the player can jump
-        [SerializeField] protected Animator anim;
+        //[SerializeField] protected Animator anim;
+
+
+        [SerializeField] private float fps = 30f;
+        private float fpsCounter = 0f;
+        private int animationStep;
 
         public override void MoveAI(Vector2 playerPosition)
         {
-            if (Time.time - lastUpdate >= .1f)
-                lastUpdate = Time.time;
-            else
+            fpsCounter += Time.deltaTime;
+            
+            if (isDead)
+            {
+                if (fpsCounter >= 1 / fps)
+                {
+                    animationStep++;
+                    if (animationStep == dieSprites.Length)
+                    {
+                        animationStep = 0;
+                        sr.enabled = false;
+                    }
+
+                    sr.sprite = dieSprites[animationStep];
+                    fpsCounter = 0.0f;
+                }
                 return;
+            }
 
-            if (isBeingKnockback == true || isDead == true) return;
+            // Move anim
+            fpsCounter += Time.deltaTime;
+            if (fpsCounter >= 1 / fps)
+            {
+                animationStep++;
+                if (animationStep == moveSprites.Length)
+                {
+                    animationStep = 0;
+                }
 
+                sr.sprite = moveSprites[animationStep];
+                fpsCounter = 0.0f;
+            }
+
+            
+
+            // Move towards player
+            Vector2 direction = (playerPosition - (Vector2)transform.position);        
+            rb2D.velocity = new Vector2(direction.normalized.x * enemyData.moveSpeed, rb2D.velocity.y);
+            float distance = direction.magnitude;
+
+            // Jump
             if (canJump && IsGrounded())
             {
                 JumpAI(playerPosition);
             }
-
-
-            // Move towards player
-            Vector2 direction = (playerPosition - (Vector2)transform.position).normalized;        
-            rb2D.velocity = new Vector2(direction.x * enemyData.moveSpeed, rb2D.velocity.y);
 
 
             // Flip sprite to face player
@@ -41,15 +78,18 @@ namespace Sataura
 
         float lastUpdate = 0.0f;
         private void JumpAI(Vector2 playerPosition)
-        {          
-            if (playerPosition.y > transform.position.y + 10)
+        {
+            float xDistance = Mathf.Abs(playerPosition.x - transform.position.x);
+       
+
+            if (playerPosition.y > transform.position.y + 10 && xDistance < 10)
             {
                 JumpUp();
                 canJump = false;
                 Invoke("EnableJump", jumpDelay);
             }
 
-            if (playerPosition.y < transform.position.y - 10)
+            if (playerPosition.y < transform.position.y - 10 && xDistance < 10)
             {
                 JumpDown();
                 canJump = false;
@@ -67,41 +107,29 @@ namespace Sataura
             StartCoroutine(ToggleTrigger());
         }
 
+        private void EnableJump()
+        {
+            canJump = true;
+        }
+
         private IEnumerator ToggleTrigger()
         {
             boxCollider2D.isTrigger = true;
             yield return new WaitForSeconds(.5f);
             boxCollider2D.isTrigger = false;
         }
-
-
-
-
-
-        public override void TakeDamage(int damaged)
-        {
-            base.TakeDamage(damaged);
-
-            if (IsOutOfHealth() == false)
-            {
-                anim.SetTrigger("BeAttacked");
-            }
-        }
+       
 
         public override void OnEnemyDead()
         {
+            animationStep = 0;
             base.OnEnemyDead();
-
             rb2D.velocity = Vector2.zero;
-            anim.SetTrigger("Dead");
-
+            //anim.SetTrigger("Dead");
             SoundManager.Instance.PlaySound(SoundType.EnemyDie, enemyData.dieSFX);
         }
 
-        private void EnableJump()
-        {
-            canJump = true;
-        }
+       
 
         protected override void ReturnToNetworkPool()
         {

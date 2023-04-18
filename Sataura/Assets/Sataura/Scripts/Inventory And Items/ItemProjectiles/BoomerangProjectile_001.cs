@@ -31,7 +31,7 @@ namespace Sataura
             polygonCollider2D.isTrigger = true;
         }
 
-        public bool Throw(Player player, BoomerangData data)
+        public bool Throw(Player player, BoomerangData data, Vector2 mousePosition)
         {
             this.boomerangData = data;
             timeToReturn = this.boomerangData.timeToReturn;
@@ -50,7 +50,8 @@ namespace Sataura
             this.player = player;
             transform.position = player.transform.position;
             gameObject.SetActive(true);
-            mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+            //mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             direction = mousePosition - (Vector2)transform.position;
             rb.velocity = direction.normalized * boomerangData.releaseSpeed;
 

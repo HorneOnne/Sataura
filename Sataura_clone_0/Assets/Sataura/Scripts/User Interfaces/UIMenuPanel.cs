@@ -6,7 +6,7 @@ namespace Sataura
     public class UIMenuPanel : MonoBehaviour
     {
 
-        private void Start()
+        /*private void Start()
         {
             UIManager.Instance.menuCanvas.SetActive(false);
         }
@@ -20,7 +20,7 @@ namespace Sataura
         public void Load()
         {
             SaveManager.Instance.Load();
-        }
+        }*/
     }
 
 }

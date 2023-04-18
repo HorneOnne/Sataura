@@ -17,17 +17,9 @@ MonoBehaviour:
   itemCategory: 1
   itemType: 3
   max_quantity: 1
-  description: '~Bow001
-
-    -+ 6 attack damage
-
-    -+ 1.0 attack speed
-
-    ++
-    6 attack damage
-
-    ++ 0.5 attack speed'
+  description: Base damage up by 5.
   usageVelocity: 1.5
+  usagePassiveVelocity: 1
   currentLevel: 2
   maxLevel: 5
   upgradeRecipe:
@@ -41,6 +33,6 @@ MonoBehaviour:
     outputItemSlot:
       itemData: {fileID: 11400000, guid: 5fdfcf54a38a2dd4780a4b7bf5978252, type: 2}
       quantity: 1
-  baseAttackDamage: 12
+  baseAttackDamage: 11
   releaseSpeed: 25
   useType: 1

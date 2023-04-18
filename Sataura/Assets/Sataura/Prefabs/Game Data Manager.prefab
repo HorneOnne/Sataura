@@ -44,7 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebe6038e53033d444ac98e22ee6b1553, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isConnectNetwork: 1
   itemData:
   - {fileID: 11400000, guid: af35a522cd21d764fabe95092e687b5f, type: 2}
   - {fileID: 11400000, guid: f11b99c8af0b3164282fc6e2bb3f54d3, type: 2}
@@ -217,13 +216,11 @@ MonoBehaviour:
   - {fileID: 7523730310188361476, guid: d9a462e2c995dc042b4d766ae51e9bec, type: 3}
   - {fileID: 6825104555250527514, guid: c69ca9d8db06ead49aecb9cbfaa811dc, type: 3}
   - {fileID: 3018514922614819798, guid: 1b2339a3339f975438e5127625ecf149, type: 3}
-  - {fileID: 3119597679863554553, guid: dda04c634d94fdb40bd605aa3a43d137, type: 3}
   - {fileID: 9095001263188952735, guid: 7aeb687f08e46694fad7fb871a78a1f9, type: 3}
   - {fileID: 5207464968828955612, guid: 76dca213e545aea408be6333805ae122, type: 3}
   - {fileID: 4973538020444718908, guid: 9962602cb9502cc49a3bd5d756c92401, type: 3}
   - {fileID: 7163825116418857947, guid: 2d276384e0de20546b28f4964dfc5b99, type: 3}
   - {fileID: 3139863566514667555, guid: 2df01702708932345b34d9c6cb49d296, type: 3}
-  - {fileID: 0}
   - {fileID: 3765923086305111446, guid: 777c892840afd664390456487433499c, type: 3}
   - {fileID: 5032956868545479974, guid: 096069e716c3f464bab1242238512777, type: 3}
   - {fileID: 6224008622894449178, guid: c1ca1fb2914ea19499bc87018f25056c, type: 3}
@@ -236,3 +233,4 @@ MonoBehaviour:
   - {fileID: 5404143556966860760, guid: adb334ee1f5ed7c4bb61e254ee05bbb4, type: 3}
   - {fileID: 6009745326441535106, guid: 716fe4e60b2ef474b9b392244910de10, type: 3}
   itemContainerParent: {fileID: 0}
+  singleModePlayer: {fileID: 0}

@@ -17,17 +17,9 @@ MonoBehaviour:
   itemCategory: 1
   itemType: 3
   max_quantity: 1
-  description: '~Bow001
-
-    -+ 6 attack damage
-
-    -+ 1.0 attack speed
-
-    ++
-    12 attack damage
-
-    ++ 1.0 attack speed'
+  description: 
   usageVelocity: 2
+  usagePassiveVelocity: 1
   currentLevel: 3
   maxLevel: 5
   upgradeRecipe:

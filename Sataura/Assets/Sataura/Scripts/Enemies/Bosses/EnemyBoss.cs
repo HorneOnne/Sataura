@@ -20,7 +20,7 @@ namespace Sataura
 
         public override void OnNetworkSpawn()
         {
-            SetFollowTarget(GameDataManager.Instance.players[0].transform);
+            SetFollowTarget(GameDataManager.Instance.singleModePlayer.transform);
         }
 
 

@@ -115,67 +115,7 @@ namespace Sataura
             return baseItems[Random.Range(0, baseItems.Count)];
         }
 
-        /*private ItemData GetRandomBaseItem(Player player)
-        {
-            var playerIngameInventory = player.PlayerInGameInventory;
-            var baseItem = baseItems[Random.Range(0, baseItems.Count)];
-
-            for (int i = 0; i < playerIngameInventory.inGameInventory.Count; i++)
-            {
-
-            }
-
-
-            return baseItem;
-        }*/
-
-
-        /*public HashSet<ItemData> GenerateUpgradeItemData(Player player)
-        {
-            HashSet<ItemData> upgradeItemDataSet = new HashSet<ItemData>();
-            var playerInGameInventory = player.PlayerInGameInventory;
-
-            float timeLoad = 0.0f;
-            while (true)
-            {
-                timeLoad += Time.deltaTime;
-
-                // Break condition
-                if (upgradeItemDataSet.Count >= 3)
-                    break;
-                if (timeLoad > 1.0f)
-                {
-                    Debug.LogWarning("Out of time Load...");
-                    break;
-                }
-
-                var baseItem = GetRandomBaseItem();
-                if (upgradeItemDataSet.Contains(baseItem) == true)
-                    continue;
-
-
-                if (playerInGameInventory.HasBaseItem(baseItem))
-                {
-                    int baseItemIndex = playerInGameInventory.FindBaseItemIndex(baseItem);
-                    var currentItemDataAtIndex = playerInGameInventory.inGameInventory[baseItemIndex].ItemData;
-                    var itemUpgradeVersion = playerInGameInventory.GetUpgradeVersionOfItem(currentItemDataAtIndex);
-                    if (itemUpgradeVersion != null)
-                    {
-                        Debug.Log($"Has baseItem: {itemUpgradeVersion}");
-                        upgradeItemDataSet.Add(itemUpgradeVersion);
-                    }
-                }
-                else
-                {
-
-                    upgradeItemDataSet.Add(baseItem);
-                    Debug.Log($"Not has baseItem: {baseItem}");
-                }
-
-            }
-            return upgradeItemDataSet;
-        }*/
-
+       
 
         private ItemData HasItemEvolution(Player player)
         {
@@ -216,6 +156,7 @@ namespace Sataura
 
         public Dictionary<ItemData, bool> GenerateUpgradeItemData(Player player)
         {
+            Debug.Log(player.name);
             Debug.LogWarning("Optimize here.");
             Dictionary<ItemData, bool> upgradeItemDataDict = new Dictionary<ItemData, bool>();
             var playerInGameInventory = player.PlayerInGameInventory;

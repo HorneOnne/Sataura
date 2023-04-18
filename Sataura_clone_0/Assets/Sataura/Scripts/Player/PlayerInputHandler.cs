@@ -19,7 +19,6 @@ namespace Sataura
         [SerializeField] private Player player;
         [SerializeField] private ItemSelectionPlayer itemSelectionPlayer;
 
-
         private PlayerInventory playerInventory;
         private PlayerInGameInventory playerInGameInventory;
         private ItemInHand itemInHand;
@@ -208,8 +207,10 @@ namespace Sataura
         private void Update()
         {
             if (!IsOwner) return;
+            if (player.IsGameOver()) return;
 
-            if(playerType == PlayerType.IngamePlayer)
+
+            if (playerType == PlayerType.IngamePlayer)
             {
                 for (int i = 0; i < selectItemBindingKeys.Count; i++)
                 {

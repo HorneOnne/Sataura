@@ -9,10 +9,10 @@ namespace Sataura
 
         public override void OnNetworkSpawn()
         {
+            Debug.Log("ChangeNetworkPlayer called!!!");
+
             CharacterData characterData = ScriptableObject.CreateInstance<CharacterData>();
             NetworkObject playerNetworkObject = NetworkManager.Singleton.ConnectedClients[NetworkManager.Singleton.LocalClientId].PlayerObject;
-
-            Debug.Log(playerNetworkObject == null);
 
             if (playerNetworkObject.GetComponent<MainMenuPlayer>() != null)
                 characterData = playerNetworkObject.GetComponent<MainMenuPlayer>().characterData;

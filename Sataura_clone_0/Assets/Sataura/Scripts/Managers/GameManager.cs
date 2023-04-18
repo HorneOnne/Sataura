@@ -19,8 +19,11 @@ namespace Sataura
         {
             Application.targetFrameRate = limitFps;
 
-          
+
+            
         }
+
+
 
 
 
@@ -31,9 +34,10 @@ namespace Sataura
 
         public void BackToMainMenu()
         {
-            Loader.LoadNetwork(Loader.Scene.MainMenuScene);
+            //Loader.LoadNetwork(Loader.Scene.MainMenuScene);
+            NetworkManager.Singleton.Shutdown();
             DestroyAllDontDestroyOnLoadObjects();
-            
+            SceneManager.LoadScene(Loader.Scene.MainMenuScene.ToString());           
         }
 
         public void DestroyAllDontDestroyOnLoadObjects()

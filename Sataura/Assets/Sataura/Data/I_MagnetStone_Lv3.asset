@@ -19,6 +19,7 @@ MonoBehaviour:
   max_quantity: 1
   description: Pickup range increased by 25%.
   usageVelocity: 1
+  usagePassiveVelocity: 1
   currentLevel: 3
   maxLevel: 5
   upgradeRecipe:
@@ -26,4 +27,4 @@ MonoBehaviour:
     outputItemSlot:
       itemData: {fileID: 11400000, guid: 6183ffe86c2d2d342ae8cc47219e0d6c, type: 2}
       quantity: 1
-  attraction: 0
+  lootRadius: 11.76385

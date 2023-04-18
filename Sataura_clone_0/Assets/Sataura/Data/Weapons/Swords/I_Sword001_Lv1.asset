@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: I_Sword001_Lv1
   m_EditorClassIdentifier: 
   itemName: Wooden Sword
-  icon: {fileID: 2051969137, guid: d4d04b54f146fc9499ef61e7951f0861, type: 3}
+  icon: {fileID: -32673853, guid: f8109b945a6108247856cfb2c2e34ad6, type: 3}
   itemCategory: 1
   itemType: 4
   max_quantity: 1
-  description: Gain wooden sword.
+  description: Gain sword.
   usageVelocity: 2.5
   usagePassiveVelocity: 1
   currentLevel: 1

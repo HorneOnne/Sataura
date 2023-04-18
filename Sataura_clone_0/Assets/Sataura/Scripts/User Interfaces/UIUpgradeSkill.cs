@@ -77,8 +77,8 @@ namespace Sataura
         {
             Time.timeScale = 1.0f;
             UIManager.Instance.CloseUpgradeItemSkillPanel();
-            var playerInGameInventory = GameDataManager.Instance.players[0].PlayerInGameInventory;
-            var playerUseItem = GameDataManager.Instance.players[0].PlayerUseItem;
+            var playerInGameInventory = GameDataManager.Instance.singleModePlayer.GetComponent<Player>().PlayerInGameInventory;
+            var playerUseItem = GameDataManager.Instance.singleModePlayer.GetComponent<Player>().PlayerUseItem;
 
 
             if (ItemEvolutionManager.Instance.IsEvoItem(itemData))
