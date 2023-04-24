@@ -35,7 +35,8 @@ namespace Sataura
         private void LoadSwordProjectileDataClientRpc(Vector2 mousePosition)
         {
             this.swordData = (SwordData)ItemData;
-            swingDuration = 1.0f / (swordData.usageVelocity + 0.001f);
+            //swingDuration = 1.0f / (swordData.usageVelocity + 0.001f);
+            swingDuration = 0.5f;
             SetSwingDirection(mousePosition);
         }
 
@@ -78,11 +79,10 @@ namespace Sataura
             // increment timer
             swingTimer += Time.deltaTime;
             // rotate the object
-            if (swingTimer < swingDuration)
+            if(swingTimer < swingDuration)
             {
                 transform.localPosition = Vector3.zero;
                 Swing();
-
             }
             else
             {

@@ -3481,7 +3481,7 @@ PrefabInstance:
       objectReference: {fileID: 8300000, guid: 9dc67db72504ae6449d37c7fe587c91f, type: 3}
     - target: {fileID: 9032991810353057904, guid: 16e60d57b6c70684996189ab444866d5, type: 3}
       propertyPath: soundAudioClips.Array.data[3].soundType
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 9032991810353057905, guid: 16e60d57b6c70684996189ab444866d5, type: 3}
       propertyPath: m_RootOrder

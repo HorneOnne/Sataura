@@ -1,4 +1,6 @@
+using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -98,13 +100,17 @@ namespace Sataura
            
             int arrowID = GameDataManager.Instance.GetItemID(baseArrowData);
             arrowProjectileObject.SetDataServerRpc(arrowID, true);
-            arrowProjectileObject.Shoot(bowItemData, baseArrowData); 
+            arrowProjectileObject.Shoot(bowItemData, baseArrowData);
+
+            SoundManager.Instance.PlaySound(SoundType.Bow, 0.5f);
         }
 
 
         private void UseType02(Vector2 mousePosition)
         {
-            for (int i = 0; i < 2; i++)
+            StartCoroutine(PerformUseType02(mousePosition));
+            
+            /*for (int i = 0; i < 2; i++)
             {
                 arrowProjectilePrefab = GameDataManager.Instance.GetProjectilePrefab("PP_ArrowProjectile_001");
                 var netObject = NetworkObjectPool.Singleton.GetNetworkObject(arrowProjectilePrefab, shootingPoints[0].position, transform.rotation);
@@ -118,8 +124,16 @@ namespace Sataura
                 int arrowID = GameDataManager.Instance.GetItemID(baseArrowData);
                 arrowProjectileObject.SetDataServerRpc(arrowID, true);
                 arrowProjectileObject.Shoot(bowItemData, baseArrowData);
-            }
+            }*/
         }
+
+        IEnumerator PerformUseType02(Vector2 mousePosition)
+        {
+            UseType01(mousePosition);
+            yield return new WaitForSeconds(0.3f);
+            UseType01(mousePosition);
+        }
+
 
         private void UseType03()
         {

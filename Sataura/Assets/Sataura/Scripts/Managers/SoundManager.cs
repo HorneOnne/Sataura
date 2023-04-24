@@ -25,17 +25,21 @@ namespace Sataura
             soundTimerDictionary[SoundType.MainMenuBtnHover] = 0.0f;
         }
 
-        public void PlaySound(SoundType soundType)
+        public void PlaySound(SoundType soundType, float volume = 1.0f,float pitch = 1.0f)
         {
             if (CanPlaySound(soundType) == false) return;
             if(oneShotGameObject == null)
             {
                 oneShotGameObject = new GameObject("Sound");
                 oneShotAudioSource = oneShotGameObject.AddComponent<AudioSource>();
+                oneShotAudioSource.volume = volume;
+                oneShotAudioSource.pitch = pitch;
             }
             else
             {
                 oneShotAudioSource = oneShotGameObject.GetComponent<AudioSource>();
+                oneShotAudioSource.volume = volume;
+                oneShotAudioSource.pitch = pitch;
             }
 
             oneShotAudioSource.PlayOneShot(GetAudioClip(soundType));
@@ -85,7 +89,8 @@ namespace Sataura
             switch (soundType)
             {
                 case SoundType.EnemyHit:
-                    if (soundTimerDictionary.ContainsKey(soundType))
+                    return CanSoundTypePlay(soundType, 0.05f);
+                    /*if (soundTimerDictionary.ContainsKey(soundType))
                     {
                         float lastTimePlayed = soundTimerDictionary[soundType];
                         float maxTimePlay = .05f;
@@ -97,9 +102,10 @@ namespace Sataura
                         return false;
                     }
                     else
-                        return false;
+                        return false;*/
                 case SoundType.EnemyDie:
-                    if (soundTimerDictionary.ContainsKey(soundType))
+                    return CanSoundTypePlay(soundType, 0.05f);
+                    /*if (soundTimerDictionary.ContainsKey(soundType))
                     {
                         float lastTimePlayed = soundTimerDictionary[soundType];
                         float maxTimePlay = .05f;
@@ -111,8 +117,9 @@ namespace Sataura
                         return false;
                     }
                     else
-                        return false;
+                        return false;*/
                 case SoundType.MainMenuBtnHover:
+                    return CanSoundTypePlay(soundType, 0.1f);
                     if (soundTimerDictionary.ContainsKey(soundType))
                     {
                         float lastTimePlayed = soundTimerDictionary[soundType];
@@ -131,21 +138,21 @@ namespace Sataura
             }
         }
 
-        /*private void SetSoundTypePlayFrequency(SoundType soundType, float frequency)
+        private bool CanSoundTypePlay(SoundType soundType, float maxTimePlay)
         {
             if (soundTimerDictionary.ContainsKey(soundType))
             {
                 float lastTimePlayed = soundTimerDictionary[soundType];
-                float maxTimePlay = .5f;
                 if (lastTimePlayed + maxTimePlay < Time.time)
                 {
                     soundTimerDictionary[soundType] = Time.time;
+                    return true;
                 }
-                else
-                {
-                }
+                return false;
             }
-        }*/
+            else
+                return false;
+        }
     }
 
 

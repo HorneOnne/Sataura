@@ -156,8 +156,9 @@ namespace Sataura
 
 
 
-        [SerializeField] private float detectionRadius = 5f;
-        private float detectionInterval = 1.0f;
+        [SerializeField] private float nearDetectionRadius = 15f;
+        [SerializeField] private float farDetectionRadius = 50f;
+        private float detectionInterval = 0.5f;
         private float lastDetectionTime = 0f;
         [SerializeField] private Collider2D[] enemies = new Collider2D[5]; // Array to store results of the overlap check
 
@@ -168,6 +169,7 @@ namespace Sataura
         {
             if (ingameInformationManager.IsGameOver())
                 return;
+
 
             // Check if it's time to detect enemies again      
             if (Time.time - lastDetectionTime > detectionInterval)
@@ -200,7 +202,8 @@ namespace Sataura
             }
 
 
-            
+            // Grapping hook
+
 
         }
 
@@ -231,14 +234,25 @@ namespace Sataura
         private Vector2 DetectNearestEnemy()
         {
             // Array to store results of the overlap check
-            int numEnemies = Physics2D.OverlapCircleNonAlloc(transform.position, detectionRadius, enemies, enemyLayer);
-            if(numEnemies > 0)
+            int numEnemies = Physics2D.OverlapCircleNonAlloc(transform.position, nearDetectionRadius, enemies, enemyLayer);
+
+            if(numEnemies == 0)
             {
-                return enemies[Random.Range(0, numEnemies)].transform.position;
+                numEnemies = Physics2D.OverlapCircleNonAlloc(transform.position, farDetectionRadius, enemies, enemyLayer);
+                
+                if(numEnemies > 0)
+                {
+                    return enemies[Random.Range(0, numEnemies)].transform.position;
+                }
+                else
+                {
+                    return GetRandomVector2() + (Vector2)player.transform.position;
+                }
+                
             }
             else
             {
-                return GetRandomVector2() + (Vector2)player.transform.position;
+                return enemies[Random.Range(0, numEnemies)].transform.position;
             }        
         }
 
@@ -331,7 +345,10 @@ namespace Sataura
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(transform.position, detectionRadius);
+            Gizmos.DrawWireSphere(transform.position, nearDetectionRadius);
+
+            Gizmos.color = Color.white;
+            Gizmos.DrawWireSphere(transform.position, farDetectionRadius);
         }
     }
 

@@ -327,6 +327,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 45
       objectReference: {fileID: 0}
+    - target: {fileID: 3290786976188150510, guid: d88ef6cfa0a488646ac23473a6ee9ed9, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.key0.a
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3547931597013648592, guid: d88ef6cfa0a488646ac23473a6ee9ed9, type: 3}
       propertyPath: m_Name
       value: Trail

@@ -15,8 +15,8 @@ MonoBehaviour:
   itemSlots:
   - <ItemData>k__BackingField: {fileID: 11400000, guid: fcee30470707bf8419cd06591a2e6ef3, type: 2}
     <ItemQuantity>k__BackingField: 1
-  - <ItemData>k__BackingField: {fileID: 0}
-    <ItemQuantity>k__BackingField: 0
+  - <ItemData>k__BackingField: {fileID: 11400000, guid: 8f3ed8e6f97f1024ea2ecd3c8dd300e9, type: 2}
+    <ItemQuantity>k__BackingField: 1
   - <ItemData>k__BackingField: {fileID: 0}
     <ItemQuantity>k__BackingField: 0
   - <ItemData>k__BackingField: {fileID: 0}

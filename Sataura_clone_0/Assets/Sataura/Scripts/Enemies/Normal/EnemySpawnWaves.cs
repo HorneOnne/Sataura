@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Sataura
@@ -17,6 +18,10 @@ namespace Sataura
 
         [SerializeField] private List<BaseEnemy> currentEnemyWave = new List<BaseEnemy>();
 
+        [Header("Spawner points")]
+        [SerializeField] private List<Transform> spawnerPointsLeft = new List<Transform>();
+        [SerializeField] private List<Transform> spawnerPointsRight = new List<Transform>();
+        [SerializeField] private List<Transform> spawnerPointsUp = new List<Transform>();
         
 
 
@@ -63,8 +68,10 @@ namespace Sataura
 
                 //GenerateCircleWaveEnemies(players[0].position);
 
-                GenerateSquareWaveEnemies(players[0]);
+                //GenerateSquareWaveEnemies(players[0]);
 
+                GenerateLeftWaveEnemies(players[0].position);
+                GenerateRightWaveEnemies(players[0].position);
             }
 
             if(Time.time < 2.0f)
@@ -165,9 +172,43 @@ namespace Sataura
         }
 
 
+        public void GenerateLeftWaveEnemies(Vector2 playerPosition)
+        {
+            for (int i = 0; i < spawnerPointsLeft.Count; i++)
+            {
+                float x = playerPosition.x + spawnerPointsLeft[i].position.x;
+                float y = spawnerPointsLeft[i].position.y;
 
-        public float radius = 10.0f;
-        public int numPoints = 10;
+                var e = Spawn(new Vector2(x, y), Quaternion.identity);
+                currentEnemyWave.Add(e.GetComponent<Slime>());
+                e.GetComponent<BaseEnemy>().SetFollowTarget(players[0]);
+
+                var enemyNetworkObject = e.GetComponent<NetworkObject>();
+                enemyNetworkObject.Spawn();
+                IngameInformationManager.Instance.currentTotalEnemiesIngame++;
+            }
+        }
+
+        public void GenerateRightWaveEnemies(Vector2 playerPosition)
+        {
+            for (int i = 0; i < spawnerPointsLeft.Count; i++)
+            {
+                float x = playerPosition.x + spawnerPointsRight[i].position.x;
+                float y = spawnerPointsLeft[i].position.y;
+
+                var e = Spawn(new Vector2(x, y), Quaternion.identity);
+                currentEnemyWave.Add(e.GetComponent<Slime>());
+                e.GetComponent<BaseEnemy>().SetFollowTarget(players[0]);
+
+                var enemyNetworkObject = e.GetComponent<NetworkObject>();
+                enemyNetworkObject.Spawn();
+                IngameInformationManager.Instance.currentTotalEnemiesIngame++;
+            }
+        }
+
+
+        private float radius = 10.0f;
+        private int numPoints = 10;
         public void SpawnEnemiesInCircle()
         {
             float angle = 0.0f;

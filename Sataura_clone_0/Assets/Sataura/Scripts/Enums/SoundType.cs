@@ -4,7 +4,8 @@
     {
         EnemyHit,
         EnemyDie,
-        PlayerAttack,
+        Sword,
+        Bow,
         MainMenuBtnHover
     }
 }

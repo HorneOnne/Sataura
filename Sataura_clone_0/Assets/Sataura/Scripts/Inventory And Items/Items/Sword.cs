@@ -81,7 +81,7 @@ namespace Sataura
             swordProjectileObject.GetComponent<SwordProjectile_001>().SetDataServerRpc(itemID, true);            
             swordProjectileObject.GetComponent<SwordProjectile_001>().LoadSwordProjectileDataServerRpc(mousePosition);
 
-            SoundManager.Instance.PlaySound(SoundType.PlayerAttack);
+            SoundManager.Instance.PlaySound(SoundType.Sword);
         }
 
         private void UseType02(Player player, Vector2 mousePosition)

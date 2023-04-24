@@ -108,7 +108,7 @@ namespace Sataura
         /// </summary>
         private void Awake()
         {
-            DontDestroyOnLoad(this.gameObject);
+            //DontDestroyOnLoad(this.gameObject);
 
             GenerateItemDataDict();
             GenerateItemPrefabDictionary();

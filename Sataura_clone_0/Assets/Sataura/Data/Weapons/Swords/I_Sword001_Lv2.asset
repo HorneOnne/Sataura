@@ -18,7 +18,7 @@ MonoBehaviour:
   itemType: 4
   max_quantity: 1
   description: Base damage up by 5.
-  usageVelocity: 2.5
+  usageVelocity: 1.5
   usagePassiveVelocity: 1
   currentLevel: 2
   maxLevel: 5
