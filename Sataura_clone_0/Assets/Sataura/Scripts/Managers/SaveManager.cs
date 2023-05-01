@@ -11,7 +11,8 @@ namespace Sataura
     {
         [Header("Default Character Data")]
         public CharacterMovementData defaultCharacterMovementData;
-        public InventoryData defaultInGameInventoryData;
+        public InventoryData defaultWeaponsData;
+        public InventoryData defaultAccessoriesData;
         public InventoryData defaultInventoryData;
 
 
@@ -41,7 +42,8 @@ namespace Sataura
                 {
                     characterName = charactersData[i].characterName,
                     characterMovementData = new CharacterMovementDataStruct(charactersData[i].characterMovementData),
-                    ingameInventoryData = new InventoryStruct(charactersData[i].ingameInventoryData),
+                    weaponsData = new InventoryStruct(charactersData[i].weaponsData),
+                    accessoriesData = new InventoryStruct(charactersData[i].accessoriesData),
                     playerInventoryData = new InventoryStruct(charactersData[i].playerInventoryData),
                 });
             }
@@ -67,7 +69,8 @@ namespace Sataura
                 characterData.name = accountData.charactersDataStruct[i].characterName;
                 characterData.characterName = accountData.charactersDataStruct[i].characterName;
                 characterData.characterMovementData = Utilities.ConvertStructToCharacterMovementData(accountData.charactersDataStruct[i].characterMovementData);
-                characterData.ingameInventoryData = Utilities.ConvertInventoryDataStructToInventoryData(accountData.charactersDataStruct[i].ingameInventoryData);
+                characterData.weaponsData = Utilities.ConvertInventoryDataStructToInventoryData(accountData.charactersDataStruct[i].weaponsData);
+                characterData.accessoriesData = Utilities.ConvertInventoryDataStructToInventoryData(accountData.charactersDataStruct[i].accessoriesData);
                 characterData.playerInventoryData = Utilities.ConvertInventoryDataStructToInventoryData(accountData.charactersDataStruct[i].playerInventoryData);
                 characterData.currencyString = accountData.charactersDataStruct[i].currencyString;
 

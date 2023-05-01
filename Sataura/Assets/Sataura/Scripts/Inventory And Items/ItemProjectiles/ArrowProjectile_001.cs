@@ -16,6 +16,10 @@ namespace Sataura
         [SerializeField] private Transform explosionSpawnPosition;
 
 
+        [Header("Properties")]
+        [SerializeField] private LayerMask groundLayer;
+
+
         // Cached variables
         private BoxCollider2D arrowCollider;
         private float timeElapsedSinceShot = 0.0f;
@@ -75,8 +79,7 @@ namespace Sataura
             ArrowPropertiesWhenCollideServerRpc();
             StartCoroutine(PerformReturnToPool());
      
-            /*var explosionObject = Instantiate(explosionObjectPrefab, explosionSpawnPosition.position, Quaternion.identity);
-            Destroy(explosionObject, 0.5f);*/
+            
         }
 
 
@@ -86,6 +89,14 @@ namespace Sataura
 
             ArrowPropertiesWhenCollideServerRpc();
             StartCoroutine(PerformReturnToPool());
+
+            if (groundLayer == (groundLayer | (1 << collision.gameObject.layer)))
+            {
+                // Collision detected with a game object that is in the canHookLayers LayerMask
+                // You can add your desired code or logic here
+
+                SoundManager.Instance.PlaySound(SoundType.ArrowProjectileHitGround, playRandom: true, collision.transform.position);
+            }
         }
 
         /// <summary>

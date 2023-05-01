@@ -53,7 +53,6 @@ namespace Sataura
 
 
             canUseItems = new bool[playerInGameInv.Capacity];
-            Debug.Log(canUseItems.Length);
             // Set all canuseItems array to false at start.
             for (int i = 0; i < canUseItems.Length; i++)
             {
@@ -88,20 +87,20 @@ namespace Sataura
         #region Use Passive Item
         public void CreateAllPassiveItemObjectInInventory()
         {
-            for (int i = 0; i < playerInGameInv.inGameInventory.Count; i++)
+            for (int i = 0; i < playerInGameInv.weapons.Count; i++)
             {
-                if (playerInGameInv.inGameInventory[i].HasItemData() == false)
+                if (playerInGameInv.weapons[i].HasItemData() == false)
                     continue;
 
 
-                var itemPrefab = GameDataManager.Instance.GetItemPrefab($"IP_{playerInGameInv.inGameInventory[i].ItemData.itemType}");
+                var itemPrefab = GameDataManager.Instance.GetItemPrefab($"IP_{playerInGameInv.weapons[i].ItemData.itemType}");
                 if (itemPrefab != null)
                 {
                     var obj = Instantiate(itemPrefab, transform.position, Quaternion.identity);
                     var itemObj = obj.GetComponent<Item>();
-                    itemObj.SetData(playerInGameInv.inGameInventory[i]);
+                    itemObj.SetData(playerInGameInv.weapons[i]);
                     itemObj.spriteRenderer.enabled = false;
-                    itemObj.GetComponent<NetworkObject>().Spawn();               
+                    itemObj.GetComponent<NetworkObject>().Spawn();
                     passiveItems.Add(itemObj);
 
                     // Set parent
@@ -109,10 +108,10 @@ namespace Sataura
                     itemObj.transform.SetParent(player.transform);
                 }
 
-                if (playerInGameInv.inGameInventory[i].ItemData is BootData)
+                if (playerInGameInv.weapons[i].ItemData is BootData)
                 {
                     Debug.Log($"Has boots data: {i}");
-                    SetBootsEquipProperties((BootData)playerInGameInv.inGameInventory[i].ItemData);
+                    SetBootsEquipProperties((BootData)playerInGameInv.weapons[i].ItemData);
                     IsBootEvo = itemEvolutionManager.IsEvoItem(bootData);
 
                     for (int j = 0; j < passiveItems.Count; j++)
@@ -125,10 +124,10 @@ namespace Sataura
                     }
                 }
 
-                if (playerInGameInv.inGameInventory[i].ItemData is MagnetStoneData)
+                if (playerInGameInv.weapons[i].ItemData is MagnetStoneData)
                 {
                     Debug.Log($"Has MagnetStone data: {i}");
-                    SetMagnetStoneEquipProperties((MagnetStoneData)playerInGameInv.inGameInventory[i].ItemData);
+                    SetMagnetStoneEquipProperties((MagnetStoneData)playerInGameInv.weapons[i].ItemData);
 
                     /*IsBootEvo = itemEvolutionManager.IsEvoItem(bootData);
                     for (int j = 0; j < passiveItems.Count; j++)
@@ -236,11 +235,11 @@ namespace Sataura
             // Array to store results of the overlap check
             int numEnemies = Physics2D.OverlapCircleNonAlloc(transform.position, nearDetectionRadius, enemies, enemyLayer);
 
-            if(numEnemies == 0)
+            if (numEnemies == 0)
             {
                 numEnemies = Physics2D.OverlapCircleNonAlloc(transform.position, farDetectionRadius, enemies, enemyLayer);
-                
-                if(numEnemies > 0)
+
+                if (numEnemies > 0)
                 {
                     return enemies[Random.Range(0, numEnemies)].transform.position;
                 }
@@ -248,12 +247,12 @@ namespace Sataura
                 {
                     return GetRandomVector2() + (Vector2)player.transform.position;
                 }
-                
+
             }
             else
             {
                 return enemies[Random.Range(0, numEnemies)].transform.position;
-            }        
+            }
         }
 
 
@@ -283,27 +282,65 @@ namespace Sataura
         // ========================
         public bool HasBaseItem(ItemData baseItem)
         {
-            int inventorySize = playerInGameInv.inGameInventory.Count;
-            for (int i = 0; i < inventorySize; i++)
+            int size;
+            switch (baseItem.itemCategory)
             {
-                if (ItemData.IsSameName(playerInGameInv.inGameInventory[i].ItemData, baseItem))
-                {
-                    return true;
-                }
-
+                case ItemCategory.Weapons:
+                    size = playerInGameInv.weapons.Count;
+                    for (int i = 0; i < size; i++)
+                    {
+                        if (ItemData.IsSameName(playerInGameInv.weapons[i].ItemData, baseItem))
+                        {
+                            return true;
+                        }
+                    }
+                    return false;
+                case ItemCategory.Accessories:
+                    size = playerInGameInv.accessories.Count;
+                    for (int i = 0; i < size; i++)
+                    {
+                        if (ItemData.IsSameName(playerInGameInv.accessories[i].ItemData, baseItem))
+                        {
+                            return true;
+                        }
+                    }
+                    return false;
+                default:
+                    Debug.LogWarning($"Not found item has item category type: {baseItem.itemCategory}.");
+                    break;
             }
+
             return false;
         }
 
         public int FindBaseItemIndex(ItemData baseItem)
         {
-            int inventorySize = playerInGameInv.inGameInventory.Count;
-            for (int i = 0; i < inventorySize; i++)
+            int size;
+
+            switch (baseItem.itemCategory)
             {
-                if (ItemData.IsSameName(playerInGameInv.inGameInventory[i].ItemData, baseItem))
-                {
-                    return i;
-                }
+                case ItemCategory.Weapons:
+                    size = playerInGameInv.weapons.Count;
+                    for (int i = 0; i < size; i++)
+                    {
+                        if (ItemData.IsSameName(playerInGameInv.weapons[i].ItemData, baseItem))
+                        {
+                            return i;
+                        }
+                    }
+                    break;
+                case ItemCategory.Accessories:
+                    size = playerInGameInv.accessories.Count;
+                    for (int i = 0; i < size; i++)
+                    {
+                        if (ItemData.IsSameName(playerInGameInv.accessories[i].ItemData, baseItem))
+                        {
+                            return i;
+                        }
+                    }
+                    break;
+                default:
+                    break;
             }
 
             throw new System.Exception($"Not found base item {baseItem} in PlayerplayerIngameInv.inGameInventory.cs.");
@@ -321,22 +358,34 @@ namespace Sataura
             }
         }
 
-
+        /// <summary>
+        /// Check in weapons already has this baseItem.
+        /// </summary>
+        /// <param name="baseItem"></param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception"></exception>
         public bool HasEvoOfBaseItem(ItemData baseItem)
         {
-            int inventorySize = playerInGameInv.inGameInventory.Count;
-            for (int i = 0; i < inventorySize; i++)
+            if (baseItem.itemCategory == ItemCategory.Weapons)
             {
-                if (playerInGameInv.inGameInventory[i].HasItemData() == false)
-                    continue;
-
-                if (playerInGameInv.inGameInventory[i].ItemData.Equals(itemEvolutionManager.GetEvolutionItem(baseItem)))
+                int size = playerInGameInv.weapons.Count;
+                for (int i = 0; i < size; i++)
                 {
-                    return true;
-                }
+                    if (playerInGameInv.weapons[i].HasItemData() == false)
+                        continue;
 
+                    if (playerInGameInv.weapons[i].ItemData.Equals(itemEvolutionManager.GetEvolutionItem(baseItem)))
+                    {
+                        return true;
+                    }
+
+                }
+                return false;
             }
-            return false;
+            else
+            { 
+                throw new System.Exception(); 
+            }
         }
         // END Item level skill methods
         // ========================

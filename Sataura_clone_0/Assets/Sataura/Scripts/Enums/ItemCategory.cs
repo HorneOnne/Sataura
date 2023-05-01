@@ -9,9 +9,6 @@
         Weapons,
         Ammunition,
         Consumables,
-        CraftingMaterials,
-        Furniture,
-        Miscellaneous,
-        Tools,
+        Accessories
     }
 }

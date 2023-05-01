@@ -58,6 +58,8 @@ namespace Sataura
 
             if(hasEvo)
             {
+                Debug.Log("Evo already set active.");
+
                 evoParent.SetActive(true);
                 evoIcon.sprite = ItemEvolutionManager.Instance.GetEvolutionItemNeeded(itemData).icon;
             }
@@ -67,12 +69,7 @@ namespace Sataura
             }
         }
 
-        private void OnEnable()
-        {
-            UpdateData(hasEvo: false);
-        }
-
-
+   
         public void OnUIUpgradeSkillButtonClicked()
         {
             Time.timeScale = 1.0f;
@@ -83,50 +80,120 @@ namespace Sataura
 
             if (ItemEvolutionManager.Instance.IsEvoItem(itemData))
             {
+                Debug.Log($"{itemData} is evoItem.");
                 ItemEvolutionManager.Instance.GetItemsNeededToEvol(itemData, out ItemData itemNeedToEvolA, out ItemData itemNeedToEvolB);
                 
-                for(int i = 0; i < playerInGameInventory.inGameInventory.Count; i++)
+                switch(itemNeedToEvolA.itemCategory)
                 {
-                    if (ItemData.IsSameItem(itemNeedToEvolA, playerInGameInventory.inGameInventory[i].ItemData))
-                    {
-                        playerInGameInventory.inGameInventory[i].ClearSlot();
-                    }
-
-                    if (ItemData.IsSameItem(itemNeedToEvolB, playerInGameInventory.inGameInventory[i].ItemData))
-                    {
-                        playerInGameInventory.inGameInventory[i].ClearSlot();
-                    }
+                    case ItemCategory.Weapons:
+                        for (int i = 0; i < playerInGameInventory.weapons.Count; i++)
+                        {
+                            if (ItemData.IsSameItem(itemNeedToEvolA, playerInGameInventory.weapons[i].ItemData))
+                            {
+                                playerInGameInventory.weapons[i].ClearSlot();
+                            }
+                        }
+                        break;
+                    case ItemCategory.Accessories:
+                        /*for (int i = 0; i < playerInGameInventory.accessories.Count; i++)
+                        {
+                            if (ItemData.IsSameItem(itemNeedToEvolA, playerInGameInventory.accessories[i].ItemData))
+                            {
+                                playerInGameInventory.accessories[i].ClearSlot();
+                            }
+                        }*/
+                        break;
+                    default:
+                        throw new Exception();
                 }
 
-                playerInGameInventory.AddItem(itemData);
+                switch (itemNeedToEvolB.itemCategory)
+                {
+                    case ItemCategory.Weapons:
+                        for (int i = 0; i < playerInGameInventory.weapons.Count; i++)
+                        {
+                            if (ItemData.IsSameItem(itemNeedToEvolB, playerInGameInventory.weapons[i].ItemData))
+                            {
+                                playerInGameInventory.weapons[i].ClearSlot();
+                            }
+                        }
+                        break;
+                    case ItemCategory.Accessories:
+                        /*for (int i = 0; i < playerInGameInventory.accessories.Count; i++)
+                        {
+                            if (ItemData.IsSameItem(itemNeedToEvolB, playerInGameInventory.accessories[i].ItemData))
+                            {
+                                playerInGameInventory.accessories[i].ClearSlot();
+                            }
+                        }*/
+                        break;
+                    default:
+                        throw new Exception();
+                }
+
+
+                playerInGameInventory.AddWeapons(itemData);
             }
             else
-            {              
+            {
                 bool hasBaseItemDataInPlayerIngameInv = playerUseItem.HasBaseItem(itemData);
+                int index;
+                ItemData currentItemData;
+                ItemData upgradeVersionItemData;
 
                 if (hasBaseItemDataInPlayerIngameInv)
                 {
-                    //playerInGameInventory.inGameInventory[i] = new ItemSlot(inventory[i].ItemData.upgradeRecipe.outputItemSlot.itemData, 1);
-                    int index = playerUseItem.FindBaseItemIndex(itemData);
-                    var currentItemData = playerInGameInventory.inGameInventory[index].ItemData;
-                    var upgradeVersionItemData = playerUseItem.GetUpgradeVersionOfItem(currentItemData);
-
-                    if (upgradeVersionItemData != null)
+                    switch (itemData.itemCategory)
                     {
-                        playerInGameInventory.inGameInventory[index] = new ItemSlot(upgradeVersionItemData, 1);
-                    }
-                    else
-                    {
-                        Debug.Log("Item has max level.");
-                    }
+                        case ItemCategory.Weapons:
+                            index = playerUseItem.FindBaseItemIndex(itemData);
+                            currentItemData = playerInGameInventory.weapons[index].ItemData;
+                            upgradeVersionItemData = playerUseItem.GetUpgradeVersionOfItem(currentItemData);
 
+                            if (upgradeVersionItemData != null)
+                            {
+                                playerInGameInventory.weapons[index] = new ItemSlot(upgradeVersionItemData, 1);
+                            }
+                            else
+                            {
+                                Debug.Log("Item has max level.");
+                            }
+                            break;
+                        case ItemCategory.Accessories:
+                            index = playerUseItem.FindBaseItemIndex(itemData);
+                            currentItemData = playerInGameInventory.accessories[index].ItemData;
+                            upgradeVersionItemData = playerUseItem.GetUpgradeVersionOfItem(currentItemData);
+
+                            
+                            if (upgradeVersionItemData != null)
+                            {
+                                playerInGameInventory.accessories[index] = new ItemSlot(upgradeVersionItemData, 1);
+                            }
+                            else
+                            {
+                                Debug.Log("Item has max level.");
+                            }
+                            break;
+                        default:
+                            throw new System.Exception();
+                    }
                 }
                 else
                 {
                     Debug.Log("Not have this item in ingame Inventory!!!!!!!");
-                    playerInGameInventory.AddItem(itemData);
-                    
-                }
+
+                    switch (itemData.itemCategory)
+                    {
+                        case ItemCategory.Weapons:
+                            playerInGameInventory.AddWeapons(itemData);
+                            break;
+                        case ItemCategory.Accessories:
+                            playerInGameInventory.AddAccessories(itemData);
+                            break;
+                        default:
+                            throw new System.Exception();
+                    }                 
+                }      
             }
 
             Debug.LogWarning("Refactory code here.");
@@ -134,7 +201,7 @@ namespace Sataura
             playerUseItem.CreateAllPassiveItemObjectInInventory();
 
 
-            UIPlayerInGameInventory.Instance.UpdateInventoryUI();
+            UIPlayerInGameInventory.Instance.UpdateUI();
             OnUpgradeButtonClicked?.Invoke();
         }
 

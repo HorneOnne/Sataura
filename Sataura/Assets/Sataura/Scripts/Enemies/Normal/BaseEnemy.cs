@@ -127,7 +127,7 @@ namespace Sataura
                     }
                     else
                     {
-                        SoundManager.Instance.PlaySound(SoundType.EnemyHit);
+                        SoundManager.Instance.PlaySound(SoundType.EnemyHit, playRandom: true);
                         ShowDamage(damageReceived);
 
                         Vector2 direction = transform.position - collision.transform.position;

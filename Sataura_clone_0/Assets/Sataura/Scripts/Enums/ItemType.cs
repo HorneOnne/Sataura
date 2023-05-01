@@ -20,23 +20,5 @@
         Bullet,
 
         MagnetStone,
-
-        /*// Consumables
-        Buff,
-        Consumption,
-
-        // Furniture
-        Chest,
-
-        // Miscellaneous
-        CombatDummy,
-        Currency,
-
-        Hook,
-        Accessory,
-
-        Null,*/
-
-
     }
 }

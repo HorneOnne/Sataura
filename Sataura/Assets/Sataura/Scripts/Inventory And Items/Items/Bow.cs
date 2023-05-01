@@ -102,7 +102,7 @@ namespace Sataura
             arrowProjectileObject.SetDataServerRpc(arrowID, true);
             arrowProjectileObject.Shoot(bowItemData, baseArrowData);
 
-            SoundManager.Instance.PlaySound(SoundType.Bow, 0.5f);
+            SoundManager.Instance.PlaySound(SoundType.Bow, playRandom: true, 0.5f);
         }
 
 

@@ -197,7 +197,7 @@ namespace Sataura
 
             AnimateUITagSelected(toolCategoryObject);
 
-            LoadAllItemInType(ItemCategory.Tools);
+            LoadAllItemInType(ItemCategory.Weapons);
             currentItemTypeText.text = "Tools";
         }
 

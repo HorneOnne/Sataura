@@ -1,19 +1,19 @@
-﻿using UnityEngine;
+﻿using Unity.Netcode;
+using UnityEngine;
 
 namespace Sataura
 {
-    public class GrapplingGun : MonoBehaviour
+    public class GrapplingGun : NetworkBehaviour
     {
         [Header("Scripts:")]
         public GrappleRope grappleRope;
         [Header("Layer Settings:")]
         [SerializeField] private LayerMask grappableLayer;
 
-        [Header("Main Camera")]
-        private Camera m_camera;
 
-        [Header("Transform Refrences:")]
-        public Transform gunHolder;
+        [Header("Refrences:")]
+        [SerializeField] private Rigidbody2D characterRb2D;
+        public Transform character;
         public Transform gunPivot;
         public Transform firePoint;
 
@@ -22,137 +22,103 @@ namespace Sataura
         [Range(0, 80)][SerializeField] private float rotationSpeed = 4;
 
         [Header("Distance:")]
-        [SerializeField] private bool hasMaxDistance = true;
-        [SerializeField] private float maxDistance = 4;
+        [SerializeField] private float maxDistance = 30;
 
         [Header("Launching")]
-        [SerializeField] private bool launchToPoint = true;
-        [SerializeField] private LaunchType Launch_Type = LaunchType.Transform_Launch;
-        [Range(0, 5)][SerializeField] private float launchSpeed = 5;
-
-        [Header("No Launch To Point")]
-        [SerializeField] private bool autoCongifureDistance = false;
-        [SerializeField] private float targetDistance = 3;
-        [SerializeField] private float targetFrequency = 3;
-
-
-        private enum LaunchType
-        {
-            Transform_Launch,
-            Physics_Launch,
-        }
-
-        [Header("Component Refrences:")]
-        public SpringJoint2D m_springJoint2D;
-
-        [HideInInspector] public Vector2 grapplePoint;
-        [HideInInspector] public Vector2 DistanceVector;
-        Vector2 Mouse_FirePoint_DistanceVector;
-
-        public Rigidbody2D ballRigidbody;
-        private Vector2 hookAnchorPoint;
+        [Range(1000, 5000)][SerializeField] private float hookLaunchForce = 1000;
+        [Range(10, 50)][SerializeField] private float characterDragForce = 20;
+        
 
         // Anchor
-        [SerializeField] private GameObject anchorPrefab;
-        public GameObject anchorObject;
-        private Rigidbody2D anchorRb2D;
+        [SerializeField] private HookAnchor anchorPrefab;
+        [HideInInspector] public HookAnchor anchorObject;
 
+
+        // Cached
+        private Camera m_camera;
+        Vector2 mousePosition;
+        Vector2 hookDirection;
+        Vector2 hookInteruptDirection;
 
         private void Start()
         {
             m_camera = Camera.main;
             grappleRope.enabled = false;
-            m_springJoint2D.enabled = false;
-            ballRigidbody.gravityScale = 1;
+        }
+
+        public void SetGrappleGun(Vector2 hookPoint)
+        {
+            grappleRope.enabled = true;
         }
 
         private void Update()
         {
-            Mouse_FirePoint_DistanceVector = m_camera.ScreenToWorldPoint(Input.mousePosition) - gunPivot.position;
             RotateGun(m_camera.ScreenToWorldPoint(Input.mousePosition), false);
 
-            if (Input.GetKeyDown(KeyCode.Mouse0))
+            if (Input.GetKeyDown(KeyCode.E))
             {
-                SetGrapplePoint();
+                if (anchorObject != null) return;
+   
+                anchorObject = Instantiate(anchorPrefab, transform.position, Quaternion.identity);
+                mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                hookDirection = mousePosition - (Vector2)transform.position;
+
+                anchorObject.SetHookProperties(hookDirection.normalized, this, this.transform, maxDistance, hookLaunchForce);
+                grappleRope.enabled = true;
             }
 
 
-            if (grappleRope.enabled)
-            {
-                RotateGun(grapplePoint, false);
-            }
-
-
-            if (launchToPoint && grappleRope.isGrappling)
-            {
-                if (Launch_Type == LaunchType.Transform_Launch)
-                {
-                    if (hookCollided == false)
-                    {
-                        Vector2 direction = (Vector2)anchorObject.transform.position - (Vector2)this.transform.position;
-                        anchorRb2D.velocity = -direction.normalized * 1000 * Time.fixedDeltaTime;
-
-                    }
-
-                    if (Vector2.Distance(anchorObject.transform.position, this.transform.position) < .4f)
-                    {
-                        Destroy(anchorObject);
-                        this.grappleRope.enabled = false;
-                        return;
-                    }
-
-                    Debug.Log("LaunchType.Transform_Launch");
-                    if (Vector2.Distance(hookAnchorPoint, gunHolder.position) > 0.3f)
-                    {                      
-                        //gunHolder.position = Vector3.Lerp(gunHolder.position, grapplePoint, Time.deltaTime * launchSpeed);
-
-                        float distance = Vector3.Distance(gunHolder.position, grapplePoint);
-                        float duration = distance / (launchSpeed * 10); // calculate the duration of the interpolation based on distance and launch speed
-                        float t = Time.deltaTime / duration; // calculate the t value based on the duration and delta time
-                        gunHolder.position = Vector3.Lerp(gunHolder.position, grapplePoint, t);
-                    }                  
-                }
-            }
-
-
-            // Release hook.
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                grappleRope.enabled = false;
-                m_springJoint2D.enabled = false;
-                ballRigidbody.gravityScale = 1;
-            }
-
-            /*else if (Input.GetKey(KeyCode.Mouse0))
-            {
-                if (grappleRope.enabled)
+                if (anchorObject == null) return;
+                if (anchorObject.State == HookAnchor.AnchorState.Idle ||
+                    anchorObject.State == HookAnchor.AnchorState.Anchored)
                 {
-                    RotateGun(grapplePoint, false);
-                }
-
-                if (launchToPoint && grappleRope.isGrappling)
-                {
-                    if (Launch_Type == LaunchType.Transform_Launch)
-                    {
-                        Debug.Log("LaunchType.Transform_Launch");
-                        gunHolder.position = Vector3.Lerp(gunHolder.position, grapplePoint, Time.deltaTime * launchSpeed);
-                    }
-                }
-
-            }*/
-            /*else if (Input.GetKeyUp(KeyCode.Mouse0))
-            {
-                grappleRope.enabled = false;
-                m_springJoint2D.enabled = false;
-                ballRigidbody.gravityScale = 1;
-            }*/
+                    characterRb2D.isKinematic = false;
+                    anchorObject.State = HookAnchor.AnchorState.Interrupt;
+                }             
+            }           
         }
 
+        
 
-        private void ResetGrappleRope()
+        private void FixedUpdate()
         {
-            grappleRope.enabled = false;
+            if(anchorObject != null)
+            {
+                if (anchorObject.State == HookAnchor.AnchorState.Anchored)
+                {
+                    // Move the object towards the target position gradually
+                    Vector2 currentPosition = characterRb2D.position;
+                    Vector2 newPosition = Vector2.MoveTowards(currentPosition, anchorObject.transform.position, characterDragForce * Time.fixedDeltaTime);
+                    characterRb2D.MovePosition(newPosition);  
+                }
+                else if (anchorObject.State == HookAnchor.AnchorState.Idle)
+                {
+                    if(characterRb2D.isKinematic == false)
+                        characterRb2D.isKinematic = true;
+
+                    characterRb2D.velocity = Vector2.zero;
+
+                }
+                else if (anchorObject.State == HookAnchor.AnchorState.Interrupt)
+                {
+                    Vector2 currentPosition = characterRb2D.position;
+                    Vector2 targetPosition = anchorObject.transform.position;
+                    hookDirection = (targetPosition - currentPosition).normalized;
+
+                    characterRb2D.velocity = hookDirection.normalized * 3000 * Time.fixedDeltaTime;
+
+                    //anchorObject.SetBrokenAnchorState();
+                    anchorObject.State = HookAnchor.AnchorState.Retracting;
+                    Debug.Log(anchorObject.State);
+                }
+
+
+            }            
         }
+
+
 
 
         void RotateGun(Vector3 lookPoint, bool allowRotationOverTime)
@@ -167,128 +133,6 @@ namespace Sataura
             }
             else
                 gunPivot.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
-        }
-
-
-        float distance = 20f;
-        public bool hookCollided;
-        void SetGrapplePoint()
-        {
-            Debug.Log("SetGrapplePoint");
-            RaycastHit2D _hit = Physics2D.Raycast(firePoint.position, Mouse_FirePoint_DistanceVector.normalized, distance, grappableLayer);
-            if (_hit)
-            {
-                if ((Vector2.Distance(_hit.point, firePoint.position) <= maxDistance) || !hasMaxDistance)
-                {
-                    hookCollided = true;
-
-                    launchToPoint = true;
-                    grapplePoint = _hit.point;
-                    DistanceVector = grapplePoint - (Vector2)gunPivot.position;
-                    grappleRope.enabled = true;
-
-
-                    // Set gravity to 0 prevent object fall down.
-                    // -
-                    ballRigidbody.gravityScale = 0;
-
-                    // Set hook anchor point
-                    // -
-                    hookAnchorPoint = _hit.point;
-                }
-            }
-            else
-            {
-                hookCollided = false;
-
-
-                launchToPoint = false;
-
-                var predictNewPoint = GetPointAtDistanceAndDirection(firePoint.position, distance, Mouse_FirePoint_DistanceVector.normalized);
-                grapplePoint = predictNewPoint;
-                DistanceVector = grapplePoint - (Vector2)gunPivot.position;
-                grappleRope.enabled = true;
-
-
-                // Set hook anchor point
-                // -
-                hookAnchorPoint = predictNewPoint;
-            }
-
-
-            if (anchorObject == null)
-            {
-                anchorObject = Instantiate(anchorPrefab, grapplePoint, Quaternion.identity);
-                anchorRb2D = anchorObject.GetComponent<Rigidbody2D>();
-            }         
-        }
-
-
-
-
-        private Vector2 GetPointAtDistanceAndDirection(Vector2 startPosition, float distance, Vector2 direction)
-        {
-            // Normalize the direction vector to get a vector of length 1
-            Vector2 normalizedDirection = direction.normalized;
-
-            // Calculate the position at the desired distance and direction
-            Vector2 pointAtDistanceAndDirection = startPosition + normalizedDirection * distance;
-
-            return pointAtDistanceAndDirection;
-        }
-
-
-        public void Grapple()
-        {
-            Debug.Log("Call Grapple()");
-
-
-            if (launchToPoint == false && autoCongifureDistance == false)
-            {
-                m_springJoint2D.distance = targetDistance;
-                m_springJoint2D.frequency = targetFrequency;
-            }
-
-            if (launchToPoint == false)
-            {
-                Debug.Log($"launchToPoint: {launchToPoint}");
-                ballRigidbody.gravityScale = 1;
-
-                if (autoCongifureDistance)
-                {
-                    m_springJoint2D.autoConfigureDistance = true;
-                    m_springJoint2D.frequency = 0;
-                }
-
-                m_springJoint2D.connectedAnchor = grapplePoint;
-                m_springJoint2D.enabled = true;
-            }
-            else
-            {
-                if (Launch_Type == LaunchType.Transform_Launch)
-                {
-                    Debug.Log("Grapple  LaunchType.Transform_Launch");
-
-                    //ballRigidbody.gravityScale = 0;
-                    ballRigidbody.velocity = Vector2.zero;
-                }
-                /*if (Launch_Type == LaunchType.Physics_Launch)
-                {
-                    m_springJoint2D.connectedAnchor = grapplePoint;
-                    m_springJoint2D.distance = 0;
-                    m_springJoint2D.frequency = launchSpeed;
-                    m_springJoint2D.enabled = true;
-                }*/
-            }
-        }
-
-        private void OnDrawGizmos()
-        {
-            if (hasMaxDistance)
-            {
-                Gizmos.color = Color.green;
-                Gizmos.DrawWireSphere(firePoint.position, maxDistance);
-            }
         }
     }
 }

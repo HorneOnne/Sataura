@@ -14,7 +14,10 @@ namespace Sataura
 
         [Header("Inventory Data")]
         public InventoryData playerInventoryData;
-        public InventoryData ingameInventoryData;
+
+        [Header("InGame")]
+        public InventoryData weaponsData;
+        public InventoryData accessoriesData;
 
         [Header("Currency")]
         public string currencyString;
@@ -33,14 +36,15 @@ namespace Sataura
             return characterName == otherCharacterData.characterName &&
                    characterMovementData == otherCharacterData.characterMovementData &&
                    playerInventoryData == otherCharacterData.playerInventoryData &&
-                   ingameInventoryData == otherCharacterData.ingameInventoryData &&
+                   weaponsData == otherCharacterData.weaponsData &&
+                   accessoriesData == otherCharacterData.accessoriesData &&
                    currencyString == otherCharacterData.currencyString &&
                    currency == otherCharacterData.currency;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(characterName, characterMovementData, playerInventoryData, ingameInventoryData, currencyString);
+            return HashCode.Combine(characterName, characterMovementData, playerInventoryData, weaponsData, accessoriesData, currencyString);
         }
     }
 }

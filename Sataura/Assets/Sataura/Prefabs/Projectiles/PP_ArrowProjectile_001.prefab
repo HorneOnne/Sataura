@@ -4932,6 +4932,9 @@ MonoBehaviour:
   spriteRenderer: {fileID: 0}
   explosionObjectPrefab: {fileID: 7070060414050384019, guid: afa7d8e101f07904081040c98e567783, type: 3}
   explosionSpawnPosition: {fileID: 6306378342690964625}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 2147483648
 --- !u!114 &4175954331295289048
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -6,7 +6,8 @@
         EnemyDie,
         Sword,
         Bow,
-        MainMenuBtnHover
+        MainMenuBtnHover,
+        ArrowProjectileHitGround
     }
 }
 

@@ -31,6 +31,7 @@ namespace Sataura
             {
                 defaultImage.enabled = true;
                 this.mainImage.sprite = null;
+                this.mainImage.enabled = false;
                 amountItemInSlotText.text = "";
 
                 currentItemSlot.ClearSlot();
@@ -38,6 +39,7 @@ namespace Sataura
             else
             {
                 defaultImage.enabled = false;
+                this.mainImage.enabled = true;
                 this.mainImage.sprite = itemSlot.GetItemIcon();
                 if (itemSlot.ItemQuantity > 1)
                     amountItemInSlotText.text = $"{itemSlot.ItemQuantity}";
@@ -60,6 +62,7 @@ namespace Sataura
             {
                 defaultImage.enabled = true;
                 this.mainImage.sprite = null;
+                this.mainImage.enabled = false;
                 amountItemInSlotText.text = "";
 
                 currentItemSlot.ClearSlot();
@@ -67,6 +70,7 @@ namespace Sataura
             else
             {
                 defaultImage.enabled = false;
+                this.mainImage.enabled = true;
                 this.mainImage.sprite = itemSlot.GetItemIcon();
                 if (itemSlot.ItemQuantity > 1)
                     amountItemInSlotText.text = $"{itemSlot.ItemQuantity}";
@@ -79,42 +83,5 @@ namespace Sataura
             mainImage.color = mainImageColor;
             amountItemInSlotText.color = defaultTextColor;
         }
-
-
-       
-
-
-
-        /*public void OnPointerEnter(PointerEventData eventData)
-        {
-            if(currentItemSlot.HasItem())
-            {
-                ItemDescriptionManager.Instance.SetItemData(currentItemSlot.ItemData);
-                StartCoroutine(Show());
-            }         
-        }
-
-        IEnumerator Show()
-        {
-            yield return new WaitForSeconds(0.3f);
-            ItemDescriptionManager.Instance.Show();
-            UIManager.Instance.ItemDescCanvas.SetActive(true);
-                  
-        }
-
-
-
-        public void OnPointerExit(PointerEventData eventData)
-        {
-            StopAllCoroutines();
-            if (currentItemSlot.HasItem())
-            {
-                ItemDescriptionManager.Instance.SetItemData(null);
-                ItemDescriptionManager.Instance.Hide();
-                UIManager.Instance.ItemDescCanvas.SetActive(false);
-            }
-            
-        }*/
-
     }
 }

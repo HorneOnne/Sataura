@@ -393,9 +393,9 @@ namespace Sataura
                 case StoredType.CraftingTable:
                     CraftingTable.Instance.StackItem();
                     break;
-                case StoredType.PlayerInGameInventory:
+                /*case StoredType.PlayerInGameInventory:
                     playerInGameInventory.StackItem();
-                    break;
+                    break;*/
 
                 default: break;
 

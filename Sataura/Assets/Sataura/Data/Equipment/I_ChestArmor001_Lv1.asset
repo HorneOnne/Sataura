@@ -14,11 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Chest Armor
   icon: {fileID: -1812804723, guid: 4cbff1a86fa76004db005d00ebb3f6b2, type: 3}
-  itemCategory: 0
+  itemCategory: 4
   itemType: 0
   max_quantity: 1
   description: 
   usageVelocity: 1
+  usagePassiveVelocity: 1
   currentLevel: 1
   maxLevel: 5
   upgradeRecipe:

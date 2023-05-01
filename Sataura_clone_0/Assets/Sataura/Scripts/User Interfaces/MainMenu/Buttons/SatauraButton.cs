@@ -22,8 +22,8 @@ namespace Sataura
         {
             button.onClick.AddListener(OnClick);
 
-            btnText.fontSize = DEFAULT_BTN_TEXT_FONTSIZE;
-            btnText.color = Utilities.HexToColor(defaultColor);
+            //btnText.fontSize = DEFAULT_BTN_TEXT_FONTSIZE;
+            //btnText.color = Utilities.HexToColor(defaultColor);
         }
 
         private void OnDisable()
@@ -38,16 +38,16 @@ namespace Sataura
 
         public void OnPointerEnter(PointerEventData eventData)
         {
-            btnText.fontSize = DEFAULT_BTN_TEXT_FONTSIZE + (DEFAULT_BTN_TEXT_FONTSIZE * 15 / 100);
-            btnText.color = Utilities.HexToColor(highlightColor);
+            /*btnText.fontSize = DEFAULT_BTN_TEXT_FONTSIZE + (DEFAULT_BTN_TEXT_FONTSIZE * 15 / 100);
+            btnText.color = Utilities.HexToColor(highlightColor);*/
 
-            SoundManager.Instance.PlaySound(SoundType.MainMenuBtnHover);          
+            SoundManager.Instance.PlaySound(SoundType.MainMenuBtnHover, playRandom: false);          
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
-            btnText.fontSize = DEFAULT_BTN_TEXT_FONTSIZE;
-            btnText.color = Utilities.HexToColor(defaultColor);
+            /*btnText.fontSize = DEFAULT_BTN_TEXT_FONTSIZE;
+            btnText.color = Utilities.HexToColor(defaultColor);*/
         }
 
         public virtual void OnClick() { }

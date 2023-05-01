@@ -14,13 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Arrow
   icon: {fileID: -784705802, guid: d4d04b54f146fc9499ef61e7951f0861, type: 3}
-  itemCategory: 2
+  itemCategory: 4
   itemType: 6
   max_quantity: 1
   description: '~Arrow_006
 
     -+ 30 attack damage'
   usageVelocity: 1
+  usagePassiveVelocity: 1
   currentLevel: 4
   maxLevel: 5
   upgradeRecipe:

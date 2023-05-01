@@ -7,7 +7,9 @@
 
         public CharacterMovementDataStruct characterMovementData;
         public InventoryStruct playerInventoryData;
-        public InventoryStruct ingameInventoryData;
+
+        public InventoryStruct weaponsData;
+        public InventoryStruct accessoriesData;
 
         public string currencyString;
     }

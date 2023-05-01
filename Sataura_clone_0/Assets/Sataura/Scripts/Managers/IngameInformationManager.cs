@@ -86,6 +86,16 @@ namespace Sataura
             NetworkManager.Singleton.StartHost();
         }
 
+
+        private void Update()
+        {
+            if(Input.GetKeyDown(KeyCode.U))
+            {
+                Debug.LogWarning($"Debugging level up.");
+                LevelUp();
+            }
+        }
+
         private void GenerateLevelUpVFX()
         {
             if(player == null)

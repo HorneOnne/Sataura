@@ -25,12 +25,10 @@ namespace Sataura
 
         
             characterData.characterMovementData = CreateCharacterMovementData();
-            characterData.ingameInventoryData = CreateInGameInventoryData();
             characterData.playerInventoryData = CreateInventoryData();
-
-
-            //AssetDatabase.CreateAsset(characterData, $"Assets/Sataura/Saves/PlayerData/{characterData.name}.asset");
-            //AssetDatabase.SaveAssets();
+            characterData.weaponsData = CreateWeaponsData();
+            characterData.accessoriesData = CreateAccessoriesData();
+            
 
             SaveManager.charactersData.Add(characterData);
         }
@@ -40,30 +38,29 @@ namespace Sataura
             CharacterMovementData characterMovementData = Instantiate(SaveManager.Instance.defaultCharacterMovementData);
             characterMovementData.name = $"{UICreateNewCharacterManager.Instance.CharacterName}_movementData";
 
-            //AssetDatabase.CreateAsset(characterMovementData, $"Assets/Sataura/Saves/PlayerData/{characterMovementData.name}.asset");
-            //AssetDatabase.SaveAssets();
-
             return characterMovementData;
         }
 
-        private InventoryData CreateInGameInventoryData()
+        private InventoryData CreateWeaponsData()
         {
-            InventoryData ingameInventoryData = Instantiate(SaveManager.Instance.defaultInGameInventoryData);
-            ingameInventoryData.name = $"{UICreateNewCharacterManager.Instance.CharacterName}_ingameInventoryData";
+            InventoryData weaponData = Instantiate(SaveManager.Instance.defaultWeaponsData);
+            weaponData.name = $"{UICreateNewCharacterManager.Instance.CharacterName}_weaponsData";
 
-            //AssetDatabase.CreateAsset(ingameInventoryData, $"Assets/Sataura/Saves/PlayerData/{ingameInventoryData.name}.asset");
-            //AssetDatabase.SaveAssets();
+            return weaponData;
+        }
 
-            return ingameInventoryData;
+        private InventoryData CreateAccessoriesData()
+        {
+            InventoryData accessoriesData = Instantiate(SaveManager.Instance.defaultAccessoriesData);
+            accessoriesData.name = $"{UICreateNewCharacterManager.Instance.CharacterName}_accessoriesData";
+
+            return accessoriesData;
         }
 
         private InventoryData CreateInventoryData()
         {
             InventoryData inventoryData = Instantiate(SaveManager.Instance.defaultInventoryData);
             inventoryData.name = $"{UICreateNewCharacterManager.Instance.CharacterName}_inventoryData";
-
-            //AssetDatabase.CreateAsset(inventoryData, $"Assets/Sataura/Saves/PlayerData/{inventoryData.name}.asset");
-            //AssetDatabase.SaveAssets();
 
             return inventoryData;
         }

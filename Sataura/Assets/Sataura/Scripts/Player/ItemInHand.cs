@@ -126,7 +126,7 @@ namespace Sataura
             if (currentItemObject != null)
             {
                 var playerIngameInventory = player.PlayerInGameInventory;
-                currentItemObject.SetData(playerIngameInventory.inGameInventory[playerInputHandler.currentUseItemIndex.Value]);
+                currentItemObject.SetData(playerIngameInventory.weapons[playerInputHandler.currentUseItemIndex.Value]);
             }
         }
 
@@ -182,7 +182,7 @@ namespace Sataura
                     }
                 }*/
 
-                if (HasItemObjectInServer(player.PlayerInGameInventory.inGameInventoryData))
+                if (HasItemObjectInServer(player.PlayerInGameInventory.weaponsData))
                 {
                     //if (currentItemObject.showIconWhenHoldByHand == true)
                     //{
@@ -347,7 +347,7 @@ namespace Sataura
         {
             if(playerType == PlayerType.IngamePlayer)
             {
-                Swap(ref player.PlayerInGameInventory.inGameInventory, slotIndex, storageType, forceUpdateUI);
+                Swap(ref player.PlayerInGameInventory.weapons, slotIndex, storageType, forceUpdateUI);
 
                 // NOTE! In case you know a list of ClientId's ahead of time, that does not need change,
                 // Then please consider caching this (as a member variable), to avoid Allocating Memory every time you run this function
@@ -364,7 +364,7 @@ namespace Sataura
 
             if (playerType == PlayerType.ItemSelectionPlayer)
             {
-                Swap(ref itemSelectionPlayer.PlayerInGameInventory.inGameInventory, slotIndex, storageType, forceUpdateUI);
+                Swap(ref itemSelectionPlayer.PlayerInGameInventory.weapons, slotIndex, storageType, forceUpdateUI);
 
                 // NOTE! In case you know a list of ClientId's ahead of time, that does not need change,
                 // Then please consider caching this (as a member variable), to avoid Allocating Memory every time you run this function
@@ -388,12 +388,12 @@ namespace Sataura
             Debug.Log("Server call client");
 
             if (playerType == PlayerType.IngamePlayer)
-                Swap(ref player.PlayerInGameInventory.inGameInventory, slotIndex, storageType, forceUpdateUI);
+                Swap(ref player.PlayerInGameInventory.weapons, slotIndex, storageType, forceUpdateUI);
 
             if (playerType == PlayerType.ItemSelectionPlayer)
-                Swap(ref itemSelectionPlayer.PlayerInGameInventory.inGameInventory, slotIndex, storageType, forceUpdateUI);
+                Swap(ref itemSelectionPlayer.PlayerInGameInventory.weapons, slotIndex, storageType, forceUpdateUI);
 
-            UIPlayerInGameInventory.Instance.UpdateInventoryUI();
+            UIPlayerInGameInventory.Instance.UpdateUI();
 
         }
 
@@ -448,8 +448,8 @@ namespace Sataura
         [ServerRpc]
         public void SplitItemSlotQuantityInInventoryServerRpc(ulong clientId, int slotIndex)
         {
-            List<ItemSlot> inventory = player.PlayerInGameInventory.inGameInventory;
-            SplitItemSlotQuantityInInventory(ref player.PlayerInGameInventory.inGameInventory, slotIndex);
+            List<ItemSlot> inventory = player.PlayerInGameInventory.weapons;
+            SplitItemSlotQuantityInInventory(ref player.PlayerInGameInventory.weapons, slotIndex);
 
             ClientRpcParams clientRpcParams = new ClientRpcParams
             {
@@ -466,8 +466,8 @@ namespace Sataura
         private void SplitItemSlotQuantityInInventoryClientRpc(int slotIndex, ClientRpcParams clientRpcParams = default)
         {
             if (!IsOwner || IsServer) return;
-            SplitItemSlotQuantityInInventory(ref player.PlayerInGameInventory.inGameInventory, slotIndex);
-            UIPlayerInGameInventory.Instance.UpdateInventoryUI();
+            SplitItemSlotQuantityInInventory(ref player.PlayerInGameInventory.weapons, slotIndex);
+            UIPlayerInGameInventory.Instance.UpdateUI();
         }
 
 
@@ -593,7 +593,7 @@ namespace Sataura
 
             if(playerType != PlayerType.IngamePlayer) return;
 
-            if (HasItemObjectInServer(player.PlayerInGameInventory.inGameInventoryData))
+            if (HasItemObjectInServer(player.PlayerInGameInventory.weaponsData))
             {
                 // Check if it's time to attack
                 if (Time.time - lastUsedTime >= 1.0f / (currentItemObject.ItemData.usageVelocity + 0.001f))
@@ -774,7 +774,7 @@ namespace Sataura
             }
 
 
-            int itemID = GameDataManager.Instance.GetItemID(player.PlayerInGameInventory.inGameInventory[playerInputHandler.currentUseItemIndex.Value].ItemData);
+            int itemID = GameDataManager.Instance.GetItemID(player.PlayerInGameInventory.weapons[playerInputHandler.currentUseItemIndex.Value].ItemData);
             if (itemID == -1) return;
 
             InstantitateCurrentItemNetworkObjectServerRpc(NetworkManager.LocalClientId, itemID, 1);

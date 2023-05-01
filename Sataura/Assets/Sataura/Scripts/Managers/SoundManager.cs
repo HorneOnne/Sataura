@@ -23,9 +23,10 @@ namespace Sataura
             soundTimerDictionary[SoundType.EnemyHit] = 0.0f;
             soundTimerDictionary[SoundType.EnemyDie] = 0.0f;
             soundTimerDictionary[SoundType.MainMenuBtnHover] = 0.0f;
+            soundTimerDictionary[SoundType.ArrowProjectileHitGround] = 0.0f;
         }
 
-        public void PlaySound(SoundType soundType, float volume = 1.0f,float pitch = 1.0f)
+        public void PlaySound(SoundType soundType, bool playRandom, float volume = 1.0f,float pitch = 1.0f)
         {
             if (CanPlaySound(soundType) == false) return;
             if(oneShotGameObject == null)
@@ -42,10 +43,18 @@ namespace Sataura
                 oneShotAudioSource.pitch = pitch;
             }
 
-            oneShotAudioSource.PlayOneShot(GetAudioClip(soundType));
+            if(playRandom)
+            {
+                oneShotAudioSource.PlayOneShot(GetRandomAudioClip(soundType));
+            }
+            else
+            {
+                oneShotAudioSource.PlayOneShot(GetFirstAudioClip(soundType));
+            }
+            
         }
 
-        public void PlaySound(SoundType soundType, Vector2 position)
+        public void PlaySound(SoundType soundType, bool playRandom, Vector2 position)
         {
             if (CanPlaySound(soundType) == false) return;
             if (oneShotGameObject == null)
@@ -53,7 +62,16 @@ namespace Sataura
                 oneShotGameObject = new GameObject("Sound");
                 oneShotAudioSource = oneShotGameObject.AddComponent<AudioSource>();
             }
-            oneShotAudioSource.clip = GetAudioClip(soundType);
+
+            if (playRandom)
+            {
+                oneShotAudioSource.clip = GetRandomAudioClip(soundType);
+            }
+            else
+            {
+                oneShotAudioSource.clip = GetFirstAudioClip(soundType);
+            }
+            
             oneShotAudioSource.Play(); 
         }
 
@@ -69,13 +87,27 @@ namespace Sataura
         }
 
 
-        private AudioClip GetAudioClip(SoundType soundType)
+        private AudioClip GetFirstAudioClip(SoundType soundType)
         {
             foreach (var soundAudioClip in soundAudioClips)
             {
                 if (soundAudioClip.soundType.Equals(soundType))
                 {
-                    return soundAudioClip.audioClip;
+                    return soundAudioClip.audioClips[0];
+                }
+            }
+
+            Debug.LogError($"Sound {soundType} not found!");
+            return null;
+        }
+
+        private AudioClip GetRandomAudioClip(SoundType soundType)
+        {
+            foreach (var soundAudioClip in soundAudioClips)
+            {
+                if (soundAudioClip.soundType.Equals(soundType))
+                {
+                    return soundAudioClip.audioClips[Random.Range(0, soundAudioClip.audioClips.Count)];
                 }
             }
 
@@ -90,49 +122,12 @@ namespace Sataura
             {
                 case SoundType.EnemyHit:
                     return CanSoundTypePlay(soundType, 0.05f);
-                    /*if (soundTimerDictionary.ContainsKey(soundType))
-                    {
-                        float lastTimePlayed = soundTimerDictionary[soundType];
-                        float maxTimePlay = .05f;
-                        if (lastTimePlayed + maxTimePlay < Time.time)
-                        {
-                            soundTimerDictionary[soundType] = Time.time;
-                            return true;
-                        }
-                        return false;
-                    }
-                    else
-                        return false;*/
                 case SoundType.EnemyDie:
                     return CanSoundTypePlay(soundType, 0.05f);
-                    /*if (soundTimerDictionary.ContainsKey(soundType))
-                    {
-                        float lastTimePlayed = soundTimerDictionary[soundType];
-                        float maxTimePlay = .05f;
-                        if (lastTimePlayed + maxTimePlay < Time.time)
-                        {
-                            soundTimerDictionary[soundType] = Time.time;
-                            return true;
-                        }
-                        return false;
-                    }
-                    else
-                        return false;*/
                 case SoundType.MainMenuBtnHover:
                     return CanSoundTypePlay(soundType, 0.1f);
-                    if (soundTimerDictionary.ContainsKey(soundType))
-                    {
-                        float lastTimePlayed = soundTimerDictionary[soundType];
-                        float maxTimePlay = .1f;
-                        if (lastTimePlayed + maxTimePlay < Time.time)
-                        {
-                            soundTimerDictionary[soundType] = Time.time;
-                            return true;
-                        }
-                        return false;
-                    }
-                    else
-                        return false;
+                case SoundType.ArrowProjectileHitGround:
+                    return CanSoundTypePlay(soundType, 0.05f);
                 default:
                     return true;
             }
@@ -161,7 +156,7 @@ namespace Sataura
     public class SoundAudioClip
     {
         public SoundType soundType;
-        public AudioClip audioClip;
+        public List<AudioClip> audioClips;
     }
 
 }

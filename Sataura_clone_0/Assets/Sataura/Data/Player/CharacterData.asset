@@ -15,5 +15,6 @@ MonoBehaviour:
   characterName: 
   characterMovementData: {fileID: 11400000, guid: 065c071c566b4e4408dd38924ce3b03e, type: 2}
   playerInventoryData: {fileID: 11400000, guid: e1665995ce0dc4743a9bea1adfa0dfcf, type: 2}
-  ingameInventoryData: {fileID: 11400000, guid: e256f04e3679a454fa6287ef91d26ba7, type: 2}
+  weaponsData: {fileID: 11400000, guid: e256f04e3679a454fa6287ef91d26ba7, type: 2}
+  accessoriesData: {fileID: 11400000, guid: e47c1dff566004e4ea8400fbe1ba7761, type: 2}
   currencyString: 

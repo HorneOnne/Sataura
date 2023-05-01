@@ -75,7 +75,7 @@ namespace Sataura
                 playerInventory = player.PlayerInventory;
                 playerInputHandler = player.PlayerInputHandler;
 
-                inventorySize = player.characterData.ingameInventoryData.itemSlots.Count;
+                inventorySize = player.characterData.weaponsData.itemSlots.Count;
             }
             else if (playerType == PlayerType.ItemSelectionPlayer)
             {

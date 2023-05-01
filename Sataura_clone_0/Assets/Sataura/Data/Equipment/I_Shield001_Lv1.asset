@@ -14,11 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: Shield
   icon: {fileID: -1152714809, guid: 6ba96a71fee7a864cb341b3c20d014ce, type: 3}
-  itemCategory: 0
+  itemCategory: 4
   itemType: 1
   max_quantity: 1
   description: 
   usageVelocity: 1
+  usagePassiveVelocity: 1
   currentLevel: 1
   maxLevel: 5
   upgradeRecipe:

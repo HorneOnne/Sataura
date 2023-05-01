@@ -114,7 +114,7 @@ namespace Sataura
             {
                 var uiUpgradeSkillObject = Instantiate(uIUpgradeSkillPrefab, uIUpgradeSkillParent);
                 uIUpgradeSkills.Add(uiUpgradeSkillObject.GetComponent<UIUpgradeSkill>());
-
+             
                 ItemData upgradeItem = upgradeItemDict.ElementAt(i).Key;
                 uIUpgradeSkills[i].UpdateData(upgradeItem, upgradeItemDict.ElementAt(i).Value);
             }
