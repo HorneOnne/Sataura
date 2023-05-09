@@ -10,9 +10,10 @@ namespace Sataura
     {
         public enum Scene
         {
-            MainMenuScene,
-            GameScene,
-            CharacterInventoryScene
+            _0_MainMenuScene,
+            _1_CharacterInventoryScene,
+            _2_GameScene,
+            
         }
 
         private static Scene targetScene;
@@ -21,7 +22,7 @@ namespace Sataura
         {
             Loader.targetScene = targetScene;
 
-            SceneManager.LoadScene(Scene.MainMenuScene.ToString());
+            SceneManager.LoadScene(Scene._0_MainMenuScene.ToString());
         }
 
         public static void LoadNetwork(Scene targetScene)

@@ -6,12 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Sataura/Scenes/MainMenuScene.unity
+    path: Assets/Sataura/_0_Scenes/_0_MainMenuScene.unity
     guid: 6095df6425fed5d4fbde24cb350f4919
   - enabled: 1
-    path: Assets/Sataura/Scenes/GameScene.unity
-    guid: f5892c59818042248b00a592e32aa9d7
-  - enabled: 1
-    path: Assets/Sataura/Scenes/CharacterInventoryScene.unity
+    path: Assets/Sataura/_0_Scenes/_1_CharacterInventoryScene.unity
     guid: 499a984633c45d3498a6da6123106d34
+  - enabled: 1
+    path: Assets/Sataura/_0_Scenes/_2_GameScene.unity
+    guid: f5892c59818042248b00a592e32aa9d7
   m_configObjects: {}

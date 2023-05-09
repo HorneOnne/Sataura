@@ -1,0 +1,395 @@
+﻿using Unity.Netcode;
+using UnityEngine;
+using System.Collections.Generic;
+using UnityEngine.InputSystem;
+using System.Collections;
+
+namespace Sataura
+{
+    public class PlayerUseItem : NetworkBehaviour
+    {
+        [Header("References")]
+        [SerializeField] private Player player;
+        [SerializeField] private PlayerLoot playerLoot;
+        private PlayerInGameSkills playerInGameInv;
+        private PlayerMovement playerMovement;
+        private ItemEvolutionManager itemEvolutionManager;
+        private IngameInformationManager ingameInformationManager;
+
+        [Header("Properties")]
+        public float updateInterval = 0.05f; // the interval between updates in seconds
+        private float lastUpdateTime; // the time the method was last called
+        private bool IsBootEvo;
+        [SerializeField] private LayerMask enemyLayer;
+        private bool[] canUseItems;
+
+        // Enemy detection
+        [SerializeField] private float nearDetectionRadius = 15f;
+        [SerializeField] private float farDetectionRadius = 50f;
+        private float detectionInterval = 0.5f;
+        private float lastDetectionTime = 0f;
+        [SerializeField] private Collider2D[] enemies = new Collider2D[5]; // Array to store results of the overlap check
+        Vector2 nearestEnemy;
+        Vector2 direction;
+
+
+        [Header("Passive Items")]
+        [SerializeField] List<Item> passiveItems = new List<Item>();
+
+
+        [Header("Runtime References")]
+        [SerializeField] private BootData bootData;
+        [SerializeField] private Boots bootsGO;
+        [SerializeField] private MagnetStoneData magnetStoneData;
+        [SerializeField] private MagnetStone magnetStoneGO;
+
+        
+
+        public override void OnNetworkSpawn()
+        {
+            playerInGameInv = player.playerInGameInventory;
+            playerMovement = player.playerMovement;
+            itemEvolutionManager = ItemEvolutionManager.Instance;
+            ingameInformationManager = IngameInformationManager.Instance;
+
+            Invoke(nameof(SettingsWhenSpawnPlayer), 1f);
+
+            canUseItems = new bool[playerInGameInv.Capacity];
+            // Set all canuseItems array to false at start.
+            for (int i = 0; i < canUseItems.Length; i++)
+            {
+                canUseItems[i] = true;
+            }
+        }
+
+
+        private void SetBootsEquipProperties(BootData _bootData = null)
+        {
+            bootData = _bootData;
+
+            playerMovement.SetMovementSpeed(bootData);
+            playerMovement.SetJumpForce(bootData);
+        }
+
+        private void SetMagnetStoneEquipProperties(MagnetStoneData _magnetStoneData = null)
+        {
+            this.magnetStoneData = _magnetStoneData;
+
+            playerLoot.SetLootRadius(magnetStoneData.lootRadius);
+        }
+
+        private void SettingsWhenSpawnPlayer()
+        {
+            ClearAllPassiveItemObjectInInventory();
+            CreateAllPassiveItemObjectInInventory();
+        }
+
+
+
+        #region Use Passive Item
+        public void CreateAllPassiveItemObjectInInventory()
+        {
+            for (int i = 0; i < playerInGameInv.weapons.Count; i++)
+            {
+                if (playerInGameInv.weapons[i].HasItemData() == false)
+                    continue;
+
+
+                var itemPrefab = GameDataManager.Instance.GetItemPrefab($"IP_{playerInGameInv.weapons[i].ItemData.itemType}");
+                if (itemPrefab != null)
+                {
+                    var obj = Instantiate(itemPrefab, transform.position, Quaternion.identity);
+                    var itemObj = obj.GetComponent<Item>();
+                    itemObj.SetData(playerInGameInv.weapons[i]);
+                    itemObj.spriteRenderer.enabled = false;
+                    itemObj.GetComponent<NetworkObject>().Spawn();
+                    passiveItems.Add(itemObj);
+
+                    // Set parent
+                    // =========
+                    itemObj.transform.SetParent(player.transform);
+                }
+
+                if (playerInGameInv.weapons[i].ItemData is BootData)
+                {
+                    Debug.Log($"Has boots data: {i}");
+                    SetBootsEquipProperties((BootData)playerInGameInv.weapons[i].ItemData);
+                    IsBootEvo = itemEvolutionManager.IsEvoItem(bootData);
+
+                    for (int j = 0; j < passiveItems.Count; j++)
+                    {
+                        if (passiveItems[j] is Boots)
+                        {
+                            bootsGO = passiveItems[j].GetComponent<Boots>();
+                            break;
+                        }
+                    }
+                }
+
+                if (playerInGameInv.weapons[i].ItemData is MagnetStoneData)
+                {
+                    Debug.Log($"Has MagnetStone data: {i}");
+                    SetMagnetStoneEquipProperties((MagnetStoneData)playerInGameInv.weapons[i].ItemData);
+
+                    /*IsBootEvo = itemEvolutionManager.IsEvoItem(bootData);
+                    for (int j = 0; j < passiveItems.Count; j++)
+                    {
+                        if (passiveItems[j] is Boots)
+                        {
+                            bootsGO = passiveItems[j].GetComponent<Boots>();
+                            break;
+                        }
+                    }*/
+
+                }
+
+            }
+        }
+
+        public void ClearAllPassiveItemObjectInInventory()
+        {
+            for (int i = 0; i < passiveItems.Count; i++)
+            {
+                passiveItems[i].GetComponent<NetworkObject>().Despawn();
+            }
+            passiveItems.Clear();
+        }
+
+
+
+        
+
+        private void Update()
+        {
+            if (ingameInformationManager.IsGameOver())
+                return;
+
+
+            // Check if it's time to detect enemies again      
+            if (Time.time - lastDetectionTime > detectionInterval)
+            {
+                lastDetectionTime = Time.time;
+
+                // Detect enemies within the specified radius
+                nearestEnemy = DetectNearestEnemy();
+            }
+
+
+            if (passiveItems.Count == 0) return;
+
+
+            for (int i = 0; i < passiveItems.Count; i++)
+            {
+                // Check if the item can be used
+
+                if (canUseItems[i])
+                {
+                    // Use the item
+                    // ...
+                    passiveItems[i].Use(player, nearestEnemy);
+
+                    // Set the canUseItem flag to false and start the coroutine to wait for the interval
+                    canUseItems[i] = false;
+                    float usageTime = 1.0f / passiveItems[i].ItemData.usageVelocity;
+                    StartCoroutine(UseItemAfterInterval(i, usageTime));
+                }
+            }
+
+
+            // Grapping hook
+
+
+        }
+
+
+        /*private Transform DetectNearestEnemy(float detecionRadius)
+        {
+            Transform nearestEnemyTransform;
+
+            // Array to store results of the overlap check
+            int numEnemies = Physics2D.OverlapCircleNonAlloc(transform.position, detectionRadius, enemies);
+            int index = -1;
+            // Find the shortest squared distance to the player
+            float shortestSquaredDistance = Mathf.Infinity;
+            for (int i = 0; i < numEnemies; i++)
+            {
+                float squaredDistanceToPlayer = (enemies[i].transform.position - transform.position).sqrMagnitude;
+                if (squaredDistanceToPlayer < shortestSquaredDistance)
+                {
+                    shortestSquaredDistance = squaredDistanceToPlayer;
+                    index = i;
+                }
+            }
+
+            nearestEnemyTransform = enemies[index].transform;
+            return nearestEnemyTransform;
+        }*/
+
+        private Vector2 DetectNearestEnemy()
+        {
+            // Array to store results of the overlap check
+            int numEnemies = Physics2D.OverlapCircleNonAlloc(transform.position, nearDetectionRadius, enemies, enemyLayer);
+
+            if (numEnemies == 0)
+            {
+                numEnemies = Physics2D.OverlapCircleNonAlloc(transform.position, farDetectionRadius, enemies, enemyLayer);
+
+                if (numEnemies > 0)
+                {
+                    return enemies[Random.Range(0, numEnemies)].transform.position;
+                }
+                else
+                {
+                    return GetRandomVector2() + (Vector2)player.transform.position;
+                }
+
+            }
+            else
+            {
+                return enemies[Random.Range(0, numEnemies)].transform.position;
+            }
+        }
+
+
+        private IEnumerator UseItemAfterInterval(int slotIndex, float useInterval)
+        {
+            // Wait for the interval before allowing the item to be used again
+            yield return new WaitForSeconds(useInterval);
+            canUseItems[slotIndex] = true;
+        }
+
+        private Vector2 GetRandomVector2()
+        {
+            float randomX = Random.Range(-10.0f, 10.0f);
+            float randomY = Random.Range(-10.0f, 10.0f);
+            return new Vector2(randomX, randomY);
+        }
+
+  
+
+        #endregion Use Passive Item
+
+        // START Item level skill methods
+        // ========================
+        public bool HasBaseItem(ItemData baseItem)
+        {
+            int size;
+            switch (baseItem.itemCategory)
+            {
+                case ItemCategory.Skill_Weapons:
+                    size = playerInGameInv.weapons.Count;
+                    for (int i = 0; i < size; i++)
+                    {
+                        if (ItemData.IsSameName(playerInGameInv.weapons[i].ItemData, baseItem))
+                        {
+                            return true;
+                        }
+                    }
+                    return false;
+                case ItemCategory.Skill_Accessories:
+                    size = playerInGameInv.accessories.Count;
+                    for (int i = 0; i < size; i++)
+                    {
+                        if (ItemData.IsSameName(playerInGameInv.accessories[i].ItemData, baseItem))
+                        {
+                            return true;
+                        }
+                    }
+                    return false;
+                default:
+                    Debug.LogWarning($"Not found item has item category type: {baseItem.itemCategory}.");
+                    break;
+            }
+
+            return false;
+        }
+
+        public int FindBaseItemIndex(ItemData baseItem)
+        {
+            int size;
+
+            switch (baseItem.itemCategory)
+            {
+                case ItemCategory.Skill_Weapons:
+                    size = playerInGameInv.weapons.Count;
+                    for (int i = 0; i < size; i++)
+                    {
+                        if (ItemData.IsSameName(playerInGameInv.weapons[i].ItemData, baseItem))
+                        {
+                            return i;
+                        }
+                    }
+                    break;
+                case ItemCategory.Skill_Accessories:
+                    size = playerInGameInv.accessories.Count;
+                    for (int i = 0; i < size; i++)
+                    {
+                        if (ItemData.IsSameName(playerInGameInv.accessories[i].ItemData, baseItem))
+                        {
+                            return i;
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            throw new System.Exception($"Not found base item {baseItem} in PlayerplayerIngameInv.inGameInventory.cs.");
+        }
+
+        public ItemData GetUpgradeVersionOfItem(ItemData itemData)
+        {
+            if (itemData.currentLevel < itemData.maxLevel)
+            {
+                return itemData.upgradeRecipe.outputItemSlot.itemData;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Check in weapons already has this baseItem.
+        /// </summary>
+        /// <param name="baseItem"></param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception"></exception>
+        public bool HasEvoOfBaseItem(ItemData baseItem)
+        {
+            if (baseItem.itemCategory == ItemCategory.Skill_Weapons)
+            {
+                int size = playerInGameInv.weapons.Count;
+                for (int i = 0; i < size; i++)
+                {
+                    if (playerInGameInv.weapons[i].HasItemData() == false)
+                        continue;
+
+                    if (playerInGameInv.weapons[i].ItemData.Equals(itemEvolutionManager.GetEvolutionItem(baseItem)))
+                    {
+                        return true;
+                    }
+
+                }
+                return false;
+            }
+            else
+            { 
+                throw new System.Exception(); 
+            }
+        }
+        // END Item level skill methods
+        // ========================
+
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(transform.position, nearDetectionRadius);
+
+            Gizmos.color = Color.white;
+            Gizmos.DrawWireSphere(transform.position, farDetectionRadius);
+        }
+    }
+
+}

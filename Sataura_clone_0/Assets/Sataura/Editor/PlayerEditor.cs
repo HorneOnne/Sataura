@@ -7,7 +7,7 @@ namespace Sataura
     [CustomEditor(typeof(Player))]
     public class PlayerEditor : Editor
     {
-        private SerializedProperty characterDataProperty;
+        /*private SerializedProperty characterDataProperty;
 
         private SerializedProperty handleItemProperty;
         private SerializedProperty handleMovementProperty;
@@ -108,7 +108,7 @@ namespace Sataura
             }
 
             serializedObject.ApplyModifiedProperties();
-        }
+        }*/
 
     }
 
