@@ -1,7 +1,7 @@
 using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.InputSystem;
+
 
 namespace Sataura
 {
@@ -15,16 +15,16 @@ namespace Sataura
 
         [Header("CHARACTER DATA")]
         public CharacterData characterData;
-        public PlayerInGameSkills playerInGameInventory;
-        public ItemInHand itemInHand;
+        public PlayerInGameSkills playerIngameSkills;
         public PlayerMovement playerMovement;
-        public PlayerInputHandler playerInputHandler;
+        public PlayerCombat playerCombat;
+        public IngameInputHandler ingameInputHandler;
         public PlayerUseItem playerUseItem;
         public PlayerUseEquipmentItem playerUseEquipmentItem;
         private IngameInformationManager ingameInformationManager;
 
-
-        public bool canUseItem;
+        [Header("Effects")]
+        public GhostEffect ghostEffect;
 
 
         [HideInInspector]
@@ -66,7 +66,7 @@ namespace Sataura
 
 
                 // Update inventory data.
-                playerInGameInventory.UpdateCharacterData();
+                playerIngameSkills.UpdateCharacterData();
             }
 
 
@@ -97,11 +97,7 @@ namespace Sataura
                 if (UIPlayerInGameSkills.Instance != null)
                 {
                     UIPlayerInGameSkills.Instance.LoadReferences();
-                }
-                    
-
-                if (UIItemInHand.Instance != null)
-                    UIItemInHand.Instance.LoadReferences();         
+                }                 
             }
 
             if (IsOwner)

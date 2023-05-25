@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bacdd2f0913e1c459f7ed73685d3f72, type: 3}
+  m_Name: I_LeatherBoots
+  m_EditorClassIdentifier: 
+  itemName: Leather Boots
+  icon: {fileID: -2070934872, guid: 7fa8d1d0ec1d51442a0f7ed86f7ef164, type: 3}
+  itemCategory: 2
+  itemType: 151
+  max_quantity: 1
+  hoverDescription: "~Equipping it allows the \n~player to perform a dash\n~by double-tapping
+    either \n~the Left or Right key."
+  equipDescription: 
+  unequipDescription: 
+  ingameDescription: 
+  rateOfFire: 1
+  currentLevel: 1
+  maxLevel: 1
+  upgradeRecipe:
+    materials: []
+    outputItemSlot:
+      itemData: {fileID: 11400000, guid: fd23400f8e9e1d84bab1ab48873bafc5, type: 2}
+      quantity: 0
+  dashForce: 50
+  dashTime: 0.2
+  dashCooldown: 1
+  specialBootType: 0

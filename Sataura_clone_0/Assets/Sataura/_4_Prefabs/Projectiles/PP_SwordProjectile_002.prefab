@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7099038870744077377}
   - component: {fileID: -1691563593642034690}
   - component: {fileID: 503436786407757704}
-  m_Layer: 29
+  m_Layer: 7
   m_Name: PP_SwordProjectile_002
   m_TagString: Item
   m_Icon: {fileID: 0}
@@ -101,8 +101,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <ItemData>k__BackingField: {fileID: 0}
   useGravity: 0
-  networkObject: {fileID: 503436786407757704}
+  _networkObject: {fileID: 503436786407757704}
   spriteRenderer: {fileID: 0}
+  rb: {fileID: 8431559877168370848}
 --- !u!114 &503436786407757704
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -129,7 +130,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6486890697582953635}
   - component: {fileID: 1231150979389788801}
-  m_Layer: 29
+  m_Layer: 7
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}

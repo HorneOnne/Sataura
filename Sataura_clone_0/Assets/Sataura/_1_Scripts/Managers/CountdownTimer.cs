@@ -39,6 +39,11 @@ namespace Sataura
                 countdownText.text = "Time's up!";
             }
         }
+
+        public float MinutesToSeconds(float minute)
+        {
+            return minute * 60;
+        }
     }
 }
 

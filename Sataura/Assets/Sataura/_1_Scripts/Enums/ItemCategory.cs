@@ -5,8 +5,10 @@
     /// </summary>
     public enum ItemCategory
     {
-        Skill_Weapons,
-        Skill_Accessories,
-        Equipment,
+        Skill_Weapons = 0,
+        Skill_Accessories = 1,
+
+        Equipment_Armor = 10,
+        Equipment_Hook = 11,
     }
 }

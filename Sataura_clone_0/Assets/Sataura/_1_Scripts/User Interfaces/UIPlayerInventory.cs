@@ -10,7 +10,7 @@ namespace Sataura
         [SerializeField] private ItemSelectionPlayer itemSelectionPlayer;
 
         private PlayerInventory playerInventory;
-        private PlayerInputHandler playerInputHandler;
+        private InputHandler playerInputHandler;
         private ItemInHand itemInHand;
 
 
@@ -62,6 +62,16 @@ namespace Sataura
             itemInHand = itemSelectionPlayer.itemInHand;
             playerInventory = itemSelectionPlayer.playerInventory;
             playerInputHandler = itemSelectionPlayer.playerInputHandler;
+
+            CreateInventory();
+
+            // Update Inventory UI at the first time when start game.
+            Invoke("UpdateInventoryUI", .1f);
+        }
+
+
+        public void CreateInventory()
+        {
             int inventorySize = itemSelectionPlayer.characterData.playerInventoryData.itemSlots.Count;
 
             for (int i = 0; i < inventorySize; i++)
@@ -77,9 +87,40 @@ namespace Sataura
 
                 itemSlotList.Add(slotObject);
             }
+        }
 
-            // Update Inventory UI at the first time when start game.
-            Invoke("UpdateInventoryUI", .1f);
+        public void CreateInventoryType(ItemCategory _category)
+        {
+            int inventorySize = itemSelectionPlayer.characterData.playerInventoryData.itemSlots.Count;
+
+            for (int i = 0; i < inventorySize; i++)
+            {
+                if(itemSelectionPlayer.characterData.playerInventoryData.itemSlots[i].HasItemData())
+                {
+                    if (itemSelectionPlayer.characterData.playerInventoryData.itemSlots[i].ItemData.itemCategory == _category)
+                    {
+                        GameObject slotObject = Instantiate(itemSlotPrefab, this.transform);
+                        slotObject.GetComponent<UIItemSlot>().SetIndex(i);
+                        slotObject.GetComponent<UIItemSlot>().SetData(null);
+                        Utilities.AddEvent(slotObject, EventTriggerType.PointerClick, (baseEvent) => OnClick(baseEvent, slotObject));
+                        Utilities.AddEvent(slotObject, EventTriggerType.PointerEnter, delegate { OnEnter(slotObject); });
+                        Utilities.AddEvent(slotObject, EventTriggerType.PointerExit, delegate { OnExit(slotObject); });
+                        Utilities.AddEvent(slotObject, EventTriggerType.BeginDrag, (baseEvent) => OnBeginDrag(baseEvent, slotObject));
+                        Utilities.AddEvent(slotObject, EventTriggerType.EndDrag, (baseEvent) => OnEndDrag(baseEvent, slotObject));
+
+                        itemSlotList.Add(slotObject);
+                    }
+                }                     
+            }
+        }
+
+        public void Clear()
+        {
+            for (int i = 0; i < itemSlotList.Count; i++)
+            {
+                Destroy(itemSlotList[i].gameObject);
+            }
+            itemSlotList.Clear();
         }
 
 
@@ -109,7 +150,7 @@ namespace Sataura
 
         public void UpdateInventoryUI()
         {
-            for (int i = 0; i < playerInventory.Capacity; i++)
+            for (int i = 0; i < itemSlotList.Count; i++)
             {
                 UpdateInventoryUIAt(i);
             }
@@ -120,6 +161,8 @@ namespace Sataura
             UIItemSlot uiSlot = itemSlotList[index].GetComponent<UIItemSlot>();
             uiSlot.SetData(playerInventory.playerInventory[index]);
         }
+
+        
 
         // LOGIC 
         // ===================================================================

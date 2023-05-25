@@ -17,7 +17,7 @@ namespace Sataura
 
 
 
-        [HideInInspector] public List<Enemy001> enemies = new List<Enemy001>();
+        [HideInInspector] public List<BaseEnemy> enemies = new List<BaseEnemy>();
         [HideInInspector] public List<Currency> currencies = new List<Currency>();
 
 

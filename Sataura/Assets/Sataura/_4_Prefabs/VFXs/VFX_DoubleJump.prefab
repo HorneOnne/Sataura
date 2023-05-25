@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4854370247927313893}
   - component: {fileID: 2578509835168692899}
   - component: {fileID: -8383958205928850455}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: VFX_DoubleJump
   m_TagString: Untagged
   m_Icon: {fileID: 0}

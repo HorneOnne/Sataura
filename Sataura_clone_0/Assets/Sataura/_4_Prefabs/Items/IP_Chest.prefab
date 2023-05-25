@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8038181425775904794}
   - component: {fileID: 6404370885783017357}
   - component: {fileID: 212180773416867645}
-  m_Layer: 27
+  m_Layer: 17
   m_Name: IP_Chest
   m_TagString: Item
   m_Icon: {fileID: 0}
@@ -110,9 +110,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f638d0b0e7c8c984abcb75c24104ec0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <ItemData>k__BackingField: {fileID: 0}
   spriteRenderer: {fileID: 0}
-  showIconWhenHoldByHand: 0
+  _networkObject: {fileID: 212180773416867645}
   <ShowRay>k__BackingField: 0
   <PlacedLayer>k__BackingField:
     serializedVersion: 2
@@ -144,7 +143,7 @@ GameObject:
   - component: {fileID: 6094155235270631156}
   - component: {fileID: 6094155235270631158}
   - component: {fileID: 7402595292785146131}
-  m_Layer: 27
+  m_Layer: 17
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}

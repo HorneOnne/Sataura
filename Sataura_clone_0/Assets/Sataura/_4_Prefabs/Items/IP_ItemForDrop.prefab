@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8497554094401409814}
   - component: {fileID: 5453535841282176704}
   - component: {fileID: 3478537958014404193}
-  m_Layer: 27
+  m_Layer: 17
   m_Name: IP_ItemForDrop
   m_TagString: Item
   m_Icon: {fileID: 0}
@@ -147,9 +147,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c928972ca09f2874790a26945441a7fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <ItemData>k__BackingField: {fileID: 0}
   spriteRenderer: {fileID: 0}
-  showIconWhenHoldByHand: 0
+  _networkObject: {fileID: 3478537958014404193}
 --- !u!114 &3478537958014404193
 MonoBehaviour:
   m_ObjectHideFlags: 0

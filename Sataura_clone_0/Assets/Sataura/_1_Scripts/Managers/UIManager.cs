@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections;
 using UnityEngine;
 
@@ -10,10 +11,10 @@ namespace Sataura
     {
         [Header("Canvas")]
         public GameObject playerInGameInventoryCanvas;
-        public GameObject creativeInventoryCanvas;
         public GameObject playerInformationCanvas;
-        public GameObject chestInventoryCanvas;
+        public Canvas bossHealthBarCanvas;
         public GameObject menuCanvas;
+        public Canvas victoryCanvas;
 
         [Header("Panel")]
         public GameObject upgradeItemSkillPanel;
@@ -36,11 +37,15 @@ namespace Sataura
             if(playerInGameInventoryCanvas != null)
                 playerInGameInventoryCanvas.SetActive(true);
 
-            /*if(creativeInventoryCanvas != null)
-                creativeInventoryCanvas.SetActive(true);*/
 
             if (menuCanvas != null)
-                menuCanvas.SetActive(true);     
+                menuCanvas.SetActive(true);
+
+            if (bossHealthBarCanvas != null)
+                bossHealthBarCanvas.enabled = false;
+
+            if (victoryCanvas != null)
+                victoryCanvas.enabled = false;
         }
 
 
@@ -55,6 +60,7 @@ namespace Sataura
             yield return new WaitForSeconds(time);
             upgradeItemSkillPanel.SetActive(true);
             UIIngameInformationManager.Instance.FakeFullExpSliderWhenLevelUp();
+            UIIngameInformationManager.Instance.GenerateUpgradeList();
             Time.timeScale = 0.0f;
         }
 

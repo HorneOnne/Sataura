@@ -5,18 +5,12 @@ using System.Collections.Generic;
 
 namespace Sataura
 {
-    /// <summary>
-    /// Represents an item that is currently held in the player's hand.
-    /// </summary>
     public class ItemInHand : NetworkBehaviour
     {
-        public PlayerType playerType;
-
         [Header("References")]
-        [SerializeField] private Player player;
         [SerializeField] private ItemSelectionPlayer itemSelectionPlayer;
 
-        private PlayerInputHandler playerInputHandler;
+        private InputHandler playerInputHandler;
 
 
         /// <summary>
@@ -37,23 +31,6 @@ namespace Sataura
         public NetworkVariable<int> currentHoldHandItemID = new NetworkVariable<int>(-1);
 
 
-        /// <summary>
-        /// Indicates whether this is the first time that the item has been used.
-        /// </summary>
-        [Header("Settings")]
-        [Tooltip("Prevent using a selected item for the first time.")]
-        private bool isFirstTimeUsingItem = true;
-
-
-        /// <summary>
-        /// The time elapsed since the last mouse press.
-        /// </summary>
-        private float lastUsedTime = 0.0f;
-
-        /// <summary>
-        /// Whether the current item being used is being used for the first time.
-        /// </summary>
-        private bool firstUseItem = true;
 
         #region Properties
         /// <summary>
@@ -64,140 +41,24 @@ namespace Sataura
         #endregion
 
 
-        private void OnEnable()
-        {
-            if (playerType == PlayerType.IngamePlayer)
-            {
-                if (player.canUseItem)
-                {
-                    EventManager.OnItemInHandChanged += ReInstantiateItem;
-                    currentHoldHandItemID.OnValueChanged += OnInHandItemIDChanged;
-                    player.playerInputHandler.currentUseItemIndex.OnValueChanged += OnCurrentUseIndexItemIDChanged;
-
-
-                    // Optimize
-                    UIUpgradeSkill.OnUpgradeButtonClicked += UpdateCurrentItemObjectData;
-                }
-            }
-
-            if (playerType == PlayerType.ItemSelectionPlayer)
-            {
-
-            }
-
-        }
-
-
-        private void OnDisable()
-        {
-            if (playerType == PlayerType.IngamePlayer)
-            {
-                if (player.canUseItem)
-                {
-                    EventManager.OnItemInHandChanged -= ReInstantiateItem;
-                    currentHoldHandItemID.OnValueChanged -= OnInHandItemIDChanged;
-                    player.playerInputHandler.currentUseItemIndex.OnValueChanged -= OnCurrentUseIndexItemIDChanged;
-
-
-                    // Optimize
-                    UIUpgradeSkill.OnUpgradeButtonClicked -= UpdateCurrentItemObjectData;
-                }
-            }
-            
-        }
-
 
 
         public override void OnNetworkSpawn()
         {
             uiItemInHand = UIItemInHand.Instance;
+            playerInputHandler = itemSelectionPlayer.playerInputHandler;
 
-            if (playerType == PlayerType.IngamePlayer)
-                playerInputHandler = player.playerInputHandler;
-
-            if (playerType == PlayerType.ItemSelectionPlayer)
-                playerInputHandler = itemSelectionPlayer.playerInputHandler;
         }
 
 
-        public void UpdateCurrentItemObjectData()
-        {
-            Debug.LogWarning("Optimize here.");
-            if (currentItemObject != null)
-            {
-                var playerIngameInventory = player.playerInGameInventory;
-                currentItemObject.SetData(playerIngameInventory.weapons[playerInputHandler.currentUseItemIndex.Value]);
-            }
-        }
-
-        public bool HasItemObjectInServer(InventoryData inventoryData)
-        {
-            if (currentHoldHandItemID.Value != -1)
-            {
-                return true;
-            }
-
-
-            if (playerInputHandler.currentUseItemIndex.Value != -1)
-            {
-                if (inventoryData.itemSlots[playerInputHandler.currentUseItemIndex.Value].HasItemData())
-                {
-                    return true;
-                }
-            }
-
-
-            return false;
-        }
 
         public bool HasHandHoldItemInServer()
         {
             return currentHoldHandItemID.Value != -1;
         }
 
-        public bool HasUseItemIndexInServer()
-        {
-            return playerInputHandler.currentUseItemIndex.Value != -1;
-        }
 
-        private void Update()
-        {
-            if (!IsOwner) return;
 
-            if (playerType != PlayerType.IngamePlayer)
-                return;
-
-            if (HasItemObjectInServer(player.playerInGameInventory.weaponsData))
-            {
-                //if (currentItemObject.showIconWhenHoldByHand == true)
-                //{
-                // Mouse
-                Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                RotateHoldItemServerRpc(mousePosition);
-
-                // Controller
-                //RotateHoldItemServerRpc(player.PlayerInputHandler.RotateWeaponInput);
-                //}
-            }
-        }
-
-        /// <summary>
-        /// Rotate hold item if it can be shown
-        /// </summary>
-        [ServerRpc]
-        private void RotateHoldItemServerRpc(Vector3 mousePosition)
-        {
-            // Mouse
-            Utilities.RotateObjectTowardMouse2D(mousePosition, player.HandHoldItem, 0);
-
-            // Controller
-            //Utilities.RotateObjectTowardDirection2D(mousePosition, player.HandHoldItem, 0);
-        }
-
-        /// <summary>
-        /// Gets the item data for the item in this hand.
-        /// </summary>
-        /// <returns>The item data for the item in this hand.</returns>
         public ItemData GetItemData()
         {
             return itemSlot.ItemData;
@@ -221,7 +82,7 @@ namespace Sataura
                 slotStoredType = storageType
             };
 
-            isFirstTimeUsingItem = true;
+
             EventManager.TriggerItemInHandChangedEvent();
 
             if (forceUpdateUI)
@@ -282,8 +143,6 @@ namespace Sataura
                 slotStoredType = storageType
             };
 
-
-            isFirstTimeUsingItem = true;
             EventManager.TriggerItemInHandChangedEvent();
 
             if (forceUpdateUI)
@@ -314,8 +173,6 @@ namespace Sataura
                 slotStoredType = storageType
             };
 
-
-            isFirstTimeUsingItem = true;
             EventManager.TriggerItemInHandChangedEvent();
 
             if (forceUpdateUI)
@@ -325,64 +182,7 @@ namespace Sataura
         }
 
 
-        [ServerRpc]
-        public void SwapServerRpc(ulong clientId, int slotIndex, StoredType storageType = StoredType.Another, bool forceUpdateUI = false)
-        {
-            if(playerType == PlayerType.IngamePlayer)
-            {
-                Swap(ref player.playerInGameInventory.weapons, slotIndex, storageType, forceUpdateUI);
-
-                // NOTE! In case you know a list of ClientId's ahead of time, that does not need change,
-                // Then please consider caching this (as a member variable), to avoid Allocating Memory every time you run this function
-                ClientRpcParams clientRpcParams = new ClientRpcParams
-                {
-                    Send = new ClientRpcSendParams
-                    {
-                        TargetClientIds = new ulong[] { clientId }
-                    }
-                };
-                SwapClientRpc(slotIndex, storageType, forceUpdateUI, clientRpcParams);
-            }
-
-
-            /*if (playerType == PlayerType.ItemSelectionPlayer)
-            {
-                Swap(ref itemSelectionPlayer.PlayerInGameInventory.weapons, slotIndex, storageType, forceUpdateUI);
-
-                // NOTE! In case you know a list of ClientId's ahead of time, that does not need change,
-                // Then please consider caching this (as a member variable), to avoid Allocating Memory every time you run this function
-                ClientRpcParams clientRpcParams = new ClientRpcParams
-                {
-                    Send = new ClientRpcSendParams
-                    {
-                        TargetClientIds = new ulong[] { clientId }
-                    }
-                };
-                SwapClientRpc(slotIndex, storageType, forceUpdateUI, clientRpcParams);
-            }*/
-        }
-
-
-        [ClientRpc]
-        private void SwapClientRpc(int slotIndex, StoredType storageType = StoredType.Another, bool forceUpdateUI = false, ClientRpcParams clientRpcParams = default)
-        {
-            if (!IsOwner || IsServer) return;
-
-            Debug.Log("Server call client");
-
-            if (playerType == PlayerType.IngamePlayer)
-            {
-                Swap(ref player.playerInGameInventory.weapons, slotIndex, storageType, forceUpdateUI);
-                UIPlayerInGameSkills.Instance.UpdateUI();
-            }
-                
-
-            /*if (playerType == PlayerType.ItemSelectionPlayer)
-                Swap(ref itemSelectionPlayer.PlayerInGameInventory.weapons, slotIndex, storageType, forceUpdateUI);*/
-
-            
-
-        }
+ 
 
         /// <summary>
         /// Splits the item slot quantity in the specified inventory at the given slot index.
@@ -431,31 +231,6 @@ namespace Sataura
             }
         }
 
-
-        [ServerRpc]
-        public void SplitItemSlotQuantityInInventoryServerRpc(ulong clientId, int slotIndex)
-        {
-            List<ItemSlot> inventory = player.playerInGameInventory.weapons;
-            SplitItemSlotQuantityInInventory(ref player.playerInGameInventory.weapons, slotIndex);
-
-            ClientRpcParams clientRpcParams = new ClientRpcParams
-            {
-                Send = new ClientRpcSendParams
-                {
-                    TargetClientIds = new ulong[] { clientId }
-                }
-            };
-            SplitItemSlotQuantityInInventoryClientRpc(slotIndex, clientRpcParams);
-        }
-
-
-        [ClientRpc]
-        private void SplitItemSlotQuantityInInventoryClientRpc(int slotIndex, ClientRpcParams clientRpcParams = default)
-        {
-            if (!IsOwner || IsServer) return;
-            SplitItemSlotQuantityInInventory(ref player.playerInGameInventory.weapons, slotIndex);
-            UIPlayerInGameSkills.Instance.UpdateUI();
-        }
 
 
         /// <summary>
@@ -569,55 +344,7 @@ namespace Sataura
         }
 
 
-        /// <summary>
-        /// Use item if left mouse button is pressed
-        /// </summary>
-        [ServerRpc]
-        public void UseItemServerRpc(Vector2 mousePosition)
-        {
-            if (IsMouseOverUI() == true)
-                return;
-
-            if(playerType != PlayerType.IngamePlayer) return;
-
-            if (HasItemObjectInServer(player.playerInGameInventory.weaponsData))
-            {
-                // Check if it's time to attack
-                if (Time.time - lastUsedTime >= 1.0f / (currentItemObject.ItemData.usageVelocity + 0.001f))
-                {
-                    lastUsedTime = Time.time;
-                    UseItem(mousePosition);
-                }
-                else if (firstUseItem)
-                {
-                    bool canUseItem = UseItem(mousePosition);
-                    if (canUseItem)
-                    {
-                        firstUseItem = false;
-                        lastUsedTime = Time.time;
-                    }
-                }
-            }
-        }
-
-
-        /// <summary>
-        /// Uses the item currently in the player's hand.
-        /// </summary>
-        /// <returns>A boolean indicating whether the item was successfully used or not.</returns>
-        public bool UseItem(Vector2 mousePosition)
-        {
-            if (playerType != PlayerType.IngamePlayer) return false;
-
-            if (isFirstTimeUsingItem)
-            {
-                isFirstTimeUsingItem = false;
-                return false;
-            }
-
-            return currentItemObject.Use(player, mousePosition);
-        }
-
+       
 
         /// <summary>
         /// Removes one quantity of the item in the player's hand.
@@ -628,143 +355,6 @@ namespace Sataura
             uiItemInHand.UpdateItemInHandUI();
 
             EventManager.TriggerItemInHandChangedEvent();
-        }
-
-
-        [ServerRpc]
-        public void RemoveItemServerRpc(ulong clientId)
-        {
-            RemoveItem();
-
-            ClientRpcParams clientRpcParams = new ClientRpcParams
-            {
-                Send = new ClientRpcSendParams
-                {
-                    TargetClientIds = new ulong[] { clientId }
-                }
-            };
-
-            RemoveItemClientRpc(clientRpcParams);
-        }
-
-
-        [ClientRpc]
-        private void RemoveItemClientRpc(ClientRpcParams clientRpcParams = default)
-        {
-            if (!IsOwner || IsServer) return;
-
-            RemoveItem();
-
-            UIItemInHand.Instance.UpdateItemInHandUI();
-        }
-
-
-        /// <summary>
-        /// Checks whether the player's mouse is currently over a UI element or not.
-        /// </summary>
-        /// <returns>A boolean indicating whether the player's mouse is currently over a UI element or not.</returns>
-        private bool IsMouseOverUI()
-        {
-            if (EventSystem.current.IsPointerOverGameObject())
-            {
-                // mouse click is on a UI element.
-                return true;
-            }
-            else
-            {
-                // mouse click is not on a UI element
-                return false;
-            }
-        }
-
-
-        /// <summary>
-        /// Handles the re-instantiation of the item in the player's hand. Destroys any existing items in the player's hand and
-        /// creates a new item object in the hand if the item inventory slot is not empty.
-        /// </summary>
-        private void ReInstantiateItem()
-        {
-            if (!IsOwner) return;
-            DespawnCurrentInHandNetworkObjectServerRpc();
-
-            bool hasItemData = HasItemData();
-            if (hasItemData)
-            {
-                int itemID = GameDataManager.Instance.GetItemID(itemSlot.ItemData);
-                SetHandHoldItemIDServerRpc(itemID);
-            }
-            else
-            {
-                SetHandHoldItemIDServerRpc(-1);
-            }
-        }
-
-
-
-        [ServerRpc]
-        private void DespawnCurrentInHandNetworkObjectServerRpc()
-        {
-            if (currentItemObject == null)
-            {
-                //SetHandHoldItemIDServerRpc(-1);
-                return;
-            }
-
-
-            NetworkObject networkObject = currentItemObject.GetComponent<NetworkObject>();
-            if (networkObject != null && networkObject.IsSpawned && IsServer)
-            {
-                networkObject.Despawn();
-            }
-
-            //SetHandHoldItemIDServerRpc(-1);
-        }
-
-
-        [ServerRpc]
-        private void InstantitateCurrentItemNetworkObjectServerRpc(ulong clientId, int itemID, int itemQuantity)
-        {
-            if (playerType != PlayerType.IngamePlayer) return;
-
-            currentItemObject = Utilities.InstantiateItemNetworkObject(itemID, itemQuantity, player.HandHoldItem);
-            currentItemObject.GetComponent<NetworkObject>().Spawn(true);
-            currentItemObject.GetComponent<NetworkObject>().TrySetParent(player.HandHoldItem);
-            currentItemObject.transform.localPosition = Vector3.zero;
-            currentItemObject.transform.localScale = Vector3.one;
-        }
-
-
-
-
-
-        private void OnInHandItemIDChanged(int oldID, int newID)
-        {
-            if (!IsOwner) return;
-            if (newID == -1) return;
-
-            InstantitateCurrentItemNetworkObjectServerRpc(NetworkManager.LocalClientId, newID, 1);
-        }
-
-
-
-
-        // Testing
-        // ==============================================================
-        private void OnCurrentUseIndexItemIDChanged(int oldID, int newID)
-        {
-            if (!IsOwner) return;
-            DespawnCurrentInHandNetworkObjectServerRpc();
-
-            if (playerInputHandler.currentUseItemIndex.Value == -1)
-            {
-                return;
-            }
-
-
-            int itemID = GameDataManager.Instance.GetItemID(player.playerInGameInventory.weapons[playerInputHandler.currentUseItemIndex.Value].ItemData);
-            if (itemID == -1) return;
-
-            InstantitateCurrentItemNetworkObjectServerRpc(NetworkManager.LocalClientId, itemID, 1);
         }
     }
 }

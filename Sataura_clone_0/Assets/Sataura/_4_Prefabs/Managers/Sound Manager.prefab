@@ -62,6 +62,5 @@ MonoBehaviour:
     - {fileID: 8300000, guid: 89d8ba2283ff7044b9402d09db8b6721, type: 3}
   - soundType: 5
     audioClips:
-    - {fileID: 8300000, guid: 9dc67db72504ae6449d37c7fe587c91f, type: 3}
     - {fileID: 8300000, guid: 507820645b490bc4c92f0a1a6f7720d0, type: 3}
   oneShotGameObject: {fileID: 0}

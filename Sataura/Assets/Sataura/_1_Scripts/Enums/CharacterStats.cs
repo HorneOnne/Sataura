@@ -7,11 +7,11 @@
         Armor,
         MoveSpeed,
         JumpForce,
-        AttackSpeed,
         Duration,
         Area,
         Cooldown,
         Magnet,
         Revival,
+        Aware
     }
 }

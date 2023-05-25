@@ -15,9 +15,13 @@ namespace Sataura
         [SerializeField] private Rigidbody2D rb;
         [SerializeField] public Transform groundCheckPoint;
         private CharacterMovementData characterMovementData;
+        private IngameInputHandler _ingameInputHandler;
+        // Model & anim
+        [SerializeField] private Transform _model;
+        [SerializeField] private Animator _anim;
 
-        [SerializeField] private PlayerInputHandler playerInputHandler;
-
+        [Header("Character properties")]
+        private float _currentMovementForceInAir;
 
         [Header("Layer Properties")]
         public LayerMask groundLayer;
@@ -27,6 +31,10 @@ namespace Sataura
         // Ground check
         public bool isGrounded;
         public bool isOnPlatform;
+
+
+        // Others Skills
+        public bool isDashing = false;
 
 
         #region Properties
@@ -45,18 +53,13 @@ namespace Sataura
         public int NumOfJumps { get; private set; } = 0;
         #endregion Properties  
 
-        [Header("Character properties")]
-        [SerializeField] private float _currentMovementForceInAir;
-
+       
 
         public override void OnNetworkSpawn()
         {
-            playerInputHandler = player.playerInputHandler;
+            _ingameInputHandler = player.ingameInputHandler;
             characterMovementData = player.characterData.characterMovementData;
             FacingDirection = 1;
-
-            SetMovementSpeed();
-            SetJumpForce();
 
 
             float additionMoveSpeed = player.characterData._currentMoveSpeed - player.characterData._defaultMoveSpeed;
@@ -73,32 +76,6 @@ namespace Sataura
 
 
 
-
-
-
-        public void SetMovementSpeed(BootData _bootData = null)
-        {
-            /*if(_bootData != null)
-            {
-                currentMovementSpeed = characterMovementData.movementSpeed + (characterMovementData.movementSpeed * _bootData.additionMoveSpeed / 100);
-                currentMovementForceInAir = characterMovementData.movementForceInAir + (characterMovementData.movementForceInAir * _bootData.additionMoveSpeed / 100);
-            }            
-            else
-            {
-                currentMovementSpeed = characterMovementData.movementSpeed;
-                currentMovementForceInAir = characterMovementData.movementForceInAir;
-            }*/
-                
-        }
-
-        public void SetJumpForce(BootData _bootData = null)
-        {
-            /*if (_bootData != null)
-                currentJumpForce = characterMovementData.jumpForce + (characterMovementData.jumpForce * _bootData.additionJumpForce/100);
-            else
-                currentJumpForce = characterMovementData.jumpForce;*/
-        }
-
         private void Update()
         {
             if (player.IsGameOver()) return;
@@ -109,30 +86,58 @@ namespace Sataura
             {
                 NumOfJumps = 0;
             }
+
+
+            // Set Movement animation
+            _anim.SetBool("isGround", isGrounded);
+
+
+            if (player.ingameInputHandler.MovementInput.x != 0)
+            {
+                _anim.SetBool("isMove", true);
+                _anim.SetFloat("xMoveSpeed", player.characterData._currentMoveSpeed);
+            }
+            else
+            {
+                _anim.SetBool("isMove", false);
+            }
+
+
+            /*if(_ingameInputHandler.canJump)
+            {
+                _anim.SetTrigger("isJump");
+                _anim.SetFloat("yVelocity", rb.velocity.y);            
+            }
+            else
+            {
+                _anim.ResetTrigger("isJump");
+            }*/
+            // ----------------------
         }
 
         private void FixedUpdate()
         {
             if (!IsOwner) return;
-
+            if (isDashing) return;
+            
             // Movement 
             // =========================================================================
-            HandleMovementOnGround(player.playerInputHandler.MovementInput);
+            HandleMovementOnGround(player.ingameInputHandler.MovementInput);
 
             // Movement in AIR
-            HandleMoveInAir(player.playerInputHandler.MovementInput, isGrounded);
+            HandleMoveInAir(player.ingameInputHandler.MovementInput, isGrounded);
 
             // Jump 
             // =========================================================================
-            if (playerInputHandler.canJump)
+            if (_ingameInputHandler.canJump)
             {
                 HandleJump();
-                playerInputHandler.canJump = false;
+                _ingameInputHandler.canJump = false;
             }
 
 
 
-            if (playerInputHandler.MovementInput.y < 0)
+            if (_ingameInputHandler.MovementInput.y < 0)
             {
                 HandleOneWayPlatformEffector2D();
             }
@@ -143,8 +148,9 @@ namespace Sataura
 
             //SetMaxVelocity();
             HandleSetMaxVelocity();
+            //LimitVelocity()
 
-            FlipCharacterFace(playerInputHandler.MovementInput.x);
+            FlipCharacterFace(_ingameInputHandler.MovementInput.x);
         }
 
 
@@ -173,6 +179,8 @@ namespace Sataura
             if (movementInputVector.x != 0)
             {
                 rb.velocity = new Vector2(movementInputVector.x * player.characterData._currentMoveSpeed , rb.velocity.y);
+
+                //_anim.SetFloat("xMovement", player.characterData._currentMoveSpeed);
             }
             else
             {
@@ -244,7 +252,7 @@ namespace Sataura
 
         public void FlipCharacterFace(float XInput)
         {
-            if (XInput != 0 && XInput != FacingDirection)
+            if ((XInput == 1 || XInput == -1) && XInput != FacingDirection)
             {
                 Flip();
             }
@@ -252,8 +260,17 @@ namespace Sataura
         }
 
         private void Flip()
-        {
+        {          
             FacingDirection *= -1;
+            _model.localScale = new Vector3(Mathf.Abs(_model.localScale.x) * FacingDirection, _model.localScale.y, _model.localScale.z);
+        }
+
+        public void LimitVelocity(float maxVelocity)
+        {   
+            if(rb.velocity.magnitude > maxVelocity)
+            {
+                rb.velocity = rb.velocity.normalized * maxVelocity;
+            }
         }
     }
 }

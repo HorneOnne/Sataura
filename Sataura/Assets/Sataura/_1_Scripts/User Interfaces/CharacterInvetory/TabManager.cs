@@ -14,6 +14,8 @@ namespace Sataura
         [SerializeField] private Button _armorTabs;
         [SerializeField] private Button _currentTab;
 
+
+
         private void OnEnable()
         {          
             _allTabs.onClick.AddListener(AllTabClicked);
@@ -23,12 +25,7 @@ namespace Sataura
 
        
 
-        private void OnDisable()
-        {
-            
-        }
-
-        
+             
         private void Start()
         {
             AllTabClicked();
@@ -76,8 +73,8 @@ namespace Sataura
         private void AllTabClicked()
         {
             _currentTab = _allTabs;
-
             OnTabChangedMethod();
+
         }
         private void WeaponsTabClicked()
         {
@@ -88,7 +85,6 @@ namespace Sataura
         private void ArmorsTabClicked()
         {
             _currentTab = _armorTabs;
-
             OnTabChangedMethod();
         }
 

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 831976476365492695}
   - component: {fileID: 4207874688212585534}
   - component: {fileID: 6057402819971364267}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: VFX_BloodSplash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4827,7 +4827,7 @@ GameObject:
   - component: {fileID: 2547793470657992238}
   - component: {fileID: 3152625959363252524}
   - component: {fileID: 4449464889932336595}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: Circles
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9639,7 +9639,7 @@ GameObject:
   - component: {fileID: 1617770122570235419}
   - component: {fileID: 1617770122570235418}
   - component: {fileID: 1617770122570235429}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: BloodSplash_Particle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14451,7 +14451,7 @@ GameObject:
   - component: {fileID: 443296805805810752}
   - component: {fileID: 8132901328578306114}
   - component: {fileID: 2168684340928837693}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: Sparks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19263,7 +19263,7 @@ GameObject:
   - component: {fileID: 3708903227363193731}
   - component: {fileID: 518336172281304623}
   - component: {fileID: 4843784746027078352}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: Smoke
   m_TagString: Untagged
   m_Icon: {fileID: 0}

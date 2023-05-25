@@ -23,36 +23,38 @@ namespace Sataura
         public int _defaultMaxHealth = 100;
         public float _defaultRecovery = 0;
         public int _defaultArmor = 0;
-        public int _defaultMoveSpeed = 20;
-        public int _defaultJumpForce = 30;
+        public float _defaultMoveSpeed = 7;
+        public float _defaultJumpForce = 30;
         public float _defaultAttackSpeed = 1;
         public int _defaultDuration = 0;
-        public int _defaultArea = 0;
+        public float _defaultArea = 1;
         public int _defaultCooldown = 0;
-        public float _defaultMagnet = 0;
+        public float _defaultMagnet = 5;
         public int _defaultRevival = 0;
+        public float _defaultAware = 50;
 
-        [Header("Current Character Statistics")]
+        [Header("Current Character Statistics (Runtime)")]
         public int _currentMaxHealth;
         public float _currentRecovery;
         public int _currentArmor;
-        public int _currentMoveSpeed;
-        public int _currentJumpForce;
+        public float _currentMoveSpeed;
+        public float _currentJumpForce;
         public float _currentAttackSpeed;
         public int _currentDuration;
-        public int _currentArea;
+        public float _currentArea;
         public int _currentCooldown;
         public float _currentMagnet;
         public int _currentRevival;
+        public float _currentAware;
 
 
         [Header("Equipment")]
-        public int helmetDataID = -1;
-        public int chestplateDataID = -1;
-        public int leggingDataID = -1;
-        public int bootsDataID = -1;
-        public int hookDataID = -1;
-        public int accessoryDataID = -1;
+        public HelmetData helmetData;
+        public ChestplateData chestplateData;
+        public LeggingData leggingData;
+        public BootData bootsData;
+        public HookData hookData;
+
 
         [Header("Currency")]
         public string currencyString;
@@ -72,6 +74,7 @@ namespace Sataura
             _currentCooldown = _defaultCooldown;
             _currentMagnet = _defaultMagnet;
             _currentRevival = _defaultRevival;
+            _currentAware = _defaultAware;
         }
 
         public override bool Equals(object other)

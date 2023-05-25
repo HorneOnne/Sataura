@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a49cb402b306c34bb2a6d317a03bd01, type: 3}
+  m_Name: I_IronHammer_Lv4
+  m_EditorClassIdentifier: 
+  itemName: Iron Hammer
+  icon: {fileID: 21300000, guid: 4f8102721984d8549b5c884c2ca40193, type: 3}
+  itemCategory: 0
+  itemType: 52
+  max_quantity: 1
+  hoverDescription: 
+  equipDescription: 
+  unequipDescription: 
+  ingameDescription: Fires 1 more projectile.
+  rateOfFire: 0.25
+  currentLevel: 4
+  maxLevel: 5
+  upgradeRecipe:
+    materials: []
+    outputItemSlot:
+      itemData: {fileID: 11400000, guid: 85f11a099d612f747af53047f27a41ae, type: 2}
+      quantity: 1
+  damage: 15
+  releaseForce: 15
+  size: 3
+  useType: 3

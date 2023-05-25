@@ -2,7 +2,7 @@
 
 namespace Sataura
 {
-    [CreateAssetMenu(fileName = "ChestplateData", menuName = "UltimateItemSystem/Item/Equipment/ChestplateData", order = 51)]
+    [CreateAssetMenu(fileName = "ChestplateData", menuName = "Sataura/Item/Equipment/ChestplateData", order = 51)]
     public class ChestplateData : ItemData
     {
         [Header("ChestplateData Data")]

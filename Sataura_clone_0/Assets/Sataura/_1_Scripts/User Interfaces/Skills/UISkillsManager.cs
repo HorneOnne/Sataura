@@ -43,7 +43,7 @@ namespace Sataura
 
         private void LoadUI()
         {
-            for(int i = 0; i < _player.playerSkills.weapons.Count; i++)
+            for(int i = 0; i < _player.playerSkills.weaponsData.itemSlots.Count; i++)
             {
                 var skillSlotObject = Instantiate(uiSkillSlotPrefab, uiWeaponsParent.transform);
                 skillSlotObject.SetItemCategory(ItemCategory.Skill_Weapons);
@@ -57,7 +57,7 @@ namespace Sataura
             }
 
 
-            for (int i = 0; i < _player.playerSkills.accessories.Count; i++)
+            for (int i = 0; i < _player.playerSkills.accessoriesData.itemSlots.Count; i++)
             {
                 var skillSlotObject = Instantiate(uiSkillSlotPrefab, uiAccessoriesParent.transform);
                 skillSlotObject.SetItemCategory(ItemCategory.Skill_Accessories);
@@ -89,6 +89,7 @@ namespace Sataura
             int index = GetClickedUISkillSlotIndex(clickedUISkillSlot, slotCategory);     
             ItemSlot skillSlotData = GetPlayerSkillSlot(slotCategory, index);
 
+
             if (itemInHand.HasItemData() == false)
             {
                 if (skillSlotData.HasItemData() == false)
@@ -99,6 +100,8 @@ namespace Sataura
                 else
                 {
                     Debug.Log("HAND: EMPTY \t SLOT: HAS ITEM");
+                    _player.playerSkills.UpdateStatsUnequip(skillSlotData.ItemData);
+
                     itemInHand.SetItem(skillSlotData);           
                     skillSlotData.ClearSlot();
                 }
@@ -114,6 +117,7 @@ namespace Sataura
                     skillSlotData.AddItemsFromAnotherSlot(itemInHand.GetSlot());
                     itemInHand.ClearSlot();
 
+                    _player.playerSkills.UpdateStatsEquip(skillSlotData.ItemData);
                 }
                 else
                 {
@@ -133,9 +137,9 @@ namespace Sataura
             switch (itemSlotCategory)
             {
                 case ItemCategory.Skill_Weapons:
-                    return _player.playerSkills.weapons[index];
+                    return _player.playerSkills.weaponsData.itemSlots[index];
                 case ItemCategory.Skill_Accessories:
-                    return _player.playerSkills.accessories[index];
+                    return _player.playerSkills.accessoriesData.itemSlots[index];
                 default:
                     throw new System.Exception();
             }
@@ -168,8 +172,6 @@ namespace Sataura
 
         private void UpdateUI()
         {
-            Debug.Log("UpdateUI called.");
-
             for (int i = 0; i < weapons.Count; i++)
             {
                 weapons[i].UpdateItemImage(_player.playerSkills.weaponsData.itemSlots[i].ItemData);

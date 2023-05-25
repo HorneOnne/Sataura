@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 9095001263188952732}
   - component: {fileID: -2608910921673304873}
   - component: {fileID: 3330461262925266214}
-  m_Layer: 28
+  m_Layer: 18
   m_Name: Hand Hold Item
   m_TagString: Untagged
   m_Icon: {fileID: 0}

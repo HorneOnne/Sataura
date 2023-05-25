@@ -17,4 +17,32 @@ MonoBehaviour:
   playerInventoryData: {fileID: 11400000, guid: e1665995ce0dc4743a9bea1adfa0dfcf, type: 2}
   weaponsData: {fileID: 11400000, guid: e256f04e3679a454fa6287ef91d26ba7, type: 2}
   accessoriesData: {fileID: 11400000, guid: e47c1dff566004e4ea8400fbe1ba7761, type: 2}
+  _defaultMaxHealth: 100
+  _defaultRecovery: 0
+  _defaultArmor: 0
+  _defaultMoveSpeed: 3
+  _defaultJumpForce: 25
+  _defaultAttackSpeed: 1
+  _defaultDuration: 0
+  _defaultArea: 0
+  _defaultCooldown: 0
+  _defaultMagnet: 0
+  _defaultRevival: 0
+  _currentMaxHealth: 100
+  _currentRecovery: 0
+  _currentArmor: 0
+  _currentMoveSpeed: 10
+  _currentJumpForce: 30
+  _currentAttackSpeed: 1
+  _currentDuration: 0
+  _currentArea: 0
+  _currentCooldown: 0
+  _currentMagnet: 0
+  _currentRevival: 0
+  helmetDataID: -1
+  chestplateDataID: -1
+  leggingDataID: -1
+  bootsDataID: -1
+  hookDataID: -1
+  accessoryDataID: -1
   currencyString: 

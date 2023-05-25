@@ -5,10 +5,7 @@ namespace Sataura
 {
     public class UIItemInHand : Singleton<UIItemInHand>
     {
-        public PlayerType playerType;
-
         [Header("Runtime References")]
-        [SerializeField] private Player player;
         [SerializeField] private ItemSelectionPlayer itemSelectionPlayer;
 
         private ItemInHand itemInHand;
@@ -41,10 +38,8 @@ namespace Sataura
         {
             mainCamera = Camera.main;
 
-            if(playerType == PlayerType.IngamePlayer)
-                itemInHand = player.itemInHand;
-            else if (playerType == PlayerType.ItemSelectionPlayer)
-                itemInHand = itemSelectionPlayer.itemInHand;
+            itemInHand = itemSelectionPlayer.itemInHand;
+
 
             alreadyLoadReferences = true;
         }
@@ -52,12 +47,8 @@ namespace Sataura
 
         public void SetPlayer(GameObject playerObject)
         {
-            if (playerType == PlayerType.IngamePlayer)
-                this.player = playerObject.GetComponent<Player>();
+            this.itemSelectionPlayer = playerObject.GetComponent<ItemSelectionPlayer>();
 
-
-            if (playerType == PlayerType.ItemSelectionPlayer)
-                this.itemSelectionPlayer = playerObject.GetComponent<ItemSelectionPlayer>();
         }
 
         private void Update()
@@ -65,36 +56,16 @@ namespace Sataura
             if (alreadyLoadReferences == false) return;
 
 
-            if (playerType == PlayerType.IngamePlayer)
+            if (itemSelectionPlayer.itemInHand.HasItemData() && uiSlotDisplay != null)
             {
-                if (player.itemInHand.HasItemData() && uiSlotDisplay != null)
-                {
-                    mainCameraPosition = (Vector2)mainCamera.ScreenToWorldPoint(Input.mousePosition);
-                    uiSlotDisplay.GetComponent<RectTransform>().transform.position = mainCameraPosition;
-                }
-                else
-                {
-                    if (uiSlotDisplay != null)
-                    {
-                        DestroyImmediate(uiSlotDisplay);
-                    }
-                }
+                mainCameraPosition = (Vector2)mainCamera.ScreenToWorldPoint(Input.mousePosition);
+                uiSlotDisplay.GetComponent<RectTransform>().transform.position = mainCameraPosition;
             }
-
-
-            if (playerType == PlayerType.ItemSelectionPlayer)
+            else
             {
-                if (itemSelectionPlayer.itemInHand.HasItemData() && uiSlotDisplay != null)
+                if (uiSlotDisplay != null)
                 {
-                    mainCameraPosition = (Vector2)mainCamera.ScreenToWorldPoint(Input.mousePosition);
-                    uiSlotDisplay.GetComponent<RectTransform>().transform.position = mainCameraPosition;
-                }
-                else
-                {
-                    if (uiSlotDisplay != null)
-                    {
-                        DestroyImmediate(uiSlotDisplay);
-                    }
+                    DestroyImmediate(uiSlotDisplay);
                 }
             }
         }

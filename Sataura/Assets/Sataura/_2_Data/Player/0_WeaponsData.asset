@@ -13,10 +13,10 @@ MonoBehaviour:
   m_Name: 0_WeaponsData
   m_EditorClassIdentifier: 
   itemSlots:
-  - <ItemData>k__BackingField: {fileID: 11400000, guid: 72bc5e05aa32abb4994239b3b504a642, type: 2}
-    <ItemQuantity>k__BackingField: 1
-  - <ItemData>k__BackingField: {fileID: 11400000, guid: 8f3ed8e6f97f1024ea2ecd3c8dd300e9, type: 2}
-    <ItemQuantity>k__BackingField: 1
+  - <ItemData>k__BackingField: {fileID: 0}
+    <ItemQuantity>k__BackingField: 0
+  - <ItemData>k__BackingField: {fileID: 0}
+    <ItemQuantity>k__BackingField: 0
   - <ItemData>k__BackingField: {fileID: 0}
     <ItemQuantity>k__BackingField: 0
   - <ItemData>k__BackingField: {fileID: 0}

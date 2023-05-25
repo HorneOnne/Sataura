@@ -60,7 +60,7 @@ namespace Sataura
             else if (newPlayerNetworkObject.GetComponent<Player>() != null)
             {
                 newPlayerNetworkObject.GetComponent<Player>().characterData = characterData;
-                newPlayerNetworkObject.GetComponent<Player>().playerInGameInventory.UpdateCharacterData();
+                newPlayerNetworkObject.GetComponent<Player>().playerIngameSkills.UpdateCharacterData();
             }
 
             GameDataManager.Instance.singleModePlayer = newPlayerNetworkObject;

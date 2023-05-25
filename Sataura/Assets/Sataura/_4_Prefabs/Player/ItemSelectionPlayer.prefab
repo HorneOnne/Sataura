@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5596761179594084960}
   - component: {fileID: 5687187838430798410}
-  m_Layer: 28
+  m_Layer: 18
   m_Name: Input Handler
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -41,19 +41,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 5096962715581879098}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 196c224353f79504386c5202a6c998ee, type: 3}
+  m_Script: {fileID: 11500000, guid: 693039148dae9064294319a10c02bf46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerType: 0
-  player: {fileID: 0}
-  itemSelectionPlayer: {fileID: 0}
+  itemSelectionPlayer: {fileID: 2394409112032363785}
   utilityKeyBinding: 304
-  dropItemKey: 116
-  selectItemBindingKeys: 310000003200000033000000340000003500000036000000370000003800000039000000
-  currentUseItemIndex:
-    m_InternalValue: -1
   <CurrentMouseState>k__BackingField: 0
-  canJump: 0
 --- !u!1 &5751527626542576433
 GameObject:
   m_ObjectHideFlags: 0
@@ -64,7 +57,7 @@ GameObject:
   m_Component:
   - component: {fileID: 84017012618453138}
   - component: {fileID: 2634828554441456175}
-  m_Layer: 28
+  m_Layer: 18
   m_Name: playerInventory
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -98,7 +91,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ee51e05b19c65442b47ab78419e0dfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemSelectionPlayer: {fileID: 0}
+  itemSelectionPlayer: {fileID: 2394409112032363785}
   playerInventory: []
   playerInventoryData: {fileID: 0}
 --- !u!1 &6036214172868209630
@@ -114,10 +107,9 @@ GameObject:
   - component: {fileID: 2394409112032363785}
   - component: {fileID: -1568459513426037929}
   - component: {fileID: -5271946890884573677}
-  - component: {fileID: 8767068926252534543}
   - component: {fileID: 2248583063180923075}
   - component: {fileID: 2382562624369736209}
-  m_Layer: 28
+  m_Layer: 18
   m_Name: ItemSelectionPlayer
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -175,7 +167,7 @@ MonoBehaviour:
   playerEquipment: {fileID: 2248583063180923075}
   playerSkills: {fileID: 2382562624369736209}
   itemInHand: {fileID: -5271946890884573677}
-  playerInputHandler: {fileID: 8767068926252534543}
+  playerInputHandler: {fileID: 5687187838430798410}
 --- !u!114 &-1568459513426037929
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -203,8 +195,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ef5a7f2c73a73c4592e4bc05550db24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerType: 1
-  player: {fileID: 0}
   itemSelectionPlayer: {fileID: 2394409112032363785}
   itemSlot:
     <ItemData>k__BackingField: {fileID: 0}
@@ -212,28 +202,6 @@ MonoBehaviour:
   currentItemObject: {fileID: 0}
   currentHoldHandItemID:
     m_InternalValue: -1
---- !u!114 &8767068926252534543
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6036214172868209630}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 196c224353f79504386c5202a6c998ee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerType: 1
-  player: {fileID: 0}
-  itemSelectionPlayer: {fileID: 2394409112032363785}
-  utilityKeyBinding: 304
-  dropItemKey: 116
-  selectItemBindingKeys: 310000003200000033000000340000003500000036000000370000003800000039000000
-  currentUseItemIndex:
-    m_InternalValue: -1
-  <CurrentMouseState>k__BackingField: 0
-  canJump: 0
 --- !u!114 &2248583063180923075
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -266,8 +234,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _player: {fileID: 2394409112032363785}
-  weapons: []
-  accessories: []
   weaponsData: {fileID: 0}
   accessoriesData: {fileID: 0}
 --- !u!1 &6036214174516717092
@@ -279,7 +245,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6036214174516717093}
-  m_Layer: 28
+  m_Layer: 18
   m_Name: Inventories
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -312,7 +278,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4908695423109837496}
   - component: {fileID: 7611364362188039311}
-  m_Layer: 28
+  m_Layer: 18
   m_Name: ItemInHand Handler
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -346,9 +312,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ef5a7f2c73a73c4592e4bc05550db24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerType: 0
-  player: {fileID: 0}
-  itemSelectionPlayer: {fileID: 0}
+  itemSelectionPlayer: {fileID: 2394409112032363785}
   itemSlot:
     <ItemData>k__BackingField: {fileID: 0}
     <ItemQuantity>k__BackingField: 0

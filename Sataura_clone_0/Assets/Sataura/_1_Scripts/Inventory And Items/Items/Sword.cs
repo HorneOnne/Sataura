@@ -1,45 +1,45 @@
 using Unity.Netcode;
 using UnityEngine;
+using System.Collections;
+using System;
 
 namespace Sataura
 {
     public class Sword : Item
     {
-        private GameObject swordProjectilePrefab;
-        private GameObject swordProjectileObject;
-        private SwordData swordData;
-
-        private NetworkObject swordNetworkObject;
-        private float initialZAngle;
-
-
-        // Passive
-        [SerializeField] private GameObject passiveProjectilePrefab;
+        [SerializeField] private SwordData _swordData;
+        private GameObject woodenSwordProjectilePrefab;
+        private GameObject evoWoodenSwordProjectilePrefab;
 
         public override void OnNetworkSpawn()
         {
-            swordProjectilePrefab = GameDataManager.Instance.GetProjectilePrefab("PP_SwordProjectile_001");
-            swordData = ((SwordData)ItemData);
+            woodenSwordProjectilePrefab = GameDataManager.Instance.GetProjectilePrefab(ProjectileType.WoodenSwordProjectile);
+            evoWoodenSwordProjectilePrefab = GameDataManager.Instance.GetProjectilePrefab(ProjectileType.EvoWoodenSwordProjectile);
+
+            _swordData = ((SwordData)ItemData);
 
             if(IsServer)
             {
-                int itemID = GameDataManager.Instance.GetItemID(swordData);
+                int itemID = GameDataManager.Instance.GetItemID(_swordData);
                 SetDataServerRpc(itemID, 1);       
             }
         }
 
-        public override bool Use(Player player, Vector2 mousePosition)
+        public override bool Use(Player player, Vector2 nearestEnemyPosition)
         {           
-            switch(swordData.useType)
+            switch(_swordData.useType)
             {
                 case 1:
-                    UseType01(player, mousePosition);
+                    SingleProjectile(player, nearestEnemyPosition);
                     break;
                 case 2:
-                    UseType02(player, mousePosition);
+                    MultipleProjectile(player, nearestEnemyPosition);
+                    break;
+                case 3:
+                    Evo(player, nearestEnemyPosition);
                     break;
                 default:
-                    Debug.LogWarning($"Not found useType {swordData.useType} in SwordData.");
+                    Debug.LogWarning($"Not found useType {_swordData.useType} in SwordData.");
                     break;
             }
 
@@ -47,57 +47,45 @@ namespace Sataura
         }
 
 
+       
 
-        float usagePassiveTimeCount = 0.0f;
-        public override void UsePassive(Player player, Vector2 mousePosition)
+
+        private void SingleProjectile(Player player, Vector2 nearestEnemyPosition, bool upSide = true)
         {
-            if(Time.time - usagePassiveTimeCount > (1.0f / ItemData.usagePassiveVelocity))
-            {
-                usagePassiveTimeCount = Time.time;
-            }
-            else
-            {
-                return;
-            }
+            var swordOjbect = Instantiate(woodenSwordProjectilePrefab, transform.position, Quaternion.identity);
+            var passiveProjectile = swordOjbect.GetComponent<NetworkProjectile>();
+            passiveProjectile._networkObject.Spawn();
 
-            var passiveObject = Instantiate(passiveProjectilePrefab, player.transform.position, Quaternion.identity);
-            var passiveProjectile = passiveObject.GetComponent<NetworkProjectile>();
-            passiveProjectile.networkObject.Spawn();
-        }
+            swordOjbect.GetComponent<WoodenSwordProejctile>().SetUp(player, _swordData, nearestEnemyPosition, upSide);
 
-
-
-        private void UseType01(Player player, Vector2 mousePosition)
-        {
-            initialZAngle = (mousePosition.x - transform.position.x > 0) ? 90 : 0;
-
-            swordProjectilePrefab = GameDataManager.Instance.GetProjectilePrefab("PP_SwordProjectile_001");
-            swordProjectileObject = Instantiate(swordProjectilePrefab, transform.position, Quaternion.Euler(0,0, initialZAngle), player.transform); 
-            swordNetworkObject = swordProjectileObject.GetComponent<NetworkObject>();
-            swordNetworkObject.Spawn();
-            swordNetworkObject.TrySetParent(player.transform);
- 
-            int itemID = GameDataManager.Instance.GetItemID(this.ItemSlot.ItemData);            
-            swordProjectileObject.GetComponent<SwordProjectile_001>().SetDataServerRpc(itemID, true);            
-            swordProjectileObject.GetComponent<SwordProjectile_001>().LoadSwordProjectileDataServerRpc(mousePosition);
-
+            // Sound
             SoundManager.Instance.PlaySound(SoundType.Sword, playRandom: true);
+            // -----
         }
 
-        private void UseType02(Player player, Vector2 mousePosition)
+        private void MultipleProjectile(Player player, Vector2 nearestEnemyPosition)
         {
-            swordProjectilePrefab = GameDataManager.Instance.GetProjectilePrefab("PP_SwordProjectile_001");
-            swordProjectileObject = Instantiate(swordProjectilePrefab, transform.position, transform.rotation, player.transform);
-            swordProjectileObject.transform.localScale = new Vector3(4, 4, 1);
-            swordProjectileObject.SetActive(true);
-            swordProjectileObject.GetComponent<NetworkProjectile>().SetData(this.ItemSlot.ItemData);
+            SingleProjectile(player, nearestEnemyPosition, true);
+            StartCoroutine(WaitFor(0.3f, () =>
+            {
+                SingleProjectile(player, nearestEnemyPosition, false);
+            }));
 
-            var swordProjectile002 = SworldProjectile002Spawner.Instance.Pool.Get().GetComponent<SwordProjectile_002>();
-            swordProjectile002.SetData(swordData);
-            swordProjectile002.Shoot(this.transform.position);
-
-            Utilities.RotateObjectTowardMouse2D(mousePosition,swordProjectile002.transform, -45f);
         }
 
+        private void Evo(Player player, Vector2 nearestEnemyPosition)
+        {
+            var evoSwordOjbect = Instantiate(evoWoodenSwordProjectilePrefab, transform.position, Quaternion.identity);
+            var passiveProjectile = evoSwordOjbect.GetComponent<NetworkProjectile>();
+            passiveProjectile._networkObject.Spawn();
+
+            evoSwordOjbect.GetComponent<EvoWoodenSwordProejctile>().SetUp(player, _swordData, nearestEnemyPosition);
+        }
+
+        private IEnumerator WaitFor(float time, Action callback)
+        {
+            yield return new WaitForSeconds(time);
+            callback?.Invoke();
+        }
     }
 }

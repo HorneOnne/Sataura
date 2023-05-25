@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5501024170456253674}
   - component: {fileID: 523664011140715208}
-  m_Layer: 30
+  m_Layer: 17
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 8447209267630868651}
   - component: {fileID: 6596965516683863043}
   - component: {fileID: 3404917382395811677}
-  m_Layer: 30
+  m_Layer: 17
   m_Name: IP_Sword
   m_TagString: Item
   m_Icon: {fileID: 0}
@@ -130,10 +130,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 306741acd788b1e4e8645f4946cfed0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <ItemData>k__BackingField: {fileID: 0}
   spriteRenderer: {fileID: 0}
-  showIconWhenHoldByHand: 0
-  swordNetworkObject: {fileID: 0}
+  _networkObject: {fileID: 3404917382395811677}
   passiveProjectilePrefab: {fileID: 5105516432297543255, guid: 22b0f50535791364aa0f290782b842e5, type: 3}
 --- !u!114 &3404917382395811677
 MonoBehaviour:

@@ -11,8 +11,6 @@ namespace Sataura
         [Header("Combat")]
         public int maxHealth;  
         public int damage;
-        public float attackRange;
-        public float attackCooldown;
         public float knockbackResistence = 5f; // The force of the knockback applied to the enemy
         public float knockbackDuration = 1f;
 

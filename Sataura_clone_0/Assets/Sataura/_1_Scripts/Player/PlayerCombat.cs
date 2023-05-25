@@ -8,7 +8,6 @@ namespace Sataura
     public class PlayerCombat : NetworkBehaviour, IDamageable
     {
         [Header("Combat properties")]
-        [SerializeField] private int maxHealth;
         [SerializeField] private int currentHealth;
 
         [Header("Player references")]
@@ -33,7 +32,7 @@ namespace Sataura
 
         [Header("Detect Enemy Settings")]
         private float detectionRadius = 1.2f;
-        private float detectionInterval = 0.1f;
+        private float detectionInterval = 0.2f;
         private float lastDetectionTime = 0f;
         [SerializeField] private Collider2D[] enemies = new Collider2D[7]; // Array to store results of the overlap check
         [SerializeField] private LayerMask enemyLayer;
@@ -46,12 +45,17 @@ namespace Sataura
         private void Start()
         {
             healthBarSlider.minValue = 0;
-            healthBarSlider.maxValue = maxHealth;
+            healthBarSlider.maxValue = player.characterData._currentMaxHealth;
             healthBarSlider.value = currentHealth;
 
             characterMaterial.color = defaultColor;
         }
 
+        public void UpdateMaxHealthSlider()
+        {
+            healthBarSlider.minValue = 0;
+            healthBarSlider.maxValue = player.characterData._currentMaxHealth;
+        }
         
         public override void OnNetworkSpawn()
         {
@@ -85,28 +89,12 @@ namespace Sataura
                             UpdateHealthBarUI();
                         }          
                     }
-                    
-                    if(_bloodTearPS != null)
-                    {
-                        if (_bloodTearPS.isPlaying == false)
-                        {
-                            characterMaterial.color = damageColor;
-                            _bloodTearPS.Play();
-                        }
-                    }
-                    
-                        
+
+                    PlayBloodTearVFX();
                 }
                 else
                 {
-                    if(_bloodTearPS != null)
-                    {
-                        if (_bloodTearPS.isPlaying == true || _bloodTearPS.isEmitting == true)
-                        {
-                            _bloodTearPS.Stop(true, ParticleSystemStopBehavior.StopEmitting);
-                            characterMaterial.color = defaultColor;
-                        }
-                    }       
+                    StopBloodTearVFX();
                 }
 
                 if(IsOutOfHealth())
@@ -121,7 +109,17 @@ namespace Sataura
 
         }
 
-
+        public void Healing(int value)
+        {
+            if(currentHealth + value <= player.characterData._currentMaxHealth)
+            {
+                currentHealth += value;
+            }
+            else
+            {
+                currentHealth = player.characterData._currentMaxHealth;
+            }
+        }
 
         public bool IsOutOfHealth()
         {
@@ -129,17 +127,54 @@ namespace Sataura
             return currentHealth <= 0;
         }
 
-        public void TakeDamage(int damaged)
+        private int CalculateDamage(float baseDamage, float armor)
         {
-            currentHealth -= damaged;
+            float damageReduction = armor / (armor + 100); // Calculate the percentage of damage reduction based on armor
+            float finalDamage = baseDamage * (1 - damageReduction); // Calculate the final damage after applying damage reduction
 
-
+            return (int)finalDamage;
         }
 
-        private void UpdateHealthBarUI()
+        public void TakeDamage(int enemyDamage)
+        {
+            int damageToPlayer = CalculateDamage(enemyDamage, player.characterData._currentArmor);
+            currentHealth -= damageToPlayer;
+
+            Debug.Log($"{enemyDamage}\t{damageToPlayer}\t{player.characterData._currentArmor}");
+        }
+
+        public void UpdateHealthBarUI()
         {
             healthBarSlider.value = currentHealth;
         }
+
+        public void PlayBloodTearVFX()
+        {
+            if (_bloodTearPS != null)
+            {
+                if (_bloodTearPS.isPlaying == false)
+                {
+                    characterMaterial.color = damageColor;
+                    _bloodTearPS.Play();
+                }
+            }
+        }
+
+     
+        public void StopBloodTearVFX()
+        {
+            if (_bloodTearPS != null)
+            {
+                if (_bloodTearPS.isPlaying == true || _bloodTearPS.isEmitting == true)
+                {
+                    _bloodTearPS.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+                    characterMaterial.color = defaultColor;
+                }
+            }
+        }
+
+ 
+
 
         private void SetGameOverCharacterSettings()
         {

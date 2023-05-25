@@ -6,19 +6,15 @@ namespace Sataura
     public abstract class Item : NetworkBehaviour, IDroppable, ICollectible, IUseable
     {
         #region Properties
-        [field: SerializeField]
         public ItemData ItemData { get; private set; }
         public ItemSlot ItemSlot { get; private set; }
         protected GameObject Model { get; private set; }
         #endregion
 
 
-        [Header("References")]
+        [Header("BaseItem References")]
         [HideInInspector] public SpriteRenderer spriteRenderer;
-
-        [Header("Item Properties")]
-        [Tooltip("Indicate this item can be shown when held in hand.")]
-        public bool showIconWhenHoldByHand;
+        public NetworkObject _networkObject;
 
 
         public override void OnNetworkSpawn()
@@ -82,7 +78,7 @@ namespace Sataura
         public virtual void Drop(Player player, Vector2 position, Vector3 rotation, bool forceDestroyItemObject = false)
         {
             var itemSlotDrop = new ItemSlot(ItemSlot);
-            var itemPrefab = GameDataManager.Instance.GetItemPrefab($"IP_ItemForDrop");
+            var itemPrefab = GameDataManager.Instance.itemForDropPrefab;
             if (itemPrefab == null) 
             {
                 throw new System.Exception($"Not found prefab name IP_ItemForDrop in GameDataManager.cs");
@@ -102,11 +98,6 @@ namespace Sataura
         public virtual bool Use(Player player, Vector2 mousePosition)
         {
             return true;
-        }
-
-        public virtual void UsePassive(Player player, Vector2 mousePosition)
-        {
-            return;
-        }
+        }     
     }
 }

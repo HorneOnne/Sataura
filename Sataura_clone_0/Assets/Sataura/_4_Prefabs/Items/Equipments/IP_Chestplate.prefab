@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6163491347850384664}
   - component: {fileID: 1397006153581709251}
-  m_Layer: 30
+  m_Layer: 17
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 4041534884135477167}
   - component: {fileID: 8318830486640912753}
   - component: {fileID: -9092190651785125200}
-  m_Layer: 30
+  m_Layer: 17
   m_Name: IP_Chestplate
   m_TagString: Item
   m_Icon: {fileID: 0}
@@ -130,9 +130,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e37226d8ebc1fe342ae060edd2d37448, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <ItemData>k__BackingField: {fileID: 0}
   spriteRenderer: {fileID: 0}
-  showIconWhenHoldByHand: 0
+  _networkObject: {fileID: -9092190651785125200}
 --- !u!114 &-9092190651785125200
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5478594328252044036}
   - component: {fileID: 1055749108804714424}
-  m_Layer: 27
+  m_Layer: 17
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 4223479906415903625}
   - component: {fileID: 621984202005376555}
   - component: {fileID: 510376511100366602}
-  m_Layer: 27
+  m_Layer: 17
   m_Name: IP_MagnetStone
   m_TagString: Item
   m_Icon: {fileID: 0}
@@ -130,9 +130,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca4d836167ae2a045876e14607c207cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <ItemData>k__BackingField: {fileID: 0}
   spriteRenderer: {fileID: 0}
-  showIconWhenHoldByHand: 0
+  _networkObject: {fileID: 510376511100366602}
 --- !u!114 &510376511100366602
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -6,32 +6,48 @@ namespace Sataura
     public class PlayerLoot : NetworkBehaviour
     {
         public GameObject playerGameObject;
-        private float lootRadius = 5;
         [SerializeField] private Collider2D[] overlappedColliders = new Collider2D[10];
         [SerializeField] private LayerMask lootableLayer;
 
         // Cached
-        private Player player;
-        //private ICollectible collectibleObject;
-        //private UIPlayerInGameInventory uiInGameInventory;
+        private Player _player;
+        private CharacterData _characterData;
+
 
 
         [Header("Options")]
         [SerializeField] bool showGizmos = true;
 
-        
+
+        [Header("Performance Settings")]
+        [Tooltip("The larger the value, the higher the performance.")]
+        [SerializeField] private float updateInterval = 0.2f;
+        private float updateTimer = 0.0f;
+
+
 
         private void Start()
         {
-            player = playerGameObject.GetComponent<Player>();
-            //uiInGameInventory = UIPlayerInGameInventory.Instance;
+            _player = playerGameObject.GetComponent<Player>();
+            _characterData = _player.characterData;
         }
 
 
-        
-        private void FixedUpdate()
+        private void Update()
         {
-            int numOverlaps = Physics2D.OverlapCircleNonAlloc(transform.position, lootRadius, overlappedColliders, lootableLayer);
+            updateTimer += Time.deltaTime;
+            if(updateTimer >= updateInterval)
+            {
+                // Reset the timer.
+                updateTimer = 0.0f;
+
+                LootExperiences();
+            }
+        }
+
+        private void LootExperiences()
+        {
+            int numOverlaps = Physics2D.OverlapCircleNonAlloc(transform.position, _characterData._currentMagnet, overlappedColliders, lootableLayer);
             
             if(numOverlaps > 0)
             {
@@ -39,33 +55,23 @@ namespace Sataura
                 {
                     Collider2D overlappedCollider = overlappedColliders[i];
                     Experience experience;
-
                     if (overlappedCollider.TryGetComponent(out experience))
                     {
-                        experience.Collect(player);
+                        experience.Collect(_player);
                     }
                 }
-            }
-            
-        
+            }                  
         }
 
         void OnDrawGizmos()
         {
             if (showGizmos == false) return;
+            if (_characterData == null) return;
 
             Gizmos.color = Color.blue;
-            Gizmos.DrawWireSphere(transform.position, lootRadius);
+            Gizmos.DrawWireSphere(transform.position, _characterData._currentMagnet);
         }
 
-
-        public void SetLootRadius(float radius)
-        {
-            if (radius <= 0.0f)
-                return;
-
-            this.lootRadius = radius;
-        }
 
 
         /*private void OnTriggerEnter2D(Collider2D collision)
@@ -91,15 +97,5 @@ namespace Sataura
                 }
             }
         }*/
-
-
-
-
-
-        [ClientRpc]
-        private void LootClientRpc()
-        {
-
-        }
     }
 }

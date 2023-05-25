@@ -21,17 +21,23 @@ namespace Sataura
         protected bool isDeath = false;
 
 
+        [Header("Effects")]
+        public bool blackHole = false;
+
         #region Properties
-        [field: SerializeField] public float Cooldown { get; set; }     
-        public int EnemyDamaged 
-        { 
-            get 
+        [field: SerializeField] public float Cooldown { get; set; }
+        public int CurrentHealth { get => currentHealth.Value; }
+        public int MaxHealth { get => enemyData.maxHealth; }
+        public Rigidbody2D Rb2D { get => rb2D; }
+        public int EnemyDamaged
+        {
+            get
             {
                 if (enemyData != null)
                     return enemyData.damage;
                 else
                     return 0;
-            } 
+            }
         }
         #endregion
 
@@ -40,8 +46,30 @@ namespace Sataura
         protected bool canTrigger = true;
         protected bool isBeingKnockback;
         protected bool isDead = false;
-        private Transform playerTranform;
+        protected Transform playerTranform;
         [SerializeField] protected NetworkVariable<int> currentHealth = new NetworkVariable<int>(0);
+
+
+        private void OnEnable()
+        {
+            EnemySpawnWaves.OnNewEnemyWaveSpawned += DestroyEnemyWhenSpawnNewWave;
+        }
+
+        private void OnDisable()
+        {
+            EnemySpawnWaves.OnNewEnemyWaveSpawned -= DestroyEnemyWhenSpawnNewWave;
+        }
+
+        private void DestroyEnemyWhenSpawnNewWave()
+        {
+            if (playerTranform == null) return;
+            if ((playerTranform.position - transform.position).sqrMagnitude > 4900f)
+            {
+                OnEnemyDead();
+                Despawn();
+            }                
+        }
+
 
         public override void OnNetworkSpawn()
         {
@@ -50,36 +78,57 @@ namespace Sataura
             networkObject = GetComponent<NetworkObject>();
         }
 
-        public void SetFollowTarget(Transform target)
+        public virtual void SetFollowTarget(Transform target)
         {
             playerTranform = target;
         }
 
 
-        public abstract void MoveAI(Vector2 target);
+        public virtual void MoveAI(Vector2 target)
+        {
+            if (blackHole)
+            {
+                Invoke(nameof(ResetBlackHoleEffect), 0.2f);
+                return;
+            }          
+        }
 
+        private void ResetBlackHoleEffect()
+        {
+            blackHole = false;
+        }
 
         float timeElapse = 0.0f;
         protected virtual void FixedUpdate()
         {
             if (!IsServer) return;
 
-            if (Time.time - timeElapse >= 0.04f)
+            if (Time.time - timeElapse >= 2.0f)
             {
                 timeElapse = Time.time;
-                MoveAI(playerTranform.position);
+
+                if (playerTranform == null) return;
+                if ((playerTranform.position - transform.position).sqrMagnitude > 10000f)
+                {
+                    OnEnemyDead();
+                    Despawn();
+                }
             }
+
+            MoveAI(playerTranform.position);
         }
 
         public virtual void TakeDamage(int damaged)
         {
-            currentHealth.Value -= damaged;          
+            currentHealth.Value -= damaged;
         }
 
-        public virtual void OnEnemyDead() 
+        public virtual void OnEnemyDead()
         {
             boxCollider2D.enabled = false;
             isDead = true;
+
+            IngameInformationManager.Instance.currentTotalEnemiesIngame--;
         }
 
         public bool IsOutOfHealth()
@@ -90,12 +139,12 @@ namespace Sataura
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-         
+
         }
 
 
 
-        private void OnTriggerEnter2D(Collider2D collision)
+        private void OnTriggerStay2D(Collider2D collision)
         {
             if (!IsServer) return;
 
@@ -105,10 +154,11 @@ namespace Sataura
                 if (projectile != null)
                 {
                     int damageReceived = projectile.GetDamage();
-                   
-                    TakeDamage(damageReceived);                       
+                    if (damageReceived <= 0) return;
+
+                    TakeDamage(damageReceived);
                     if (isDead == true) return;
-                    
+
                     if (IsOutOfHealth())
                     {
                         rb2D.velocity = Vector2.zero;
@@ -120,10 +170,8 @@ namespace Sataura
                         OnEnemyDead();
                         DropItem();
 
-                        Invoke("ReturnToNetworkPoolServerRpc", 1f);
-                        IngameInformationManager.Instance.currentTotalEnemiesIngame -= 1;
+                        Invoke(nameof(Despawn), 0.5f);
                         IngameInformationManager.Instance.totalEnemiesKilled += 1;
-                        //ReturnToNetworkPoolServerRpc();
                     }
                     else
                     {
@@ -132,11 +180,9 @@ namespace Sataura
 
                         Vector2 direction = transform.position - collision.transform.position;
                         direction.Normalize();
-                        Knockback(direction, projectile.GetKnockback());                       
+                        Knockback(direction, projectile.GetKnockback());
                     }
-                    
                 }
-
                 canTrigger = false;
                 Invoke("ResetTrigger", Cooldown);
             }
@@ -147,22 +193,34 @@ namespace Sataura
             canTrigger = true;
         }
 
-        protected abstract void ReturnToNetworkPool();
-        
-
-        [ServerRpc]
-        private void ReturnToNetworkPoolServerRpc()
+        public void GetLightningDamaged(int damageReceived)
         {
-            ReturnToNetworkPool();
-            ReturnToNetworkPoolClientRpc();
+            TakeDamage(damageReceived);
+            if (isDead == true) return;
+
+            if (IsOutOfHealth())
+            {
+                rb2D.velocity = Vector2.zero;
+
+                isDead = true;
+                OnEnemyDead();
+                DropItem();
+
+                Invoke(nameof(Despawn), 0.5f);
+                IngameInformationManager.Instance.totalEnemiesKilled += 1;
+            }
+            else
+            {
+                SoundManager.Instance.PlaySound(SoundType.EnemyHit, playRandom: true);
+                ShowDamage(damageReceived);
+            }
         }
 
-        [ClientRpc]
-        private void ReturnToNetworkPoolClientRpc()
-        {
-            if (IsServer) return;
-            ReturnToNetworkPool();
-        }
+
+        protected abstract void Despawn();
+
+
+  
 
 
         // DROP ITEM HANDLE
@@ -227,8 +285,8 @@ namespace Sataura
                 float rand = Random.Range(0f, 1f);
                 if (rand <= itemDropData.itemDrops[i].dropRate / 100f)
                 {
-                    var itemDropPrefab = GameDataManager.Instance.GetItemPrefab($"IP_ItemForDrop");
-                    if(itemDropPrefab != null)
+                    var itemDropPrefab = GameDataManager.Instance.itemForDropPrefab;
+                    if (itemDropPrefab != null)
                     {
                         var itemDropObject = Instantiate(itemDropPrefab, transform.position, Quaternion.identity);
                         itemDropObject.GetComponent<ItemForDrop>().Set(itemDropData.itemDrops[i].itemDrop);
@@ -239,11 +297,13 @@ namespace Sataura
 
             // Experiences
             // ===============================
-            var expObject = Instantiate(itemDropData.exp, transform.position, Quaternion.identity);
-            expObject.GetComponent<NetworkObject>().Spawn();
-            //Debug.Log($"{itemDropData.exp.ExpValue}");
-
-
+            if(IngameInformationManager.Instance.currentExpCount < 150)
+            {
+                var expObject = Instantiate(itemDropData.exp, transform.position, Quaternion.identity);
+                expObject.GetComponent<NetworkObject>().Spawn();
+            }
+            
+       
 
 
             // Test Probability
@@ -291,7 +351,7 @@ namespace Sataura
         private float CalculateKnockbackFormula(float knockback)
         {
             float knockbackValue = knockback - enemyData.knockbackResistence;
-            if(knockback < 0)
+            if (knockback < 0)
             {
                 return 0.0f;
             }
@@ -315,8 +375,12 @@ namespace Sataura
         // ==========================================================
         public void ShowDamage(int damaged)
         {
-            //var textObject = DamagePopupSpawner.Instance.Pool.Get();
-            var textNetworkObject = NetworkObjectPool.Singleton.GetNetworkObject(damagedPopupPrefab);
+            if(IngameInformationManager.Instance.currentDamagePopupCount > 30)
+            {
+                return;
+            }
+
+            var textNetworkObject = Instantiate(damagedPopupPrefab).GetComponent<NetworkObject>();
             textNetworkObject.Spawn();
             textNetworkObject.transform.position = transform.position;
             var moveTextObjectVector = new Vector3(Random.Range(-1f, 1f), Random.Range(0.5f, 1f));
@@ -354,15 +418,15 @@ namespace Sataura
             switch (damage)
             {
                 case float n when (n >= 0 && n < 25):
-                    return 15;
+                    return 10;
                 case float n when (n >= 25 && n < 50):
-                    return 16;
+                    return 11;
                 case float n when (n >= 50 && n < 75):
-                    return 17; // Purple
+                    return 12; // Purple
                 case float n when (n >= 75 && n < 90):
-                    return 19;
+                    return 13;
                 case float n when (n >= 90):
-                    return 25;
+                    return 15;
                 default:
                     return 15;
             }

@@ -32,7 +32,7 @@ namespace Sataura
     
         public void LoadReferences()
         {
-            playerInGameSkills = player.playerInGameInventory;
+            playerInGameSkills = player.playerIngameSkills;
 
             // Update Inventory UI at the first time when start game.
             UpdateUI();
@@ -60,13 +60,13 @@ namespace Sataura
         public void UpdateUIWeaponAt(int index)
         {
             UIItemSlot uiSlot = weaponSlotList[index].GetComponent<UIItemSlot>();
-            uiSlot.SetData(playerInGameSkills.weapons[index]);
+            uiSlot.SetData(playerInGameSkills.weaponsData.itemSlots[index]);
         }
 
         public void UpdateUIAccessoryAt(int index)
         {
             UIItemSlot uiSlot = accessorySlotList[index].GetComponent<UIItemSlot>();
-            uiSlot.SetData(playerInGameSkills.accessories[index]);
+            uiSlot.SetData(playerInGameSkills.accessoriesData.itemSlots[index]);
         }
     }
 }

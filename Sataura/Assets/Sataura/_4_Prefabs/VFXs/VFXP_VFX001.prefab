@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 6056164558969865991}
   - component: {fileID: 5280455359638706565}
   - component: {fileID: 6977402465029896229}
-  m_Layer: 29
+  m_Layer: 19
   m_Name: VFXP_VFX001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -173,6 +173,7 @@ MonoBehaviour:
   useGravity: 0
   networkObject: {fileID: 5280455359638706565}
   spriteRenderer: {fileID: 0}
+  _anim: {fileID: 0}
 --- !u!114 &5280455359638706565
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -39,7 +39,7 @@ namespace Sataura
             UIUpgradeSkill.OnUpgradeButtonClicked += UpdateLevelText;
             IngameInformationManager.OnPlayerLevelUp += FakeFullExpSliderWhenLevelUp;
 
-            IngameInformationManager.OnPlayerLevelUp += GenerateUpgradeList;
+            //IngameInformationManager.OnPlayerLevelUp += GenerateUpgradeList;
 
         }
 
@@ -50,7 +50,7 @@ namespace Sataura
             UIUpgradeSkill.OnUpgradeButtonClicked -= UpdateLevelText;
             IngameInformationManager.OnPlayerLevelUp -= FakeFullExpSliderWhenLevelUp;
 
-            IngameInformationManager.OnPlayerLevelUp -= GenerateUpgradeList;
+            //IngameInformationManager.OnPlayerLevelUp -= GenerateUpgradeList;
         }
 
 
@@ -97,7 +97,7 @@ namespace Sataura
 
    
 
-        private void GenerateUpgradeList()
+        public void GenerateUpgradeList()
         {
             Debug.LogWarning("Optimize this.");
 

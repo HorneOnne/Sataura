@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7099312270547782237}
   - component: {fileID: 4664618080890013991}
   - component: {fileID: -9141399210884553681}
-  m_Layer: 29
+  m_Layer: 7
   m_Name: PP_MagicStaffProjectile_001
   m_TagString: Item
   m_Icon: {fileID: 0}
@@ -116,7 +116,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3973738385722607848}
   - component: {fileID: 8950468786591653578}
-  m_Layer: 29
+  m_Layer: 7
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -203,7 +203,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 347814784532026276, guid: 36ba9b26ec9c1a5428bd234fefbcbba0, type: 3}
       propertyPath: m_Layer
-      value: 29
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 347814784532026278, guid: 36ba9b26ec9c1a5428bd234fefbcbba0, type: 3}
       propertyPath: EmissionModule.rateOverTime.scalar

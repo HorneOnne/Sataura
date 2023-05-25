@@ -13,7 +13,9 @@
         // Weapons
         Bow = 50,
         Sword = 51,
-        Boomerang = 52,
+        Hammer = 52,
+
+        LightingStaff = 200,
 
         // Ammunition
         Arrow = 100,
@@ -21,6 +23,14 @@
 
         // Equipment
         Hook = 150,
-        Boots = 151
+        Boots = 151,
+
+
+        WhisperingGale = 201,
+        ScopeLens = 202,
+        VitalityBelt = 203,
+        AmplifyingBand = 204,
+        SwiftStriders = 205,
+        MagnetStone = 206,
     }
 }

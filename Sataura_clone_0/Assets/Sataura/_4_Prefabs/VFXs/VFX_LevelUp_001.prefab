@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4186603381841261819}
   - component: {fileID: 4186603381859611481}
   - component: {fileID: 4186603381859501903}
-  m_Layer: 1
+  m_Layer: 19
   m_Name: particle glow master
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4882,7 +4882,7 @@ GameObject:
   - component: {fileID: 4186603381859632883}
   - component: {fileID: 4186603381859574143}
   - component: {fileID: 4291814308736227921}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: VFX_LevelUp_001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9724,7 +9724,7 @@ GameObject:
   - component: {fileID: 4186603381841288143}
   - component: {fileID: 4186603381859647519}
   - component: {fileID: 4186603381859508085}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: particle glow slave birth trail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14512,7 +14512,7 @@ GameObject:
   - component: {fileID: 4186603381841295657}
   - component: {fileID: 4186603381859653327}
   - component: {fileID: 4186603381859501363}
-  m_Layer: 1
+  m_Layer: 19
   m_Name: particle core glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19237,7 +19237,7 @@ GameObject:
   - component: {fileID: 4186603381841244597}
   - component: {fileID: 4186603381859623963}
   - component: {fileID: 4186603381859536279}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: particle core spark
   m_TagString: Untagged
   m_Icon: {fileID: 0}

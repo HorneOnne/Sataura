@@ -11,6 +11,13 @@
         public InventoryStruct weaponsData;
         public InventoryStruct accessoriesData;
 
+        public int helmetDataID;
+        public int chestplateDataID;
+        public int leggingDataID;
+        public int bootsDataID;
+        public int hookDataID;
+        public int accessoryDataID;
+
         public string currencyString;
     }
 }

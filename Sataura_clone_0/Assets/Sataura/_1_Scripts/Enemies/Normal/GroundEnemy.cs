@@ -13,6 +13,11 @@ namespace Sataura
         {
             return Physics2D.OverlapCircle(groundCheckPoint.position, groundCheckRadius, groundLayer);
         }
+
+        public override void OnEnemyDead()
+        {
+            base.OnEnemyDead();
+        }
     }
 
 }

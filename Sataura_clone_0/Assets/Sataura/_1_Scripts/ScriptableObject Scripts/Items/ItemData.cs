@@ -14,13 +14,17 @@ namespace Sataura
         public ItemCategory itemCategory;
         public ItemType itemType;
         public int max_quantity;
-        [Multiline(7)]
-        public string description;
+        [Multiline(5)]
+        public string hoverDescription;
+        [Multiline(5)]
+        public string equipDescription;
+        [Multiline(5)]
+        public string unequipDescription;
+        [Multiline(5)]
+        public string ingameDescription;
 
        
-        [Tooltip("The usage velocity property indicates how quickly this item can be used within a specific timeframe. The value represents the number of times the item can be used in one second.")]
-        public float usageVelocity = 1.0f;
-        public float usagePassiveVelocity = 1.0f;
+        public float rateOfFire = 1.0f;
 
 
         [Header("LEVEL")]
@@ -48,8 +52,9 @@ namespace Sataura
             if (this.itemCategory != ((ItemData)other).itemCategory) return false;
             if (this.itemType != ((ItemData)other).itemType) return false;
             if (this.max_quantity != ((ItemData)other).max_quantity) return false;
-            if (this.description != ((ItemData)other).description) return false;
-            if (this.usageVelocity != ((ItemData)other).usageVelocity) return false;
+            if (this.hoverDescription != ((ItemData)other).hoverDescription) return false;
+            if (this.ingameDescription != ((ItemData)other).ingameDescription) return false;
+            if (this.rateOfFire != ((ItemData)other).rateOfFire) return false;
             if (this.currentLevel != ((ItemData)other).currentLevel) return false;
             if (this.maxLevel != ((ItemData)other).maxLevel) return false;
 
@@ -78,7 +83,7 @@ namespace Sataura
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(itemName, icon, itemCategory, itemType, max_quantity, usageVelocity, currentLevel);
+            return HashCode.Combine(itemName, icon, itemCategory, itemType, max_quantity, rateOfFire, currentLevel);
         }
     }
 }

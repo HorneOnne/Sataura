@@ -38,7 +38,7 @@ namespace Sataura
 
                 _floatingStatName.text = statsName;
                 _floatingStatValue.color = _increaseStatsColor;
-                _floatingStatValue.text = $"+ {statsValue}";
+                _floatingStatValue.text = $"+ {statsValue.ToString("0.0")}";
             }
             else
             {
@@ -46,7 +46,7 @@ namespace Sataura
 
                 _floatingStatName.text = statsName;
                 _floatingStatValue.color = _decreaseStatsColor;
-                _floatingStatValue.text = $"- {Mathf.Abs(statsValue)}";
+                _floatingStatValue.text = $"- {Mathf.Abs(statsValue).ToString("0.0")}";
             }
 
             alreadySetup = true;

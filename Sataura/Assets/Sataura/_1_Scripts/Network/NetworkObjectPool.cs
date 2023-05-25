@@ -145,7 +145,7 @@ namespace Sataura
         /// <returns></returns>
         private NetworkObject GetNetworkObjectInternal(GameObject prefab, Vector3 position, Quaternion rotation)
         {
-            var queue = pooledObjects[prefab];
+            var queue = pooledObjects[prefab];  
 
             NetworkObject networkObject;
             if (queue.Count > 0)

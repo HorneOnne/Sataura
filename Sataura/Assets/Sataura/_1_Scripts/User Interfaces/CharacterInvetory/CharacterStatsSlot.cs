@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using TMPro;
+using System;
 
 namespace Sataura
 {
@@ -18,7 +19,7 @@ namespace Sataura
             }
             else
             {
-                this._valueText.text = value.ToString();
+                this._valueText.text = value.ToString("0.0");
             }
 
             if (additionValue == 0)
@@ -27,7 +28,7 @@ namespace Sataura
             }
             else
             {
-                this._additionValueText.text = $"|+{additionValue}|";
+                this._additionValueText.text = $"|+{additionValue.ToString("0.0")}|";
             }
         }
     }

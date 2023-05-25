@@ -2,7 +2,7 @@
 
 namespace Sataura
 {
-    [CreateAssetMenu(fileName = "Arrow", menuName = "UltimateItemSystem/Item/Projectiles/Arrow", order = 51)]
+    [CreateAssetMenu(fileName = "Arrow", menuName = "Sataura/Item/Projectiles/Arrow", order = 51)]
     public class ArrowData : ItemData
     {
         [Header("Bow Properties")]

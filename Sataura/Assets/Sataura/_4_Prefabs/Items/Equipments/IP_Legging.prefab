@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2529793786759640598}
   - component: {fileID: -4841114728243118690}
   - component: {fileID: 8962083636681008852}
-  m_Layer: 30
+  m_Layer: 17
   m_Name: IP_Legging
   m_TagString: Item
   m_Icon: {fileID: 0}
@@ -62,9 +62,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdea17c2210f1ca46a452ef99a3ec986, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <ItemData>k__BackingField: {fileID: 0}
   spriteRenderer: {fileID: 0}
-  showIconWhenHoldByHand: 0
+  _networkObject: {fileID: -4841114728243118690}
 --- !u!1 &3631820311850519986
 GameObject:
   m_ObjectHideFlags: 0
@@ -75,7 +74,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1906911943439481431}
   - component: {fileID: 5865177367927336053}
-  m_Layer: 30
+  m_Layer: 17
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}

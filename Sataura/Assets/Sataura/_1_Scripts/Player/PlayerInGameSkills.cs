@@ -6,19 +6,8 @@ namespace Sataura
 {
     public class PlayerInGameSkills : NetworkBehaviour
     {
-        public PlayerType playerType;
-
         [Header("REFERENCES")]
-        [SerializeField] private Player player;
-        [SerializeField] private ItemSelectionPlayer itemSelectionPlayer;
-
-        private ItemInHand itemInHand;
-
-
-        [Header("INVENTORY SETTINGS")]
-        // The list of all item slots in the inventory.
-        public List<ItemSlot> weapons;
-        public List<ItemSlot> accessories;
+        [SerializeField] private Player _player;
 
 
         [Header("Runtime References")]
@@ -26,132 +15,44 @@ namespace Sataura
         public InventoryData accessoriesData;
 
 
-       
-        #region Properties
-        public int Capacity 
-        { 
-            get 
-            {
-                if (weaponsData == null)
-                    return 0;
-                else
-                    return weaponsData.itemSlots.Count; 
-            } 
-        }
-
-        #endregion
-
 
         public override void OnNetworkSpawn()
         {
-            if(IsOwner || IsServer)
-            {
-                if(playerType == PlayerType.IngamePlayer)
-                {
-                    itemInHand = player.itemInHand;
-                }
 
-                if (playerType == PlayerType.ItemSelectionPlayer)
-                {
-                    itemInHand = itemSelectionPlayer.itemInHand;
-                }
-            }          
         }
 
         public void UpdateCharacterData()
         {
-            if (playerType == PlayerType.IngamePlayer)
-            {
-                weaponsData = player.characterData.weaponsData;
-                weapons = weaponsData.itemSlots;
-
-                accessoriesData = player.characterData.accessoriesData;
-                accessories = accessoriesData.itemSlots;
-            }
-
-            if (playerType == PlayerType.ItemSelectionPlayer)
-            {
-                weaponsData = itemSelectionPlayer.characterData.weaponsData;
-                weapons = weaponsData.itemSlots;
-
-                accessoriesData = player.characterData.accessoriesData;
-                accessories = accessoriesData.itemSlots;
-            }
+            weaponsData = Instantiate(_player.characterData.weaponsData);
+            accessoriesData = Instantiate(_player.characterData.accessoriesData);
         }
 
 
-        /*[ServerRpc]
-        public void AddInHandItemSlotAtServerRpc(ulong clientId, int index)
-        {
-            ItemSlot remainItems = weapons[index].AddItemsFromAnotherSlot(itemInHand.GetSlot());
-            itemInHand.SetItem(remainItems, index, StoredType.PlayerInGameInventory, true);
-
-            ClientRpcParams clientRpcParams = new ClientRpcParams
-            {
-                Send = new ClientRpcSendParams
-                {
-                    TargetClientIds = new ulong[] { clientId }
-                }
-            };
-            AddInHandItemSlotAtClientRpc(index, clientRpcParams);
-        }
-
-        [ClientRpc]
-        private void AddInHandItemSlotAtClientRpc(int index, ClientRpcParams clientRpcParams = default)
-        {
-            if (!IsOwner || IsServer) return;
-
-            ItemSlot remainItems = weapons[index].AddItemsFromAnotherSlot(itemInHand.GetSlot());
-            itemInHand.SetItem(remainItems, index, StoredType.PlayerInGameInventory, true);
-
-            UIPlayerInGameInventory.Instance.UpdateUI();
-        }*/
 
 
-
-        /// <summary>
-        /// Gets the item data of the item in the specified inventory slot.
-        /// </summary>
-        /// <param name="slotIndex">The index of the item slot to get the item data from.</param>
-        /// <returns>The item data of the item in the specified slot.</returns>
-        public ItemData GetItem(int slotIndex)
-        {
-            if (HasSlot(slotIndex))
-            {
-                return weapons[slotIndex].ItemData;
-            }
-            return null;
-        }
-
-
-        /// <summary>
-        /// Adds an item to the inventory.
-        /// </summary>
-        /// <param name="itemData">The item data of the item to add.</param>
-        /// <returns>True if the item was added to the inventory, false otherwise.</returns>
         public bool AddWeapons(ItemData itemData)
         {
-            if(itemData.itemCategory != ItemCategory.Skill_Weapons)
+            if (itemData.itemCategory != ItemCategory.Skill_Weapons)
             {
                 Debug.LogWarning($"Item {itemData.itemName} is not a weapon.");
                 return false;
-            }    
+            }
 
             bool canAddItem = false;
 
-            for (int i = 0; i < weapons.Count; i++)
+            for (int i = 0; i < weaponsData.itemSlots.Count; i++)
             {
-                if (weapons[i].HasItemData() == false)
+                if (weaponsData.itemSlots[i].HasItemData() == false)
                 {
-                    weapons[i].AddNewItem(itemData);
+                    weaponsData.itemSlots[i].AddNewItem(itemData);
                     canAddItem = true;
                     break;
                 }
                 else
                 {
-                    if (weapons[i].ItemData == itemData)
+                    if (weaponsData.itemSlots[i].ItemData == itemData)
                     {
-                        bool canAdd = weapons[i].AddItem();
+                        bool canAdd = weaponsData.itemSlots[i].AddItem();
 
                         if (canAdd == true)
                         {
@@ -161,12 +62,13 @@ namespace Sataura
                     }
                 }
             }
-                           
+
             return canAddItem;
         }
 
         public bool AddAccessories(ItemData itemData)
         {
+            Debug.Log("AddAccessories");
             if (itemData.itemCategory != ItemCategory.Skill_Accessories)
             {
                 Debug.LogWarning($"Item {itemData.itemName} is not a accessory.");
@@ -175,19 +77,19 @@ namespace Sataura
 
             bool canAddItem = false;
 
-            for (int i = 0; i < accessories.Count; i++)
+            for (int i = 0; i < accessoriesData.itemSlots.Count; i++)
             {
-                if (accessories[i].HasItemData() == false)
+                if (accessoriesData.itemSlots[i].HasItemData() == false)
                 {
-                    accessories[i].AddNewItem(itemData);
+                    accessoriesData.itemSlots[i].AddNewItem(itemData);
                     canAddItem = true;
                     break;
                 }
                 else
                 {
-                    if (accessories[i].ItemData == itemData)
+                    if (accessoriesData.itemSlots[i].ItemData == itemData)
                     {
-                        bool canAdd = accessories[i].AddItem();
+                        bool canAdd = accessoriesData.itemSlots[i].AddItem();
 
                         if (canAdd == true)
                         {
@@ -198,167 +100,264 @@ namespace Sataura
                 }
             }
 
+ 
             return canAddItem;
         }
 
-
-        /// <summary>
-        /// Adds an item slot to the player's inventory, starting from the first available empty slot
-        /// </summary>
-        /// <param name="itemSlot">The item slot to be added to the player's inventory</param>
-        /// <returns>The item slot after it has been added to the inventory</returns>
-        public ItemSlot AddItem(ItemSlot itemSlot)
+        // START Item level skill methods
+        // ========================
+        public bool HasItemType(ItemType itemType)
         {
-            ItemSlot copyItemSlot = new ItemSlot(itemSlot);
-            ItemSlot returnItemSlot = new ItemSlot(itemSlot);
-
-            for (int i = 0; i < weapons.Count; i++)
+            for (int i = 0; i < weaponsData.itemSlots.Count; i++)
             {
-                returnItemSlot = weapons[i].AddItemsFromAnotherSlot(copyItemSlot);
-
-                if (returnItemSlot.HasItemData() == false)
+                if (weaponsData.itemSlots[i].HasItemData())
                 {
-                    break;
+                    if (weaponsData.itemSlots[i].ItemData.itemType == itemType)
+                    {
+                        return true;
+                    }
                 }
-
-            }
-            return returnItemSlot;
-        }
-
-
-        /// <summary>
-        /// Adds an item to the inventory slot at the given index.
-        /// </summary>
-        /// <param name="index">The index of the inventory slot where the item should be added</param>
-        /// <returns>True if the inventory slot is not full after adding the item, false otherwise</returns>
-        public bool AddItemAt(int index)
-        {
-            bool isSlotNotFull = weapons[index].AddItem();
-            EventManager.TriggerInventoryUpdatedEvent();
-
-            return isSlotNotFull;
-        }
-
-
-        [ServerRpc]
-        public void AddItemAtServerRpc(ulong clientId, int index)
-        {
-            bool isSlotNotFull = AddItemAt(index);
-
-            if (isSlotNotFull)
-            {
-                itemInHand.RemoveItem();
             }
 
-            ClientRpcParams clientRpcParams = new ClientRpcParams
+            for (int i = 0; i < accessoriesData.itemSlots.Count; i++)
             {
-                Send = new ClientRpcSendParams
+                if (accessoriesData.itemSlots[i].HasItemData())
                 {
-                    TargetClientIds = new ulong[] { clientId }
+                    if (accessoriesData.itemSlots[i].ItemData.itemType == itemType)
+                    {
+                        return true;
+                    }
                 }
-            };
-
-            AddItemAtClientRpc(index);
-        }
-
-        [ClientRpc]
-        public void AddItemAtClientRpc(int index, ClientRpcParams clientRpcParams = default)
-        {
-            if (!IsOwner || IsServer) return;
-
-            bool isSlotNotFull = AddItemAt(index);
-
-            if (isSlotNotFull)
-            {
-                itemInHand.RemoveItem();
-            }
-        }
-
-        /// <summary>
-        /// Adds a new item to the inventory slot at the given index.
-        /// </summary>
-        /// <param name="index">The index of the inventory slot where the new item should be added</param>
-        /// <param name="item">The item data for the new item to be added</param>
-        public void AddNewItemAt(int index, ItemData item)
-        {
-            weapons[index].AddNewItem(item);
-            EventManager.TriggerInventoryUpdatedEvent();
-        }
-
-        [ServerRpc]
-        public void AddNewItemAtServerRpc(ulong clientId, int index, int itemID)
-        {
-            ItemData itemData = GameDataManager.Instance.GetItemData(itemID);
-            AddNewItemAt(index, itemData);
-
-            ClientRpcParams clientRpcParams = new ClientRpcParams
-            {
-                Send = new ClientRpcSendParams
-                {
-                    TargetClientIds = new ulong[] { clientId }
-                }
-            };
-
-            AddNewItemAtClientRpc(index, itemID, clientRpcParams);
-
-        }
-
-        [ClientRpc]
-        private void AddNewItemAtClientRpc(int index, int itemID, ClientRpcParams clientRpcParams = default)
-        {
-            if (!IsOwner || IsServer) return;
-
-            ItemData itemData = GameDataManager.Instance.GetItemData(itemID);
-            AddNewItemAt(index, itemData);
-
-            UIPlayerInGameSkills.Instance.UpdateUIWeaponAt(index);
-        }
-
-
-        /// <summary>
-        /// Removes the item from the inventory slot at the given index.
-        /// </summary>
-        /// <param name="index">The index of the inventory slot where the item should be removed</param>
-        public void RemoveItemAt(int index)
-        {
-            weapons[index].RemoveItem();
-            EventManager.TriggerInventoryUpdatedEvent();
-        }
-
-
-        /// <summary>
-        /// Returns true if the inventory slot at the given index exists, false otherwise
-        /// </summary>
-        /// <param name="slotIndex">The index of the inventory slot to check for existence</param>
-        /// <returns>True if the inventory slot exists, false otherwise</returns>
-        public bool HasSlot(int slotIndex)
-        {
-            try
-            {
-                weapons[slotIndex].HasItemData();
-            }
-            catch
-            {
-                return false;
             }
 
-            return true;
-        }
-
-
-        /// <summary>
-        /// Returns true if the inventory slot at the given index has an item in it, false otherwise
-        /// </summary>
-        /// <param name="slotIndex">The index of the inventory slot to check for an item</param>
-        /// <returns>True if the inventory slot has an item, false otherwise</returns>
-        public bool HasItem(int slotIndex)
-        {
-            if (HasSlot(slotIndex))
-            {
-                return weapons[slotIndex].HasItemData();
-            }
             return false;
         }
 
+        public int FindItem(ItemData itemData)
+        {
+            switch (itemData.itemCategory)
+            {
+                case ItemCategory.Skill_Weapons:
+                    for (int i = 0; i < weaponsData.itemSlots.Count; i++)
+                    {
+                        if (weaponsData.itemSlots[i].ItemData.itemType == itemData.itemType)
+                        {
+                            return i;
+                        }
+                    }
+                    break;
+                case ItemCategory.Skill_Accessories:
+                    for (int i = 0; i < accessoriesData.itemSlots.Count; i++)
+                    {
+                        if (accessoriesData.itemSlots[i].ItemData.itemType == itemData.itemType)
+                        {
+                            return i;
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            throw new System.Exception($"Not found base item {itemData} in PlayerplayerIngameInv.inGameInventory.cs.");
+        }
+
+        public ItemData GetUpgradeVersionOfItem(ItemData itemData)
+        {
+            if (itemData.currentLevel < itemData.maxLevel)
+            {
+                return itemData.upgradeRecipe.outputItemSlot.itemData;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public bool HasEvoOfBaseItem(ItemData baseItem)
+        {
+            if (baseItem.itemCategory == ItemCategory.Skill_Weapons)
+            {
+                for (int i = 0; i < weaponsData.itemSlots.Count; i++)
+                {
+                    if (weaponsData.itemSlots[i].HasItemData() == false)
+                        continue;
+
+                    if (weaponsData.itemSlots[i].ItemData.itemType == baseItem.itemType)
+                    {
+                        if (weaponsData.itemSlots[i].ItemData.Equals(ItemEvolutionManager.Instance.GetEvolutionItem(baseItem)))
+                            return true;
+                        else
+                            return false;
+                    }
+                }
+                return false;
+            }
+            else
+            {
+                throw new System.Exception();
+            }
+        }
+        // END Item level skill methods
+        // ========================
+
+
+        public void UpdateStatsEquip(ItemData itemData)
+        {
+            if (itemData == null)
+                return;
+
+            Debug.Log($"UpdateStatsEquip \t{itemData.itemName}");
+            switch (itemData.itemType)
+            {
+                case ItemType.VitalityBelt:
+                    int maxHealthPercentIncrease = ((VitalityBeltData)itemData).maxHealthPercentIncrease;
+                    // Update CharacterData
+                    _player.characterData._currentMaxHealth += (_player.characterData._currentMaxHealth * maxHealthPercentIncrease / 100);
+                    // ===================
+
+                    _player.playerCombat.UpdateMaxHealthSlider();
+                    break;
+                case ItemType.MagnetStone:
+                    int magnetIncrease = ((MagnetStoneData)itemData).lootPercentIncrease;
+
+                    // Update CharacterData
+                    _player.characterData._currentMagnet += (_player.characterData._currentMagnet * magnetIncrease / 100f);
+                    // ===================  
+                    break;
+                case ItemType.SwiftStriders:
+                    int moveSpeedPerecntIncrease = ((SwiftStriders)itemData).moveSpeedPercentIncrease;
+                    int jumpForcePerecntIncrease = ((SwiftStriders)itemData).jumpForcePercentIncrease;
+
+                    // Update CharacterData
+                    _player.characterData._currentMoveSpeed += (_player.characterData._currentMoveSpeed * moveSpeedPerecntIncrease / 100f);
+                    _player.characterData._currentJumpForce += (_player.characterData._currentJumpForce * jumpForcePerecntIncrease / 100f);
+                    // ===================
+
+  
+                    break;
+                case ItemType.ScopeLens:
+                    int awarePercentIncrease = ((ScopeLens)itemData).awarePercentIncrease;
+
+                    // Update CharacterData
+                    _player.characterData._currentAware += (_player.characterData._currentAware * awarePercentIncrease / 100f);
+                    // ===================
+                    break;
+                case ItemType.AmplifyingBand:
+                    int areaPercentIncrease = ((AmplifyingBand)itemData).areaPercentIncrease;
+
+                    // Update CharacterData
+                    _player.characterData._currentArea += (_player.characterData._currentArea * areaPercentIncrease / 100f);
+                    // ===================
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        public void UpdateStatsUnequip(ItemData itemData, bool loadStatsText = true)
+        {
+            if (itemData == null)
+                return;
+
+            switch (itemData.itemType)
+            {
+                case ItemType.VitalityBelt:
+                    int maxHealthPercentIncrease = ((VitalityBeltData)itemData).maxHealthPercentIncrease;
+                    int currentMaxHealth = _player.characterData._currentMaxHealth;
+                    int decrementMaxHealth = 0;
+
+                    // Update CharacterData
+                    _player.characterData._currentMaxHealth = (int)(currentMaxHealth / (1 + maxHealthPercentIncrease / 100f));
+                    // ===================
+
+                    decrementMaxHealth = currentMaxHealth - _player.characterData._currentMaxHealth;
+                    if (loadStatsText)
+                    {
+                        FloatingStatisticTextManager.Instance.ShowFloatingStatText("Max Health", -decrementMaxHealth);
+                    }
+
+                    CharacterStatsManager.Instance.UpdateStatUI(CharacterStats.MaxHealth);
+                    break;
+                case ItemType.MagnetStone:
+                    int magnetIncrease = ((MagnetStoneData)itemData).lootPercentIncrease;
+                    float currentMagnet = _player.characterData._currentMagnet;
+                    float decrementMagnet = 0;
+
+                    // Update CharacterData
+                    _player.characterData._currentMagnet = (int)(currentMagnet / (1 + magnetIncrease / 100f));
+                    // ===================
+
+                    decrementMagnet = currentMagnet - _player.characterData._currentMagnet;
+                    if (loadStatsText)
+                    {
+                        FloatingStatisticTextManager.Instance.ShowFloatingStatText("Magnet", -decrementMagnet);
+                    }
+
+                    CharacterStatsManager.Instance.UpdateStatUI(CharacterStats.Magnet);
+                    break;
+                case ItemType.SwiftStriders:
+                    int moveSpeedPerecntIncrease = ((SwiftStriders)itemData).moveSpeedPercentIncrease;
+                    float currentMoveSpeed = _player.characterData._currentMoveSpeed;
+                    float decrementMoveSpeed = 0;
+
+                    int jumpForcePerecntIncrease = ((SwiftStriders)itemData).jumpForcePercentIncrease;
+                    float currentJumpForce = _player.characterData._currentJumpForce;
+                    float decrementJumpForce = 0;
+
+                    // Update CharacterData
+                    _player.characterData._currentMoveSpeed = (currentMoveSpeed / (1 + moveSpeedPerecntIncrease / 100f));
+                    _player.characterData._currentJumpForce = (currentJumpForce / (1 + jumpForcePerecntIncrease / 100f));
+                    // ===================
+
+                    decrementMoveSpeed = currentMoveSpeed - _player.characterData._currentMoveSpeed;
+                    decrementJumpForce = currentJumpForce - _player.characterData._currentJumpForce;
+                    if (loadStatsText)
+                    {
+                        FloatingStatisticTextManager.Instance.ShowFloatingStatText("Move Speed", -decrementMoveSpeed);
+                        StartCoroutine(FloatingStatisticTextManager.Instance.ShowFloatingStatTextAfter("Jump Force", -decrementJumpForce, 0.5f));
+                    }
+
+                    CharacterStatsManager.Instance.UpdateStatUI(CharacterStats.MoveSpeed);
+                    CharacterStatsManager.Instance.UpdateStatUI(CharacterStats.JumpForce);
+                    break;
+                case ItemType.ScopeLens:
+                    int awarePercentIncrease = ((ScopeLens)itemData).awarePercentIncrease;
+                    float currentAware = _player.characterData._currentAware;
+                    float decrementAware = 0;
+
+                    // Update CharacterData
+                    _player.characterData._currentAware = (currentAware / (1 + awarePercentIncrease / 100f));
+                    // ===================
+
+                    decrementAware = currentAware - _player.characterData._currentAware;
+                    if (loadStatsText)
+                    {
+                        FloatingStatisticTextManager.Instance.ShowFloatingStatText("Aware", -decrementAware);
+                    }
+
+                    CharacterStatsManager.Instance.UpdateStatUI(CharacterStats.Aware);
+                    break;
+                case ItemType.AmplifyingBand:
+                    int areaPercentIncrease = ((AmplifyingBand)itemData).areaPercentIncrease;
+                    float currentArea = _player.characterData._currentArea;
+                    float decrementArea = 0;
+
+                    // Update CharacterData
+                    _player.characterData._currentArea = (currentArea / (1 + areaPercentIncrease / 100f));
+                    // ===================
+
+                    decrementArea = currentArea - _player.characterData._currentArea;
+                    if (loadStatsText)
+                    {
+                        FloatingStatisticTextManager.Instance.ShowFloatingStatText("Area", -decrementArea);
+                    }
+
+                    CharacterStatsManager.Instance.UpdateStatUI(CharacterStats.Area);
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }

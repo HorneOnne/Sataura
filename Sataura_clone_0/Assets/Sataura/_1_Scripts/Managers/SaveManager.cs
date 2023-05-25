@@ -45,6 +45,12 @@ namespace Sataura
                     weaponsData = new InventoryStruct(charactersData[i].weaponsData),
                     accessoriesData = new InventoryStruct(charactersData[i].accessoriesData),
                     playerInventoryData = new InventoryStruct(charactersData[i].playerInventoryData),
+               
+                    helmetDataID = GameDataManager.Instance.GetItemID(charactersData[i].helmetData),
+                    chestplateDataID = GameDataManager.Instance.GetItemID(charactersData[i].chestplateData),
+                    leggingDataID = GameDataManager.Instance.GetItemID(charactersData[i].leggingData),
+                    bootsDataID = GameDataManager.Instance.GetItemID(charactersData[i].bootsData),
+                    hookDataID = GameDataManager.Instance.GetItemID(charactersData[i].hookData),
                 });
             }
 
@@ -72,8 +78,15 @@ namespace Sataura
                 characterData.weaponsData = Utilities.ConvertInventoryDataStructToInventoryData(accountData.charactersDataStruct[i].weaponsData);
                 characterData.accessoriesData = Utilities.ConvertInventoryDataStructToInventoryData(accountData.charactersDataStruct[i].accessoriesData);
                 characterData.playerInventoryData = Utilities.ConvertInventoryDataStructToInventoryData(accountData.charactersDataStruct[i].playerInventoryData);
-                characterData.currencyString = accountData.charactersDataStruct[i].currencyString;
 
+                characterData.helmetData = (HelmetData)GameDataManager.Instance.GetItemData(accountData.charactersDataStruct[i].helmetDataID);
+                characterData.chestplateData = (ChestplateData)GameDataManager.Instance.GetItemData(accountData.charactersDataStruct[i].chestplateDataID);
+                characterData.leggingData = (LeggingData)GameDataManager.Instance.GetItemData(accountData.charactersDataStruct[i].leggingDataID);
+                characterData.bootsData = (BootData)GameDataManager.Instance.GetItemData(accountData.charactersDataStruct[i].bootsDataID);
+                characterData.hookData = (HookData)GameDataManager.Instance.GetItemData(accountData.charactersDataStruct[i].hookDataID);
+
+                characterData.currencyString = accountData.charactersDataStruct[i].currencyString;
+               
                 charactersData.Add(characterData);
             }
 

@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -10,35 +9,25 @@ namespace Sataura
     public class Bow : Item
     {
         [Header("References")]
-        private PlayerInGameSkills inGameInventory;
         public List<Transform> shootingPoints;
+        [SerializeField] private ArrowData arrowData;
+        private GameObject normalArrowProjectilePrefab;
+        private GameObject evoArrowProjectilePrefab;
 
-
-        [Header("Bow Properties")]
-        private BowData bowItemData;
-        //[SerializeField] private bool consumeArrow;
-
-
-        private ArrowData arrowItemData;
-        //private int? arrowSlotIndex;
-        private ItemSlot arrowSlotInPlayerInventory;
-
-        [Header("References")]
-        [SerializeField] private GameObject arrowProjectilePrefab;
-        [SerializeField] private ArrowData baseArrowData;
-        private ArrowProjectile_001 arrowProjectileObject;
+        [Header("Runtime References")]
+        [SerializeField] private BowData bowItemData;
+        
 
 
         // Cached
         private ulong[] cachedClientIds;
-        NetworkObject playerNetworkObject;
-        Player playerObject;
+
 
         public override void OnNetworkSpawn()
         {
             bowItemData = (BowData)this.ItemData;
-            //arrowProjectilePrefab = GameDataManager.Instance.GetProjectilePrefab("PP_ArrowProjectile_001");
-
+            normalArrowProjectilePrefab = GameDataManager.Instance.GetProjectilePrefab(ProjectileType.NormalArrow);
+            evoArrowProjectilePrefab = GameDataManager.Instance.GetProjectilePrefab(ProjectileType.EvoArrow);
 
             if (IsServer)
             {
@@ -49,13 +38,8 @@ namespace Sataura
         }
 
 
-        public override bool Use(Player player, Vector2 mousePosition)
+        public override bool Use(Player player, Vector2 nearestEnemyPosition)
         {                    
-            inGameInventory = player.playerInGameInventory;
-            /*arrowSlotIndex = inGameInventory.FindArrowSlotIndex();
-            if (arrowSlotIndex == null) return false;*/
-            //if (arrowProjectilePrefab == null) return false;
-
             if (cachedClientIds == null || cachedClientIds.Length == 0)
             {
                 InitializeCachedClientIds(player.GetComponent<NetworkObject>().OwnerClientId);            
@@ -66,82 +50,126 @@ namespace Sataura
             switch (bowItemData.useType)
             {
                 case 1:
-                    UseType01(mousePosition);
+                    ShootSingleArrow(player, nearestEnemyPosition);
                     break;
                 case 2:
-                    UseType02(mousePosition);
+                    ShootDoubleArrows(player, nearestEnemyPosition);
                     break;
                 case 3:
-                    UseType03();    
+                    ShootTripleArrows(player, nearestEnemyPosition);
                     break;
-                default: break;
-
+                case 4:
+                    EvoShooting(player, nearestEnemyPosition);
+                    break;
+                default:
+                    break;
             }
-
-            /*if (consumeArrow)
-            {
-                ConsumeArrowServerRpc((int)arrowSlotIndex);
-            }*/
 
             return true;
         }
 
-
-        private void UseType01(Vector2 mousePosition)
+        private IEnumerator WaitAfter(float time, System.Action callback)
         {
-            arrowProjectilePrefab = GameDataManager.Instance.GetProjectilePrefab("PP_ArrowProjectile_001");
-            var netObject = NetworkObjectPool.Singleton.GetNetworkObject(arrowProjectilePrefab, shootingPoints[0].position, transform.rotation);
+            yield return new WaitForSeconds(time);
+            callback?.Invoke();
+        }
 
-            if (netObject.IsSpawned == false)
-                netObject.Spawn();
-
-            arrowProjectileObject = netObject.GetComponent<ArrowProjectile_001>();
-            Utilities.RotateObjectTowardMouse2D(mousePosition, arrowProjectileObject.transform, -45);
+        private void ShootSingleArrow(Player player, Vector2 nearestEnemyPosition)
+        {
+            var arrowObject = Instantiate(normalArrowProjectilePrefab, shootingPoints[0].position, transform.rotation);
+            arrowObject.transform.localScale *= bowItemData.size * player.characterData._currentArea;
+            var normalArrowProjectile = arrowObject.GetComponent<NormalArrowProjectile>();
+            Utilities.RotateObjectTowardMouse2D(nearestEnemyPosition, normalArrowProjectile.transform, -45);
            
-            int arrowID = GameDataManager.Instance.GetItemID(baseArrowData);
-            arrowProjectileObject.SetDataServerRpc(arrowID, true);
-            arrowProjectileObject.Shoot(bowItemData, baseArrowData);
+            int arrowID = GameDataManager.Instance.GetItemID(arrowData);
+            normalArrowProjectile.SetDataServerRpc(arrowID, true);  
+            normalArrowProjectile.Shoot(bowItemData, arrowData);
+
+            if (normalArrowProjectile._networkObject.IsSpawned == false)
+                normalArrowProjectile._networkObject.Spawn();
 
             SoundManager.Instance.PlaySound(SoundType.Bow, playRandom: true, 0.5f);
         }
 
-
-        private void UseType02(Vector2 mousePosition)
+        private void ShootDoubleArrows(Player player, Vector2 nearestEnemyPosition)
         {
-            StartCoroutine(PerformUseType02(mousePosition));
-            
-            /*for (int i = 0; i < 2; i++)
+            ShootSingleArrow(player, nearestEnemyPosition);
+
+            StartCoroutine(WaitAfter(0.2f, () =>
             {
-                arrowProjectilePrefab = GameDataManager.Instance.GetProjectilePrefab("PP_ArrowProjectile_001");
-                var netObject = NetworkObjectPool.Singleton.GetNetworkObject(arrowProjectilePrefab, shootingPoints[0].position, transform.rotation);
-
-                if (netObject.IsSpawned == false)
-                    netObject.Spawn();
-
-                arrowProjectileObject = netObject.GetComponent<ArrowProjectile_001>();
-                Utilities.RotateObjectTowardMouse2D(mousePosition, arrowProjectileObject.transform, -45);
-
-                int arrowID = GameDataManager.Instance.GetItemID(baseArrowData);
-                arrowProjectileObject.SetDataServerRpc(arrowID, true);
-                arrowProjectileObject.Shoot(bowItemData, baseArrowData);
-            }*/
+                ShootSingleArrow(player, player.playerUseItem.DetectNearestEnemyPosition());
+            }));    
         }
 
-        IEnumerator PerformUseType02(Vector2 mousePosition)
+        private void ShootTripleArrows(Player player, Vector2 nearestEnemyPosition)
         {
-            UseType01(mousePosition);
-            yield return new WaitForSeconds(0.3f);
-            UseType01(mousePosition);
+            ShootSingleArrow(player, nearestEnemyPosition);
+
+            StartCoroutine(WaitAfter(0.2f, () =>
+            {
+                ShootSingleArrow(player, player.playerUseItem.DetectNearestEnemyPosition());
+            }));
+
+            StartCoroutine(WaitAfter(0.4f, () =>
+            {
+                ShootSingleArrow(player, player.playerUseItem.DetectNearestEnemyPosition());
+            }));
         }
 
 
-        private void UseType03()
+
+        private void ShootSingleEvoArrow(Player player, Vector2 nearestEnemyPosition)
         {
-           
-        }
+            var arrowObject = Instantiate(evoArrowProjectilePrefab, shootingPoints[0].position, transform.rotation);
+            arrowObject.transform.localScale *= bowItemData.size * player.characterData._currentArea;
+            var normalArrowProjectile = arrowObject.GetComponent<EvoArrowProjectile>();
+            Utilities.RotateObjectTowardMouse2D(nearestEnemyPosition, normalArrowProjectile.transform, -45);
 
+            int arrowID = GameDataManager.Instance.GetItemID(arrowData);
+            normalArrowProjectile.SetDataServerRpc(arrowID, true);
+
+
+            var nearestEnemy = player.playerUseItem.DetectNearestEnemy();
+            if (nearestEnemy != null)
+            {
+                normalArrowProjectile.Shoot(bowItemData, arrowData, nearestEnemy);
+            }
+            else
+            {
+                normalArrowProjectile.Shoot(bowItemData, arrowData, nearestEnemy);
+            }
+
+
+
+            if (normalArrowProjectile._networkObject.IsSpawned == false)
+                normalArrowProjectile._networkObject.Spawn();
+
+            SoundManager.Instance.PlaySound(SoundType.Bow, playRandom: true, 0.5f);
+        }
+        private void EvoShooting(Player player, Vector2 nearestEnemyPosition)
+        {
+            ShootSingleEvoArrow(player, nearestEnemyPosition);
+
+            StartCoroutine(WaitAfter(0.1f, () =>
+            {
+                ShootSingleEvoArrow(player, nearestEnemyPosition);
+            }));
+
+            StartCoroutine(WaitAfter(0.2f, () =>
+            {
+                ShootSingleEvoArrow(player, nearestEnemyPosition);
+            }));
+
+            StartCoroutine(WaitAfter(0.3f, () =>
+            {
+                ShootSingleEvoArrow(player, nearestEnemyPosition);
+            }));
+        }
 
         
+
+
+
         private void InitializeCachedClientIds(ulong clientId)
         {
             Debug.Log("InitializeCachedClientIds");
@@ -153,39 +181,5 @@ namespace Sataura
 
             cachedClientIds = clientIds.ToArray();
         }
-
-
-        /*[ServerRpc]
-        private void ConsumeArrowServerRpc(int arrowIndex)
-        {
-            inGameInventory.inGameInventory[arrowIndex].RemoveItem();
-            UIPlayerInGameInventory.Instance.UpdateInventoryUIAt(arrowIndex);
-
-            ClientRpcParams clientRpcParams = new ClientRpcParams
-            {
-                Send = new ClientRpcSendParams
-                {
-                    TargetClientIds = cachedClientIds
-                }
-            };
-
-            ConsumeArrowClientRpc(arrowIndex, clientRpcParams);
-        }
-
-        [ClientRpc]
-        private void ConsumeArrowClientRpc(int arrowIndex, ClientRpcParams clientRpcParams = default)
-        {
-            if (IsServer) 
-                return;
-
-            playerNetworkObject = NetworkManager.LocalClient.PlayerObject;
-            playerObject = playerNetworkObject.GetComponent<Player>();
-
-            if(playerObject != null)
-            {
-                playerObject.PlayerInGameInventory.inGameInventory[arrowIndex].RemoveItem();
-                UIPlayerInGameInventory.Instance.UpdateInventoryUIAt(arrowIndex);
-            }            
-        }*/
     }
 }

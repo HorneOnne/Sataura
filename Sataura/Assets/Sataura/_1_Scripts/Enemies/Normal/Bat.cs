@@ -16,6 +16,8 @@ namespace Sataura
 
         public override void MoveAI(Vector2 target)
         {
+            base.MoveAI(target);
+
             fpsCounter += Time.deltaTime;
             if (isDead)
             {
@@ -36,10 +38,9 @@ namespace Sataura
 
             Vector2 direction = target - (Vector2)transform.position;
             direction.Normalize();
-            rb2D.MovePosition((Vector2)transform.position + direction * 10 * Time.fixedDeltaTime);
+            rb2D.MovePosition((Vector2)transform.position + direction * enemyData.moveSpeed * Time.fixedDeltaTime);
 
             // Fly anim
-            fpsCounter += Time.deltaTime;
             if (fpsCounter >= 1 / fps)
             {
                 animationStep++;
@@ -57,7 +58,7 @@ namespace Sataura
 
 
 
-        protected override void ReturnToNetworkPool()
+        protected override void Despawn()
         {
             if (networkObject.IsSpawned)
                 networkObject.Despawn();
@@ -68,8 +69,9 @@ namespace Sataura
        
         public override void OnEnemyDead()
         {
-            animationStep = 0;
-            base.OnEnemyDead();           
+            base.OnEnemyDead();
+
+            animationStep = 0;         
             rb2D.velocity = Vector2.zero;
             //StartCoroutine(ChangeValueOverTime(1.5f, 0f, .5f));
             SoundManager.Instance.PlaySound(SoundType.EnemyDie, enemyData.dieSFX);

@@ -17,6 +17,9 @@ TagManager:
   - 
   - Water
   - UI
+  - EnemyProjectile
+  - Projectile
+  - CanCollidedEnemyProjectile
   - 
   - 
   - 
@@ -25,22 +28,19 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Item
+  - Character
   - 
   - GroundAndPlatformCollideOnly
   - LootZone
-  - FlyEnemy
+  - 
   - Background
   - Platform
   - CameraBounds
   - Lootable
-  - Item
-  - Character
-  - Projectile
+  - 
+  - 
+  - FlyEnemy
   - Enemy
   - Ground
   m_SortingLayers:
@@ -52,6 +52,9 @@ TagManager:
     locked: 0
   - name: Lootable
     uniqueID: 1028821391
+    locked: 0
+  - name: Projectile
+    uniqueID: 182747825
     locked: 0
   - name: Enemy
     uniqueID: 2369512197

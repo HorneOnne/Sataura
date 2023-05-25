@@ -24,7 +24,7 @@ namespace Sataura
         public void LoadSwordProjectileDataServerRpc(Vector2 mousePosition)
         {
             this.swordData = (SwordData)ItemData;
-            swingDuration = 1.0f / (swordData.usageVelocity + 0.001f);
+            swingDuration = 1.0f / (swordData.rateOfFire + 0.001f);
             SetSwingDirection(mousePosition);
 
 
@@ -88,9 +88,9 @@ namespace Sataura
             {
                 if(IsServer)
                 {
-                    if(networkObject.IsSpawned)
+                    if(_networkObject.IsSpawned)
                     {
-                        networkObject.Despawn();
+                        _networkObject.Despawn();
                     }
                     
                 }

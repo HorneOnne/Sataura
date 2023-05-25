@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 868897557923778974}
   - component: {fileID: 7575770323588732031}
   - component: {fileID: -3611320111900059724}
-  m_Layer: 30
+  m_Layer: 17
   m_Name: IP_Material
   m_TagString: Item
   m_Icon: {fileID: 0}
@@ -46,9 +46,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 65185d35ac60d0645a8eb4be6f605ec4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <ItemData>k__BackingField: {fileID: 0}
   spriteRenderer: {fileID: 0}
-  showIconWhenHoldByHand: 0
+  _networkObject: {fileID: -3611320111900059724}
 --- !u!114 &-3611320111900059724
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -75,7 +74,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3847171382268190175}
   - component: {fileID: 9110808501951925245}
-  m_Layer: 30
+  m_Layer: 17
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}

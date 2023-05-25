@@ -9,7 +9,7 @@ namespace Sataura
     [System.Serializable]
     public class SaveData
     {
-        public string path = Application.dataPath + "/Sataura/Saves/PlayerData";
+        public string path = Application.dataPath + "/Sataura/_5_Saves/PlayerData";
 
 
         private AccountDataStruct accountData;

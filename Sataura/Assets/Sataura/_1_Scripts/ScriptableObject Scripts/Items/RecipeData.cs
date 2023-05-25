@@ -6,7 +6,7 @@ namespace Sataura
     /// <summary>
     /// A scriptable object that represents a crafting recipe in the game.
     /// </summary>
-    [CreateAssetMenu(fileName = "New Recipe Object", menuName = "UltimateItemSystem/Recipe", order = 51)]
+    [CreateAssetMenu(fileName = "New Recipe Object", menuName = "Sataura/Recipe", order = 51)]
     public class RecipeData : ScriptableObject
     {
         /// <summary>

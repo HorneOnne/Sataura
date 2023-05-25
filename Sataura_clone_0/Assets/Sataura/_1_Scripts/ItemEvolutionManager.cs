@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEditor;
 
 namespace Sataura
 {
@@ -54,18 +55,41 @@ namespace Sataura
             return null;
         }
 
-
-        public ItemData GetEvolutionItem(ItemData baseItemA, ItemData baseItemB)
+        public ItemData GetEvolutionItem(ItemType itemType)
         {
             for (int i = 0; i < itemEvolutions.Count; i++)
             {
-                if (ItemData.IsSameItem(itemEvolutions[i].firstItemData, baseItemA) &&
-                    ItemData.IsSameItem(itemEvolutions[i].secondItemData, baseItemB))
+                if (itemEvolutions[i].evolutionItemData.itemType == itemType)
                 {
                     return itemEvolutions[i].evolutionItemData;
                 }
-                else if (ItemData.IsSameItem(itemEvolutions[i].firstItemData, baseItemB) &&
-                    ItemData.IsSameItem(itemEvolutions[i].secondItemData, baseItemA))
+
+                if(itemEvolutions[i].firstItemData.itemType == itemType)
+                {
+                    return itemEvolutions[i].evolutionItemData;
+                }
+
+
+                if (itemEvolutions[i].secondItemData.itemType == itemType)
+                {
+                    return itemEvolutions[i].evolutionItemData;
+                }
+            }
+
+            return null;
+        }
+
+        public ItemData GetEvolutionItem(ItemData weaponData, ItemData accessoryData)
+        {
+            for (int i = 0; i < itemEvolutions.Count; i++)
+            {
+                if (ItemData.IsSameItem(itemEvolutions[i].firstItemData, weaponData) &&
+                    ItemData.IsSameItem(itemEvolutions[i].secondItemData, accessoryData))
+                {
+                    return itemEvolutions[i].evolutionItemData;
+                }
+                else if (ItemData.IsSameItem(itemEvolutions[i].firstItemData, accessoryData) &&
+                    ItemData.IsSameItem(itemEvolutions[i].secondItemData, weaponData))
                 {
                     return itemEvolutions[i].evolutionItemData;
                 }
@@ -118,28 +142,27 @@ namespace Sataura
 
         private ItemData HasItemEvolution(Player player)
         {
-            var playerInGameInventory = player.playerInGameInventory;
+            var playerIngameSkills = player.playerIngameSkills;
 
 
-            for (int i = 0; i < playerInGameInventory.weapons.Count; i++)
+            for (int i = 0; i < playerIngameSkills.weaponsData.itemSlots.Count; i++)
             {
-                if (playerInGameInventory.weapons[i].HasItemData() == false)
+                if (playerIngameSkills.weaponsData.itemSlots[i].HasItemData() == false)
                     continue;
-                if (IsEvoItem(playerInGameInventory.weapons[i].ItemData))
+                if (IsEvoItem(playerIngameSkills.weaponsData.itemSlots[i].ItemData))
                     continue;
 
-                if (playerInGameInventory.weapons[i].ItemData.IsMaxLevel())
+                if (playerIngameSkills.weaponsData.itemSlots[i].ItemData.IsMaxLevel())
                 {
-                    var itemEvoNeeded = GetEvolutionItemNeeded(playerInGameInventory.weapons[i].ItemData);
-                    for (int j = 0; j < playerInGameInventory.accessories.Count; j++)
+                    var itemEvoNeeded = GetEvolutionItemNeeded(playerIngameSkills.weaponsData.itemSlots[i].ItemData);
+                    for (int j = 0; j < playerIngameSkills.accessoriesData.itemSlots.Count; j++)
                     {    
-                        if (playerInGameInventory.accessories[j].HasItemData() == false)
+                        if (playerIngameSkills.accessoriesData.itemSlots[j].HasItemData() == false)
                             continue;
 
-                        if (playerInGameInventory.accessories[j].ItemData.Equals(itemEvoNeeded))
+                        if (playerIngameSkills.accessoriesData.itemSlots[j].ItemData.Equals(itemEvoNeeded))
                         {
-                            //Debug.Log($"Has Evolution item: {GetEvolutionItem(playerInGameInventory.inGameInventory[i].ItemData, itemEvoNeeded)}");
-                            var itemEvo = GetEvolutionItem(playerInGameInventory.weapons[i].ItemData, itemEvoNeeded);
+                            var itemEvo = GetEvolutionItem(playerIngameSkills.weaponsData.itemSlots[i].ItemData, itemEvoNeeded);
                             return itemEvo;
                         }
                     }
@@ -152,11 +175,10 @@ namespace Sataura
 
         public Dictionary<ItemData, bool> GenerateUpgradeItemData(Player player)
         {
-            Debug.Log(player.name);
-            Debug.LogWarning("Optimize here.");
+            Debug.LogWarning("Optimize here. \t GenerateUpgradeItemData");
             Dictionary<ItemData, bool> upgradeItemDataDict = new Dictionary<ItemData, bool>();
-            var playerInGameInventory = player.playerInGameInventory;
-            var playerUseItem = player.playerUseItem;
+            var playerIngameSkills = player.playerIngameSkills;
+
 
             float timeLoad = 0.0f;
             while (true)
@@ -179,105 +201,100 @@ namespace Sataura
                 var itemEvo = HasItemEvolution(player);
                 if (itemEvo != null)
                 {
-                    Debug.Log($"Item evo: {itemEvo}");
-
                     if (upgradeItemDataDict.ContainsKey(itemEvo) == false)
                         upgradeItemDataDict.Add(itemEvo, false);
                 }
 
                 
-
-                if (baseItem.itemCategory == ItemCategory.Skill_Weapons)
+                switch(baseItem.itemCategory)
                 {
-                    if (playerUseItem.HasEvoOfBaseItem(baseItem) == true)
-                        continue;
+                    case ItemCategory.Skill_Weapons:
+                        if (playerIngameSkills.HasEvoOfBaseItem(baseItem) == true)
+                            continue;
 
-                    if (playerUseItem.HasBaseItem(baseItem))
-                    {
-                        Debug.Log("Here 0");
-
-                        int baseItemIndex = playerUseItem.FindBaseItemIndex(baseItem);
-                        var currentItemDataAtIndex = playerInGameInventory.weapons[baseItemIndex].ItemData;
-                        var itemUpgradeVersion = playerUseItem.GetUpgradeVersionOfItem(currentItemDataAtIndex);
-                        if (itemUpgradeVersion != null)
+                        if (playerIngameSkills.HasItemType(baseItem.itemType))
                         {
-                            ItemData itemNeedToEvo = GetEvolutionItemNeeded(baseItem);
-                            Debug.Log($"here 1: {itemNeedToEvo.itemName}");
-                            bool hasEvo = false;
-                            if (itemNeedToEvo != null)
-                            {
-                                if (playerUseItem.HasBaseItem(itemNeedToEvo))
+                            int baseItemIndex = playerIngameSkills.FindItem(baseItem);
+                            ItemData currentItemDataAtIndex = playerIngameSkills.weaponsData.itemSlots[baseItemIndex].ItemData;
+                            var itemUpgradeVersion = playerIngameSkills.GetUpgradeVersionOfItem(currentItemDataAtIndex);
+                            if (itemUpgradeVersion != null)
+                            {                              
+                                ItemData itemNeedToEvo = GetEvolutionItemNeeded(baseItem);
+                                bool hasEvo = false;
+                                if (itemNeedToEvo != null)
                                 {
-                                    hasEvo = true;
+                                    if (playerIngameSkills.HasItemType(itemNeedToEvo.itemType))
+                                    {
+                                        hasEvo = true;
+                                    }
                                 }
-                            }
-                            Debug.Log($"here2 :  hasEvo = {hasEvo}");
-                            if (upgradeItemDataDict.ContainsKey(itemUpgradeVersion) == false)
-                            {
-                                upgradeItemDataDict.Add(itemUpgradeVersion, hasEvo);
-                                Debug.Log($"here3 :  hasEvo = {hasEvo}");
-                            }
-                                
-                        }
-                    }
-                    else
-                    {
-                        ItemData itemNeedToEvo = GetEvolutionItemNeeded(baseItem);
-                        bool hasEvo = false;
 
-                        if (itemNeedToEvo != null)
-                        {
-                            if (playerUseItem.HasBaseItem(itemNeedToEvo))
-                            {
-                                hasEvo = true;
+                                if (upgradeItemDataDict.ContainsKey(itemUpgradeVersion) == false)
+                                {
+                                    upgradeItemDataDict.Add(itemUpgradeVersion, hasEvo);
+                                }
+
                             }
                         }
-
-                        if (upgradeItemDataDict.ContainsKey(baseItem) == false)
-                            upgradeItemDataDict.Add(baseItem, hasEvo);
-                    }
-                }
-                else if (baseItem.itemCategory == ItemCategory.Skill_Accessories)
-                {        
-                    if (playerUseItem.HasBaseItem(baseItem))
-                    {
-                        int baseItemIndex = playerUseItem.FindBaseItemIndex(baseItem);
-                        var currentItemDataAtIndex = playerInGameInventory.accessories[baseItemIndex].ItemData;
-                        var itemUpgradeVersion = playerUseItem.GetUpgradeVersionOfItem(currentItemDataAtIndex);
-                        if (itemUpgradeVersion != null)
+                        else
                         {
                             ItemData itemNeedToEvo = GetEvolutionItemNeeded(baseItem);
                             bool hasEvo = false;
+
                             if (itemNeedToEvo != null)
                             {
-                                if (playerUseItem.HasBaseItem(itemNeedToEvo))
+                                if (playerIngameSkills.HasItemType(itemNeedToEvo.itemType))
                                 {
                                     hasEvo = true;
                                 }
                             }
 
-                            if (upgradeItemDataDict.ContainsKey(itemUpgradeVersion) == false)
-                                upgradeItemDataDict.Add(itemUpgradeVersion, hasEvo);
+                            if (upgradeItemDataDict.ContainsKey(baseItem) == false)
+                                upgradeItemDataDict.Add(baseItem, hasEvo);
                         }
-                    }
-                    else
-                    {
-                        ItemData itemNeedToEvo = GetEvolutionItemNeeded(baseItem);
-                        bool hasEvo = false;
-
-                        if (itemNeedToEvo != null)
+                        break;
+                    case ItemCategory.Skill_Accessories:
+                        if (playerIngameSkills.HasItemType(baseItem.itemType))
                         {
-                            if (playerUseItem.HasBaseItem(itemNeedToEvo))
+                            int baseItemIndex = playerIngameSkills.FindItem(baseItem);
+                            var currentItemDataAtIndex = playerIngameSkills.accessoriesData.itemSlots[baseItemIndex].ItemData;
+                            var itemUpgradeVersion = playerIngameSkills.GetUpgradeVersionOfItem(currentItemDataAtIndex);
+                            if (itemUpgradeVersion != null)
                             {
-                                hasEvo = true;
+                                ItemData itemNeedToEvo = GetEvolutionItemNeeded(baseItem);
+                                bool hasEvo = false;
+                                if (itemNeedToEvo != null)
+                                {
+                                    if (playerIngameSkills.HasItemType(itemNeedToEvo.itemType))
+                                    {
+                                        hasEvo = true;
+                                    }
+                                }
+
+                                if (upgradeItemDataDict.ContainsKey(itemUpgradeVersion) == false)
+                                    upgradeItemDataDict.Add(itemUpgradeVersion, hasEvo);
                             }
                         }
+                        else
+                        {
+                            ItemData itemNeedToEvo = GetEvolutionItemNeeded(baseItem);
+                            bool hasEvo = false;
 
-                        if (upgradeItemDataDict.ContainsKey(baseItem) == false)
-                            upgradeItemDataDict.Add(baseItem, hasEvo);
-                    }
+                            if (itemNeedToEvo != null)
+                            {
+                                if (playerIngameSkills.HasItemType(itemNeedToEvo.itemType))
+                                {
+                                    hasEvo = true;
+                                }
+                            }
+
+                            if (upgradeItemDataDict.ContainsKey(baseItem) == false)
+                                upgradeItemDataDict.Add(baseItem, hasEvo);
+                        }
+                        break;
+                    default:
+                        break;
                 }
-
             }
 
             return upgradeItemDataDict;

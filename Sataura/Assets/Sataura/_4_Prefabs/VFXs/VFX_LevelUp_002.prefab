@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2512440849970944116}
   - component: {fileID: 1383557444416374173}
   - component: {fileID: 9026913855570869256}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: VFX_LevelUp_002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4826,7 +4826,7 @@ GameObject:
   - component: {fileID: 724421207036583821}
   - component: {fileID: 186438745317726351}
   - component: {fileID: 1506895153438164080}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: Flares
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9647,7 +9647,7 @@ GameObject:
   - component: {fileID: 3418466926837575139}
   - component: {fileID: 6452500743776348641}
   - component: {fileID: 3985276088074776990}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: Trails
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14468,7 +14468,7 @@ GameObject:
   - component: {fileID: 1886610512444504608}
   - component: {fileID: 3343849704006737804}
   - component: {fileID: 7669253060336262003}
-  m_Layer: 0
+  m_Layer: 19
   m_Name: Smoke
   m_TagString: Untagged
   m_Icon: {fileID: 0}

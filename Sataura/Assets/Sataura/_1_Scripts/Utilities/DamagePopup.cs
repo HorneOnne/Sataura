@@ -25,7 +25,7 @@ namespace Sataura
         public override void OnNetworkSpawn()
         {
             networkObject = GetComponent<NetworkObject>();
-            damagePopupPrefab = GameDataManager.Instance.GetItemPrefab("UIP_DamagePopup");
+            IngameInformationManager.Instance.currentDamagePopupCount++; 
         }
 
         public void SetUp(int damage, Color color, float size, Vector3 moveVector, Vector3 rotation)
@@ -33,13 +33,11 @@ namespace Sataura
             this.textColor = color;
             textMesh.color = textColor;
             textMesh.fontSize = size;
-            //this.transform.rotation = Quaternion.Euler(rotation);
 
             textMesh.text = damage.ToString();
 
             disappearTimer = DISAPPEAR_TIMER_MAX;
             this.moveVector = moveVector * 30f;
-            //moveVector = new Vector3(Random.Range(-1f, 1f), Random.Range(0.5f, 1f)) * 60f;
         }
 
         private void Update()
@@ -47,18 +45,6 @@ namespace Sataura
             transform.position += moveVector * Time.deltaTime;
             moveVector -= moveVector * 8f * Time.deltaTime;
 
-            if (disappearTimer > DISAPPEAR_TIMER_MAX * .5f)
-            {
-                // First half of the popup lifetime
-                //float increaseScaleAmount = 1f;
-                //transform.localScale += Vector3.one * increaseScaleAmount * Time.deltaTime;
-            }
-            else
-            {
-                // Second half of the popup lifetime
-                //float decreaseScaleAmount = 1f;
-                //transform.localScale -= Vector3.one * decreaseScaleAmount * Time.deltaTime;
-            }
 
             disappearTimer -= Time.deltaTime;
             if (disappearTimer < 0)
@@ -69,28 +55,18 @@ namespace Sataura
                 textMesh.color = textColor;
                 if (textColor.a < 0)
                 {
-                    //Destroy(gameObject);
-                    ReturnToPool();
+                    Despawn();
                 }
             }
         }
 
 
 
-        private void ReturnToPool()
+        private void Despawn()
         {
-            ResetProperties();
-            //DamagePopupSpawner.Instance.Pool.Release(this.gameObject);
+            IngameInformationManager.Instance.currentDamagePopupCount--;
             if (networkObject.IsSpawned)
-                networkObject.Despawn(false);
-
-            NetworkObjectPool.Singleton.ReturnNetworkObject(networkObject, damagePopupPrefab);
-        }
-
-        private void ResetProperties()
-        {
-            transform.localScale = Vector3.one;
-            transform.rotation = Quaternion.Euler(0, 0, 0);
+                networkObject.Despawn();
         }
     }
 }

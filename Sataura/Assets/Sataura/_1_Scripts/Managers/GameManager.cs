@@ -34,10 +34,21 @@ namespace Sataura
 
         public void BackToMainMenu()
         {
-            //Loader.LoadNetwork(Loader.Scene.MainMenuScene);
+            SaveManager.Instance.Save();
             NetworkManager.Singleton.Shutdown();
             DestroyAllDontDestroyOnLoadObjects();
-            SceneManager.LoadScene(Loader.Scene._0_MainMenuScene.ToString());           
+            SceneManager.LoadScene(Loader.Scene._0_MainMenuScene.ToString());
+            
+        }
+
+
+        public void Exit()
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#else
+            Application.Quit();
+#endif
         }
 
         public void DestroyAllDontDestroyOnLoadObjects()
@@ -63,9 +74,7 @@ namespace Sataura
                 else
                     Destroy(root);
 
-            }
-                
-
+            }              
         }
     }
 }

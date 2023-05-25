@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5186839491552290987}
   - component: {fileID: 5186839491528670110}
-  m_Layer: 30
+  m_Layer: 17
   m_Name: Model
   m_TagString: Item
   m_Icon: {fileID: 0}
@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 7603960275652137568}
   - component: {fileID: 5194316476616076612}
   - component: {fileID: -1107238257752427845}
-  m_Layer: 30
+  m_Layer: 17
   m_Name: IP_Arrow
   m_TagString: Item
   m_Icon: {fileID: 0}
@@ -130,9 +130,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce93653d218074c4ab2f8ee2492dce3e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <ItemData>k__BackingField: {fileID: 0}
   spriteRenderer: {fileID: 0}
-  showIconWhenHoldByHand: 0
+  _networkObject: {fileID: -1107238257752427845}
 --- !u!114 &-1107238257752427845
 MonoBehaviour:
   m_ObjectHideFlags: 0

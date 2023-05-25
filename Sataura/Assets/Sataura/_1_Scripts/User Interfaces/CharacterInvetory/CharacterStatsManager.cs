@@ -20,28 +20,31 @@ namespace Sataura
 
         private IEnumerator ReferencePlayer()
         {
-            Debug.Log("ReferencePlayer");
-            yield return new WaitUntil(() => GameDataManager.Instance.singleModePlayer != null);
+            yield return new WaitUntil(() => GameDataManager.Instance.singleModePlayer != null);          
             _characterData = GameDataManager.Instance.singleModePlayer.GetComponent<ItemSelectionPlayer>().characterData;
+
 
             UpdateStatUI(CharacterStats.MaxHealth);
             UpdateStatUI(CharacterStats.Recovery);
             UpdateStatUI(CharacterStats.Armor);
             UpdateStatUI(CharacterStats.MoveSpeed);
             UpdateStatUI(CharacterStats.JumpForce);
-            UpdateStatUI(CharacterStats.AttackSpeed);
             UpdateStatUI(CharacterStats.Duration);
             UpdateStatUI(CharacterStats.Area);
             UpdateStatUI(CharacterStats.Cooldown);
             UpdateStatUI(CharacterStats.Magnet);
             UpdateStatUI(CharacterStats.Revival);
+            UpdateStatUI(CharacterStats.Aware);
         }
 
 
 
         public void UpdateStatUI(CharacterStats characterStat)
         {
-            for(int i = 0; i < _characterStatSlots.Count; i++)
+            if (_characterData == null)
+                _characterData = GameDataManager.Instance.singleModePlayer.GetComponent<ItemSelectionPlayer>().characterData;
+
+            for (int i = 0; i < _characterStatSlots.Count; i++)
             {
                 if (_characterStatSlots[i]._characterStat == characterStat)
                 {
@@ -61,10 +64,7 @@ namespace Sataura
                             break;
                         case CharacterStats.JumpForce:
                             _characterStatSlots[i].SetValueUI(_characterData._currentJumpForce, _characterData._currentJumpForce - _characterData._defaultJumpForce);
-                            break;
-                        case CharacterStats.AttackSpeed:
-                            _characterStatSlots[i].SetValueUI(_characterData._currentAttackSpeed, _characterData._currentAttackSpeed - _characterData._defaultAttackSpeed);
-                            break;
+                            break;      
                         case CharacterStats.Duration:
                             _characterStatSlots[i].SetValueUI(_characterData._currentDuration, _characterData._currentDuration - _characterData._defaultDuration);
                             break;
@@ -79,6 +79,9 @@ namespace Sataura
                             break;
                         case CharacterStats.Revival:
                             _characterStatSlots[i].SetValueUI(_characterData._currentRevival, _characterData._currentRevival - _characterData._defaultRevival);
+                            break;
+                        case CharacterStats.Aware:
+                            _characterStatSlots[i].SetValueUI(_characterData._currentAware, _characterData._currentAware - _characterData._defaultAware);
                             break;
                         default:
                             break;

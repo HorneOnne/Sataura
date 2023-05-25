@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace Sataura
 {
     public class ItemForDrop : Item
@@ -11,17 +13,7 @@ namespace Sataura
 
         public override void Collect(Player player)
         {
-            var returnSlot = player.playerInGameInventory.AddItem(ItemSlot);
-
-
-            if (returnSlot.HasItemData() == true)
-            {
-                Set(returnSlot);
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
+            Debug.Log("Collect");
         }
     }
 }

@@ -26,15 +26,23 @@ namespace Sataura
         private Player player;
         [SerializeField] private Animator fadeOutAnim;
 
-        
-        
+
+        // Others
+        [Header("Others")]
+        public int currentDamagePopupCount;
+        public int currentExpCount;
+
+
+
+
         private GameState currentGameState;
         public enum GameState
         {
             Start,
             Play,
             Pause,
-            GameOver
+            GameOver, 
+            Victory
         }
 
         [Header("Options")]
@@ -54,7 +62,7 @@ namespace Sataura
             level = 0;
             experience = 0;
             experienceToNextLevel = initialexperienceToNextLevelValue;
-
+            
             SetGameState(GameState.Start);
             StartCoroutine(StartGame());
         }
@@ -84,15 +92,24 @@ namespace Sataura
         private void Start()
         {
             NetworkManager.Singleton.StartHost();
+            currentDamagePopupCount = 0;
         }
 
 
+        private float _victoryTimer = 0.0f;
         private void Update()
         {
-            if(Input.GetKeyDown(KeyCode.U))
+            if(CurrentGameState == GameState.Victory)
             {
-                Debug.LogWarning($"Debugging level up.");
-                LevelUp();
+                _victoryTimer += Time.deltaTime;
+                if(_victoryTimer >= 2.0f)
+                {
+                    Time.timeScale = 0.0f;
+
+                    if(UIManager.Instance.victoryCanvas.enabled == false)
+                        UIManager.Instance.victoryCanvas.enabled = true;
+                }
+                
             }
         }
 
@@ -132,6 +149,11 @@ namespace Sataura
         public void SetGameState(GameState gameState)
         {
             currentGameState = gameState;
+        }
+
+        public void SetVictoryState()
+        {
+            currentGameState = GameState.Victory;
         }
 
         public bool IsGameOver()

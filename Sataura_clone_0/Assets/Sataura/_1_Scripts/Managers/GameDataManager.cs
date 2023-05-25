@@ -19,6 +19,8 @@ namespace Sataura
         [Header("VFX")]
         public GameObject levelUpVFX;
         public GameObject bloodTearVFX_001;
+        public GreenPortalVFX greenPortalVFX;
+        public HealValueFloatingText healValueFloatingPrefab;
 
 
         [Header("ITEM DATA")]
@@ -30,9 +32,13 @@ namespace Sataura
         [Header("PREFABS")]
         [SerializeField] List<GameObject> itemPrefabs = new List<GameObject>();
 
-        [SerializeField] List<GameObject> projectilePrefabs = new List<GameObject>();
-
         [SerializeField] List<GameObject> enemyPrefabs = new List<GameObject>();
+
+        [SerializeField] List<GameObject> bossPrefabs = new List<GameObject>();
+
+        [SerializeField] List<Debuff> _debuffVFXPrefabs = new List<Debuff>();
+
+        [SerializeField] List<GameObject> _projectiles = new List<GameObject>();
 
         [Header("Currency")]
         [SerializeField] private GameObject bronzeCoinPrefab;
@@ -68,19 +74,10 @@ namespace Sataura
         public Dictionary<ItemData, RecipeData> itemToRecipeDict;
 
 
-
-        /// <summary>
-        /// A dictionary that maps item prefab names to their corresponding game objects.
-        /// </summary>
-        private Dictionary<string, GameObject> itemPrefabByNameDict = new Dictionary<string, GameObject>();
         private Dictionary<string, GameObject> projectilePrefabByNameDict = new Dictionary<string, GameObject>();
-        private Dictionary<string, GameObject> enemyPrefabByNameDict = new Dictionary<string, GameObject>();
 
 
 
-        /// <summary>
-        /// A list of all the dust particle data.
-        /// </summary>
         [Header("DUST DATA")]
         public List<ProjectileParticleData> projectileParticleDatas;
 
@@ -88,17 +85,22 @@ namespace Sataura
         [Header("NETWORK OBJECT")]
         public List<GameObject> networkObjects;
 
-        /// <summary>
-        /// The parent transform for all the item objects.
-        /// </summary>
+
         [Header("ITEM OBJECT PARENT")]
         public Transform itemContainerParent;
 
+        [Header("ITEM OBJECT PARENT")]
+        public GameObject itemForDropPrefab;
+
 
         [Header("Players")]
+        public GameObject damagePopupPrefab;
+
+        [Header("Players (Runtime)")]
+        public GameObject singleModePlayer;
         public Dictionary<ulong, Player> players = new Dictionary<ulong, Player>();
 
-        public GameObject singleModePlayer;
+        
 
 
 
@@ -111,9 +113,6 @@ namespace Sataura
             DontDestroyOnLoad(this.gameObject);
 
             GenerateItemDataDict();
-            GenerateItemPrefabDictionary();
-            GenerateProjectilePrefabDictionary();
-            GenerateEnemyPrefabDictionary();
             InitializeRecipes();
 
             if (NetworkManager.Singleton == null)
@@ -135,7 +134,6 @@ namespace Sataura
             {
                 return;
             }
-
 
             for (int i = 0; i < networkObjects.Count; i++)
             {
@@ -161,11 +159,6 @@ namespace Sataura
         }
 
 
-        /// <summary>
-        /// Returns the index of the given <paramref name="itemData"/>.
-        /// </summary>
-        /// <param name="itemData">The item data to look up.</param>
-        /// <returns>The index of the <paramref name="itemData"/> in the <see cref="itemData"/> list.</returns>
         public int GetItemID(ItemData itemData)
         {
             if (itemData == null)
@@ -175,11 +168,6 @@ namespace Sataura
         }
 
 
-        /// <summary>
-        /// Gets the item data for the specified item ID.
-        /// </summary>
-        /// <param name="id">The ID of the item data to retrieve.</param>
-        /// <returns>The item data with the specified ID, or null if no item data with that ID exists.</returns>
         public ItemData GetItemData(int id)
         {
             if (id == -1)
@@ -190,84 +178,54 @@ namespace Sataura
 
 
 
-        /// <summary>
-        /// Generates a dictionary of item prefabs by name.
-        /// </summary>
-        private void GenerateItemPrefabDictionary()
+
+        private GameObject GetItemPrefabType<T>()
         {
             for (int i = 0; i < itemPrefabs.Count; i++)
             {
-                if (itemPrefabs[i] != null && itemPrefabByNameDict.ContainsKey(itemPrefabs[i].name))
-                    Debug.LogError($"[ItemDictionary]: \tItem Prefab at {i} already exist.");
-                else
+                if (itemPrefabs[i].GetComponent<T>() != null)
                 {
-                    itemPrefabByNameDict.Add(itemPrefabs[i].name, itemPrefabs[i]);
-                }
+                    return itemPrefabs[i];
+                }               
             }
+            return null;
         }
 
-        /// <summary>
-        /// Generates a dictionary of projectile prefabs by name.
-        /// </summary>
-        private void GenerateProjectilePrefabDictionary()
+        public GameObject GetItemPrefab(ItemType itemType)
         {
-            for (int i = 0; i < projectilePrefabs.Count; i++)
+            GameObject itemPrefab = null;
+            switch(itemType)
             {
-                if (projectilePrefabs[i] != null && projectilePrefabByNameDict.ContainsKey(projectilePrefabs[i].name))
-                    Debug.LogError($"[ItemDictionary]: \tProjectile Prefab at {i} already exist.");
-                else
-                {
-                    projectilePrefabByNameDict.Add(projectilePrefabs[i].name, projectilePrefabs[i]);
-                }
+                case ItemType.Sword:
+                    itemPrefab = GetItemPrefabType<Sword>();
+                    break;
+                case ItemType.Bow:
+                    itemPrefab = GetItemPrefabType<Bow>();
+                    break;
+                case ItemType.Hammer:
+                    itemPrefab = GetItemPrefabType<Hammer>();
+                    break;
+                case ItemType.LightingStaff:
+                    itemPrefab = GetItemPrefabType<LightningStaff>();
+                    break;
+                case ItemType.WhisperingGale:
+                    itemPrefab = GetItemPrefabType<WhisperingGale>();
+                    break;
+                case ItemType.Hook:
+                    itemPrefab = GetItemPrefabType<Hook>();
+                    break;
+                default: 
+                    break;
             }
-        }
 
-
-        private void GenerateEnemyPrefabDictionary()
-        {
-            if (enemyPrefabs.Count == 0) return;
-
-            for (int i = 0; i < enemyPrefabs.Count; i++)
-            {
-                if (enemyPrefabs[i] != null && enemyPrefabByNameDict.ContainsKey(enemyPrefabs[i].name))
-                    Debug.LogError($"[ItemDictionary]: \tEnemy Prefab at {i} already exist.");
-                else
-                {
-                    enemyPrefabByNameDict.Add(enemyPrefabs[i].name, enemyPrefabs[i]);
-                }
-            }
-        }
-
-
-
-
-        /// <summary>
-        /// Gets the item prefab for the item with the specified name.
-        /// </summary>
-        /// <param name="name">The name of the item prefab to retrieve.</param>
-        /// <returns>The prefab for the item with the specified name, or null if no prefab with that name exists.</returns>
-        public GameObject GetItemPrefab(string name)
-        {
-            if (itemPrefabByNameDict.ContainsKey(name))
-                return itemPrefabByNameDict[name];
+            if (itemPrefab == null)
+                throw new System.Exception($"Not found item prefab type {itemType} in GameDataManager.cs.");
             else
-            {
-                throw new System.Exception($"Not found item prefab name {name} in GameDataManager.cs.");
-            }
+                return itemPrefab;
         }
 
-        public GameObject GetItemPrefab<T>(T item)
-        {
-            string name = $"{itemPrefabPrefix}{typeof(T).Name}";
-            if (itemPrefabByNameDict.ContainsKey(name))
-                return itemPrefabByNameDict[name];
-            else
-            {
-                return null;
-                //throw new System.Exception($"Not found item prefab name {name} in GameDataManager.cs.");
-            }
-        }
-
+     
+ 
 
 
         /// <summary>
@@ -298,28 +256,7 @@ namespace Sataura
         }
 
 
-        public GameObject GetEnemyPrefab(string name)
-        {
-            if (enemyPrefabByNameDict.ContainsKey(name))
-                return enemyPrefabByNameDict[name];
-            else
-            {
-                throw new System.Exception($"Not found enemy prefab name {name} in GameDataManager.cs.");
-            }
-        }
-
-
-        public GameObject GetEnemyPrefab<T>(T item)
-        {
-            string name = $"{enemyPrefabPrefix}{typeof(T).Name}";
-            if (enemyPrefabByNameDict.ContainsKey($"{name}"))
-                return enemyPrefabByNameDict[name];
-            else
-            {
-                throw new System.Exception($"Not found enemy prefab name {name} in GameDataManager.cs.");
-            }
-        }
-
+ 
 
 
         /// <summary>
@@ -389,6 +326,7 @@ namespace Sataura
         }
 
 
+
         /// <summary>
         /// Returns a list of sprite frames for the projectile particle data at the given index.
         /// </summary>
@@ -403,6 +341,172 @@ namespace Sataura
         public GameObject GetSliverCoin() => sliverCoinPrefab;
         public GameObject GetGoldCoin() => goldCoinPrefab;
 
+
+
+        private GameObject GetEnemyPrefabByType<T>()
+        {
+            for (int i = 0; i < enemyPrefabs.Count; i++)
+            {
+                if (enemyPrefabs[i].GetComponent<T>() != null)
+                {
+                    return enemyPrefabs[i];
+                }
+            }
+            return null;
+        }
+        public GameObject GetEnemyPrefab(EnemyType enemyType)
+        {
+            GameObject enemyPrefab = null;
+            switch (enemyType)
+            {
+                case EnemyType.PinkSlime:
+                    enemyPrefab = GetEnemyPrefabByType<PinkSlime>();
+                    break;
+                case EnemyType.BlueSlime:
+                    enemyPrefab = GetEnemyPrefabByType<BlueSlime>();
+                    break;
+                case EnemyType.MotherSlime:
+                    enemyPrefab = GetEnemyPrefabByType<MotherSlime>();
+                    break;
+                case EnemyType.BabySlime:
+                    enemyPrefab = GetEnemyPrefabByType<BabySlime>();
+                    break;
+                case EnemyType.Bat:
+                    enemyPrefab = GetEnemyPrefabByType<Bat>();
+                    break;
+                case EnemyType.BlackBat:
+                    enemyPrefab = GetEnemyPrefabByType<BlackBat>();
+                    break;
+                case EnemyType.Bonehead:
+                    enemyPrefab = GetEnemyPrefabByType<WhiteSkull>();
+                    break;
+                case EnemyType.Cursedwraith:
+                    enemyPrefab = GetEnemyPrefabByType<PurpleSkull>();
+                    break;
+                case EnemyType.ObsidianMaw:
+                    enemyPrefab = GetEnemyPrefabByType<Golem>();               
+                    break;
+                default:
+                    break;
+            }
+
+            if (enemyPrefab != null) 
+                return enemyPrefab;
+            else
+                return null;
+        }
+
+
+        private GameObject GetBossPrefabByType<T>()
+        {
+            for (int i = 0; i < bossPrefabs.Count; i++)
+            {
+                if (bossPrefabs[i].GetComponent<T>() != null)
+                {
+                    return bossPrefabs[i];
+                }
+            }
+            return null;
+        }
+        public GameObject GetBossPrefab(BossType bossType)
+        {
+            GameObject bossPrefab = null;
+            switch (bossType)
+            {
+                case BossType.KingSlime:
+                    bossPrefab = GetBossPrefabByType<KingSlime>();
+                    break;              
+                default:
+                    break;
+            }
+
+            if (bossPrefab != null)
+                return bossPrefab;
+            else
+                return null;
+        }
+
+        public Sataura.Debuff GetDebuffEffectVFXPrefabs(DebuffEffect debuffEffect)
+        {
+            switch(debuffEffect)
+            {
+                case DebuffEffect.Slowly:
+                    for(int i = 0; i < _debuffVFXPrefabs.Count; i++)
+                    {
+                        if (_debuffVFXPrefabs[i]._DebuffEffect == DebuffEffect.Slowly)
+                        {
+                            return _debuffVFXPrefabs[i];
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
+            return null;
+        }
+
+        public GameObject GetProjectilePrefab(ProjectileType projectileType)
+        {
+            GameObject projectilePrefab = null;
+
+            switch (projectileType)
+            {
+                case ProjectileType.WoodenSwordProjectile:
+                    projectilePrefab = GetProjectilePrefabByType<WoodenSwordProejctile>();
+                    break;
+                case ProjectileType.EvoWoodenSwordProjectile:
+                    projectilePrefab = GetProjectilePrefabByType<EvoWoodenSwordProejctile>();
+                    break;
+                case ProjectileType.GolemBullet:
+                    projectilePrefab = GetProjectilePrefabByType<GolemBullet>();
+                    break;
+                case ProjectileType.BookOfWindProjectile:
+                    projectilePrefab = GetProjectilePrefabByType<BookOfWindProjectile>();
+                    break;
+                case ProjectileType.LightningStaffProjectile:
+                    projectilePrefab = GetProjectilePrefabByType<LightningStaffProjectile>();
+                    break;
+                case ProjectileType.NormalArrow:
+                    projectilePrefab = GetProjectilePrefabByType<NormalArrowProjectile>();
+                    break;
+                case ProjectileType.EvoArrow:
+                    projectilePrefab = GetProjectilePrefabByType<EvoArrowProjectile>();
+                    break;
+                case ProjectileType.BlackWandProjectile:
+                    projectilePrefab = GetProjectilePrefabByType<BlackWandProjectile>();
+                    break;
+                case ProjectileType.BlackWandDamageZone:
+                    projectilePrefab = GetProjectilePrefabByType<BlackWandDamageZone>();
+                    break;
+                case ProjectileType.BlackHole:
+                    projectilePrefab = GetProjectilePrefabByType<BlackHoleProjectile>();
+                    break;
+                case ProjectileType.HammerProjectile:
+                    projectilePrefab = GetProjectilePrefabByType<HammerProjectile>();
+                    break;
+                case ProjectileType.NoMoreHammerProjectile:
+                    projectilePrefab = GetProjectilePrefabByType<NoMoreHammerProjectile>();
+                    break;
+                default:
+                    break;
+            }
+
+            if (projectilePrefab == null)
+                return null;
+            else
+                return projectilePrefab;
+        }
+        private GameObject GetProjectilePrefabByType<T>()
+        {
+            for (int i = 0; i < _projectiles.Count; i++)
+            {
+                if (_projectiles[i].GetComponent<T>() != null)
+                {
+                    return _projectiles[i];
+                }
+            }
+            return null;
+        }
 
 
         public void AddNetworkPlayer(ulong clientId, Player player)

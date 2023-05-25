@@ -13,7 +13,7 @@ namespace Sataura
         public PlayerEquipment playerEquipment;
         public PlayerSkills playerSkills;
         public ItemInHand itemInHand;
-        public PlayerInputHandler playerInputHandler;
+        public InputHandler playerInputHandler;
 
 
         #region Properties

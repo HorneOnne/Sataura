@@ -3,15 +3,12 @@ using UnityEngine;
 
 namespace Sataura
 {
-    /// <summary>
-    /// An abstract class representing a projectile.
-    /// </summary>
+
     [RequireComponent(typeof(Rigidbody2D))]
     public abstract class NetworkProjectile : NetworkBehaviour
     {
         #region Properties
-
-        [field: SerializeField] public ItemData ItemData { get; private set; }
+        public ItemData ItemData { get; private set; }
         protected GameObject Model { get;  set; }
 
         /// <summary>
@@ -22,17 +19,12 @@ namespace Sataura
 
 
         [Header("References")]
-        public NetworkObject networkObject;
+        public NetworkObject _networkObject;
 
         protected ParticleControl particleControl;
         [HideInInspector] public SpriteRenderer spriteRenderer;
-        protected Rigidbody2D rb;
+        [SerializeField] protected Rigidbody2D rb;
         protected GameDataManager itemDataManager;
-
-
-        #region Properties
-
-        #endregion
 
 
         private void Awake()
@@ -43,7 +35,7 @@ namespace Sataura
 
         public override void OnNetworkSpawn()
         {
-            networkObject = GetComponent<NetworkObject>();
+            _networkObject = GetComponent<NetworkObject>();
         }
 
         private void LoadComponents()
@@ -113,7 +105,6 @@ namespace Sataura
         public void SetDustServerRpc(int dustIndex)
         {
             SetDust(dustIndex);
-
             SetDustClientRpc(dustIndex);
         }
 

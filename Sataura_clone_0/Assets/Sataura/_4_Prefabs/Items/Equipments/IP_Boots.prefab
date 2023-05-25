@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8852366266055825690}
   - component: {fileID: 4069224969668343206}
-  m_Layer: 27
+  m_Layer: 17
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 883510563956443543}
   - component: {fileID: 8321508352133707656}
   - component: {fileID: 3588018770445165844}
-  m_Layer: 27
+  m_Layer: 17
   m_Name: IP_Boots
   m_TagString: Item
   m_Icon: {fileID: 0}
@@ -130,9 +130,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6aad82e8ec4eb0d40a42307b0c3c8930, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <ItemData>k__BackingField: {fileID: 0}
   spriteRenderer: {fileID: 0}
-  showIconWhenHoldByHand: 0
+  _networkObject: {fileID: 3588018770445165844}
   vfxDoubleJumpPrefab: {fileID: 2597314236992537918, guid: 4b665a09b96ee134cadd7eee83aacb00, type: 3}
 --- !u!114 &3588018770445165844
 MonoBehaviour:

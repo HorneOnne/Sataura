@@ -23,6 +23,14 @@ namespace Sataura
         [SerializeField] private Image evoIcon;
 
 
+        [Header("References")]
+        private static Player _player;
+
+
+        private void Start()
+        {
+            _player = GameDataManager.Instance.singleModePlayer.GetComponent<Player>();
+        }
 
         public void SetData(ItemData _itemData)
         {
@@ -33,7 +41,7 @@ namespace Sataura
         {
             skillIcon.sprite = itemData.icon;
             skillNameText.text = itemData.name;
-            skillDescText.text = itemData.description;
+            skillDescText.text = itemData.hoverDescription;
             levelText.text = $"level: {itemData.currentLevel}";
 
             if (hasEvo)
@@ -52,14 +60,12 @@ namespace Sataura
             this.itemData = _itemData;
 
             skillIcon.sprite = itemData.icon;
-            skillNameText.text = itemData.name;
-            skillDescText.text = itemData.description;
+            skillNameText.text = itemData.itemName;
+            skillDescText.text = itemData.ingameDescription;
             levelText.text = $"level: {itemData.currentLevel}";
 
             if(hasEvo)
             {
-                Debug.Log("Evo already set active.");
-
                 evoParent.SetActive(true);
                 evoIcon.sprite = ItemEvolutionManager.Instance.GetEvolutionItemNeeded(itemData).icon;
             }
@@ -74,8 +80,7 @@ namespace Sataura
         {
             Time.timeScale = 1.0f;
             UIManager.Instance.CloseUpgradeItemSkillPanel();
-            var playerInGameInventory = GameDataManager.Instance.singleModePlayer.GetComponent<Player>().playerInGameInventory;
-            var playerUseItem = GameDataManager.Instance.singleModePlayer.GetComponent<Player>().playerUseItem;
+            var playerIngameSkills = _player.playerIngameSkills;
 
 
             if (ItemEvolutionManager.Instance.IsEvoItem(itemData))
@@ -86,11 +91,11 @@ namespace Sataura
                 switch(itemNeedToEvolA.itemCategory)
                 {
                     case ItemCategory.Skill_Weapons:
-                        for (int i = 0; i < playerInGameInventory.weapons.Count; i++)
+                        for (int i = 0; i < playerIngameSkills.accessoriesData.itemSlots.Count; i++)
                         {
-                            if (ItemData.IsSameItem(itemNeedToEvolA, playerInGameInventory.weapons[i].ItemData))
+                            if (ItemData.IsSameItem(itemNeedToEvolA, playerIngameSkills.weaponsData.itemSlots[i].ItemData))
                             {
-                                playerInGameInventory.weapons[i].ClearSlot();
+                                playerIngameSkills.weaponsData.itemSlots[i].ClearSlot();
                             }
                         }
                         break;
@@ -110,11 +115,11 @@ namespace Sataura
                 switch (itemNeedToEvolB.itemCategory)
                 {
                     case ItemCategory.Skill_Weapons:
-                        for (int i = 0; i < playerInGameInventory.weapons.Count; i++)
+                        for (int i = 0; i < playerIngameSkills.accessoriesData.itemSlots.Count; i++)
                         {
-                            if (ItemData.IsSameItem(itemNeedToEvolB, playerInGameInventory.weapons[i].ItemData))
+                            if (ItemData.IsSameItem(itemNeedToEvolB, playerIngameSkills.weaponsData.itemSlots[i].ItemData))
                             {
-                                playerInGameInventory.weapons[i].ClearSlot();
+                                playerIngameSkills.weaponsData.itemSlots[i].ClearSlot();
                             }
                         }
                         break;
@@ -132,27 +137,27 @@ namespace Sataura
                 }
 
 
-                playerInGameInventory.AddWeapons(itemData);
+                playerIngameSkills.AddWeapons(itemData);
             }
             else
             {
-                bool hasBaseItemDataInPlayerIngameInv = playerUseItem.HasBaseItem(itemData);
+                bool alreadyHasItemType = playerIngameSkills.HasItemType(itemData.itemType);
                 int index;
                 ItemData currentItemData;
                 ItemData upgradeVersionItemData;
 
-                if (hasBaseItemDataInPlayerIngameInv)
+                if (alreadyHasItemType)
                 {
                     switch (itemData.itemCategory)
                     {
                         case ItemCategory.Skill_Weapons:
-                            index = playerUseItem.FindBaseItemIndex(itemData);
-                            currentItemData = playerInGameInventory.weapons[index].ItemData;
-                            upgradeVersionItemData = playerUseItem.GetUpgradeVersionOfItem(currentItemData);
+                            index = playerIngameSkills.FindItem(itemData);
+                            currentItemData = playerIngameSkills.weaponsData.itemSlots[index].ItemData;
+                            upgradeVersionItemData = playerIngameSkills.GetUpgradeVersionOfItem(currentItemData);
 
                             if (upgradeVersionItemData != null)
                             {
-                                playerInGameInventory.weapons[index] = new ItemSlot(upgradeVersionItemData, 1);
+                                playerIngameSkills.weaponsData.itemSlots[index] = new ItemSlot(upgradeVersionItemData, 1);
                             }
                             else
                             {
@@ -160,14 +165,14 @@ namespace Sataura
                             }
                             break;
                         case ItemCategory.Skill_Accessories:
-                            index = playerUseItem.FindBaseItemIndex(itemData);
-                            currentItemData = playerInGameInventory.accessories[index].ItemData;
-                            upgradeVersionItemData = playerUseItem.GetUpgradeVersionOfItem(currentItemData);
-
+                            index = playerIngameSkills.FindItem(itemData);
+                            currentItemData = playerIngameSkills.accessoriesData.itemSlots[index].ItemData;
+                            upgradeVersionItemData = playerIngameSkills.GetUpgradeVersionOfItem(currentItemData);
                             
                             if (upgradeVersionItemData != null)
                             {
-                                playerInGameInventory.accessories[index] = new ItemSlot(upgradeVersionItemData, 1);
+                                playerIngameSkills.accessoriesData.itemSlots[index] = new ItemSlot(upgradeVersionItemData, 1);
+                                playerIngameSkills.UpdateStatsEquip(itemData);
                             }
                             else
                             {
@@ -185,10 +190,11 @@ namespace Sataura
                     switch (itemData.itemCategory)
                     {
                         case ItemCategory.Skill_Weapons:
-                            playerInGameInventory.AddWeapons(itemData);
+                            playerIngameSkills.AddWeapons(itemData);
                             break;
                         case ItemCategory.Skill_Accessories:
-                            playerInGameInventory.AddAccessories(itemData);
+                            playerIngameSkills.AddAccessories(itemData);
+                            playerIngameSkills.UpdateStatsEquip(itemData);
                             break;
                         default:
                             throw new System.Exception();
@@ -197,8 +203,8 @@ namespace Sataura
             }
 
             Debug.LogWarning("Refactory code here.");
-            playerUseItem.ClearAllPassiveItemObjectInInventory();
-            playerUseItem.CreateAllPassiveItemObjectInInventory();
+            _player.playerUseItem.ClearAllPassiveItemObjectInInventory();
+            _player.playerUseItem.CreateAllPassiveItemObjectInInventory();
 
 
             UIPlayerInGameSkills.Instance.UpdateUI();

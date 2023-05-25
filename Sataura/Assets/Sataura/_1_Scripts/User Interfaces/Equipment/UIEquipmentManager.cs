@@ -98,7 +98,7 @@ namespace Sataura
         }
 
        
-        private void UpdateUI()
+        public void UpdateUI()
         {
             _uiHook.UpdateItemImage(_player.playerEquipment._hookData);
             _uiBoots.UpdateItemImage(_player.playerEquipment._bootsData);

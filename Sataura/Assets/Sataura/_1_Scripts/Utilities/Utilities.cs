@@ -22,7 +22,7 @@ namespace Sataura
         {
             GameObject returnGameObject = null;
 
-            var itemPrefab = GameDataManager.Instance.GetItemPrefab($"IP_{itemSlot.ItemData.itemType}");
+            var itemPrefab = GameDataManager.Instance.GetItemPrefab(itemSlot.ItemData.itemType);
             if (itemPrefab != null)
             {
                 returnGameObject = MonoBehaviour.Instantiate(itemPrefab, parent);
@@ -42,7 +42,7 @@ namespace Sataura
             GameObject returnGameObject = null;
             var itemData = GameDataManager.Instance.GetItemData(itemID);
             
-            var itemPrefab = GameDataManager.Instance.GetItemPrefab($"IP_{itemData.itemType}");
+            var itemPrefab = GameDataManager.Instance.GetItemPrefab(itemData.itemType);
             if (itemPrefab != null)
             {
                 returnGameObject = MonoBehaviour.Instantiate(itemPrefab, parent);

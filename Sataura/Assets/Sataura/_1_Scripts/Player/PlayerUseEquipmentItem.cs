@@ -36,7 +36,6 @@ namespace Sataura
         private Legging _leggingObject; 
         private Boots _bootsObject; 
         private Hook _hookObject;
-        private PlayerInputAction playerInputAction;
 
   
 
@@ -45,24 +44,14 @@ namespace Sataura
         {
             CreateEquimentObjects();
             StartCoroutine(LoadEquipmentData());
-
-
-            // Double jump boost object handle
-            playerInputAction = new PlayerInputAction();
-            playerInputAction.Player.Enable();
-            playerInputAction.Player.Jump.performed += DoubleJumpHandle;
-            // -------------------------------
-
-
-
         }
         private void CreateEquimentObjects()
         {
-            _helmetObject = Instantiate(_helmetPrefab, equipmentObjectsParent);
-            _chestplateObject = Instantiate(_chestplatePrefab, equipmentObjectsParent);
-            _leggingObject = Instantiate(_leggingPrefab, equipmentObjectsParent);
-            _bootsObject = Instantiate(_bootsPrefab, equipmentObjectsParent);
-            _hookObject = Instantiate(_hookPrefab, equipmentObjectsParent);
+            _helmetObject = Instantiate(_helmetPrefab);
+            _chestplateObject = Instantiate(_chestplatePrefab);
+            _leggingObject = Instantiate(_leggingPrefab);
+            _bootsObject = Instantiate(_bootsPrefab);
+            _hookObject = Instantiate(_hookPrefab);          
         }
 
         private IEnumerator LoadEquipmentData()
@@ -70,11 +59,11 @@ namespace Sataura
             yield return new WaitUntil(() => _player.characterData != null);
 
             // Get equipemnts data
-            _helmetData = (HelmetData)GameDataManager.Instance.GetItemData(_player.characterData.helmetDataID);
-            _chestplateData = (ChestplateData)GameDataManager.Instance.GetItemData(_player.characterData.chestplateDataID);
-            _leggingData = (LeggingData)GameDataManager.Instance.GetItemData(_player.characterData.leggingDataID);
-            _bootData = (BootData)GameDataManager.Instance.GetItemData(_player.characterData.bootsDataID);
-            _hookData = (HookData)GameDataManager.Instance.GetItemData(_player.characterData.hookDataID);
+            _helmetData = _player.characterData.helmetData;
+            _chestplateData = _player.characterData.chestplateData;
+            _leggingData = _player.characterData.leggingData;
+            _bootData = _player.characterData.bootsData;
+            _hookData = _player.characterData.hookData;
 
 
             // Set equipments data
@@ -83,14 +72,18 @@ namespace Sataura
             _leggingObject.SetData(new ItemSlot(_leggingData, 1));
             _bootsObject.SetData(new ItemSlot(_bootData, 1));
             _hookObject.SetData(new ItemSlot(_hookData, 1));
-        }
 
-        
+            _helmetObject._networkObject.Spawn();
+            _chestplateObject._networkObject.Spawn();
+            _leggingObject._networkObject.Spawn();
+            _bootsObject._networkObject.Spawn();
+            _hookObject._networkObject.Spawn();
 
-        private void DoubleJumpHandle(InputAction.CallbackContext obj)
-        {
-            //_bootsObject.DoubleJump(_player);
-            Debug.Log("Handle double jump !!!");
-        }
+            _helmetObject._networkObject.TrySetParent(equipmentObjectsParent);
+            _chestplateObject._networkObject.TrySetParent(equipmentObjectsParent);
+            _leggingObject._networkObject.TrySetParent(equipmentObjectsParent);
+            _bootsObject._networkObject.TrySetParent(equipmentObjectsParent);
+            _hookObject._networkObject.TrySetParent(equipmentObjectsParent);
+        }    
     }
 }

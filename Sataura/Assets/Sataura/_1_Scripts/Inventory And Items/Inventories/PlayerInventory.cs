@@ -16,7 +16,6 @@ namespace Sataura
 
         private ItemInHand itemInHand;
 
-
         [Header("INVENTORY SETTINGS")]
         // The list of all item slots in the inventory.
         [HideInInspector] public List<ItemSlot> playerInventory;
