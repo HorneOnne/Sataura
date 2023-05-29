@@ -20,8 +20,8 @@ namespace Sataura
 
         private IEnumerator ReferencePlayer()
         {
-            yield return new WaitUntil(() => GameDataManager.Instance.singleModePlayer != null);          
-            _characterData = GameDataManager.Instance.singleModePlayer.GetComponent<ItemSelectionPlayer>().characterData;
+            yield return new WaitUntil(() => GameDataManager.Instance.currentPlayer != null);          
+            _characterData = GameDataManager.Instance.currentPlayer.characterData;
 
 
             UpdateStatUI(CharacterStats.MaxHealth);
@@ -42,7 +42,7 @@ namespace Sataura
         public void UpdateStatUI(CharacterStats characterStat)
         {
             if (_characterData == null)
-                _characterData = GameDataManager.Instance.singleModePlayer.GetComponent<ItemSelectionPlayer>().characterData;
+                _characterData = GameDataManager.Instance.currentPlayer.characterData;
 
             for (int i = 0; i < _characterStatSlots.Count; i++)
             {

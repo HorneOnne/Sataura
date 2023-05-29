@@ -19,7 +19,7 @@ namespace Sataura
  
 
         [Header("Runtime References")]
-        [SerializeField] private ItemSelectionPlayer _player;
+        [SerializeField] private InventoryPlayer _inventoryPlayer;
         private ItemInHand itemInHand;
 
 
@@ -38,10 +38,10 @@ namespace Sataura
 
         private IEnumerator ReferencePlayer()
         {
-            yield return new WaitUntil(() => GameDataManager.Instance.singleModePlayer != null);
+            yield return new WaitUntil(() => GameDataManager.Instance.inventoryPlayer != null);
 
-            _player = GameDataManager.Instance.singleModePlayer.GetComponent<ItemSelectionPlayer>();
-            itemInHand = _player.itemInHand;
+            _inventoryPlayer = GameDataManager.Instance.inventoryPlayer;
+            itemInHand = _inventoryPlayer.itemInHand;
 
         }
 
@@ -58,7 +58,7 @@ namespace Sataura
             PointerEventData pointerEventData = (PointerEventData)baseEvent;
 
             var equipmentSlotType = clickedObject.GetComponent<UIEquipSlot>().EequipmentType;
-            var equipmentData = _player.playerEquipment.GetEquipmentData(equipmentSlotType);
+            var equipmentData = _inventoryPlayer.playerEquipment.GetEquipmentData(equipmentSlotType);
 
             if (itemInHand.HasItemData() == false)
             {
@@ -71,7 +71,7 @@ namespace Sataura
                 {
                     //Debug.Log("HAND: EMPTY \t SLOT: HAS ITEM");
                     itemInHand.SetItem(new ItemSlot(equipmentData,1), slotIndex: -1, storageType: StoredType.Another, true);
-                    _player.playerEquipment.ClearData(equipmentSlotType);
+                    _inventoryPlayer.playerEquipment.ClearData(equipmentSlotType);
                 }
             }
             else
@@ -80,7 +80,7 @@ namespace Sataura
                 {
                     //Debug.Log("HAND: HAS ITEM \t SLOT: EMPTY");
 
-                    bool canEquip = _player.playerEquipment.TryEquip(itemInHand.GetItemData(), equipmentSlotType);
+                    bool canEquip = _inventoryPlayer.playerEquipment.TryEquip(itemInHand.GetItemData(), equipmentSlotType);
                     if (canEquip)
                     {
                         itemInHand.ClearSlot();
@@ -100,12 +100,12 @@ namespace Sataura
        
         public void UpdateUI()
         {
-            _uiHook.UpdateItemImage(_player.playerEquipment._hookData);
-            _uiBoots.UpdateItemImage(_player.playerEquipment._bootsData);
-            _helmet.UpdateItemImage(_player.playerEquipment._helmetData);
-            _chestplate.UpdateItemImage(_player.playerEquipment._chestplateData);
-            _legging.UpdateItemImage(_player.playerEquipment._leggingData);
-            _accessory.UpdateItemImage(_player.playerEquipment._accessoryData);
+            _uiHook.UpdateItemImage(_inventoryPlayer.playerEquipment._hookData);
+            _uiBoots.UpdateItemImage(_inventoryPlayer.playerEquipment._bootsData);
+            _helmet.UpdateItemImage(_inventoryPlayer.playerEquipment._helmetData);
+            _chestplate.UpdateItemImage(_inventoryPlayer.playerEquipment._chestplateData);
+            _legging.UpdateItemImage(_inventoryPlayer.playerEquipment._leggingData);
+            _accessory.UpdateItemImage(_inventoryPlayer.playerEquipment._accessoryData);
         }
     }
 }

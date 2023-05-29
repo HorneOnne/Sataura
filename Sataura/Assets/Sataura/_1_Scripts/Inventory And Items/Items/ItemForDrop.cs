@@ -11,7 +11,7 @@ namespace Sataura
         }
 
 
-        public override void Collect(Player player)
+        public override void Collect(IngamePlayer player)
         {
             Debug.Log("Collect");
         }

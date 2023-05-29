@@ -66,7 +66,7 @@ namespace Sataura
 
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            Player _player;
+            IngamePlayer _player;
             if (collision.TryGetComponent(out _player))
             {
                 _player.playerCombat.TakeDamage(_enemyData.damage);

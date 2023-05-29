@@ -25,7 +25,7 @@ namespace Sataura
         public bool blackHole = false;
 
         #region Properties
-        [field: SerializeField] public float Cooldown { get; set; }
+        [field: SerializeField] public float cooldown { get; set; }
         public int CurrentHealth { get => currentHealth.Value; }
         public int MaxHealth { get => enemyData.maxHealth; }
         public Rigidbody2D Rb2D { get => rb2D; }
@@ -102,6 +102,7 @@ namespace Sataura
         protected virtual void FixedUpdate()
         {
             if (!IsServer) return;
+            if (playerTranform == null) return;
 
             if (Time.time - timeElapse >= 2.0f)
             {
@@ -184,7 +185,7 @@ namespace Sataura
                     }
                 }
                 canTrigger = false;
-                Invoke("ResetTrigger", Cooldown);
+                Invoke("ResetTrigger", cooldown);
             }
         }
 
@@ -391,46 +392,10 @@ namespace Sataura
             else
                 textObjectRotation = new Vector3(0, 0, Random.Range(0f, 30f));
 
-            textNetworkObject.GetComponent<DamagePopup>().SetUp(damaged, GetDamageColor(damaged), GetDamageSize(damaged), moveTextObjectVector, textObjectRotation);
+            textNetworkObject.GetComponent<DamagePopup>().SetUp(damaged, Utilities.GetDamageColor(damaged), Utilities.GetDamageSize(damaged), moveTextObjectVector, textObjectRotation);
         }
 
-        private Color GetDamageColor(float damage)
-        {
-            switch (damage)
-            {
-                case float n when (n >= 0 && n < 25):
-                    return Color.green;
-                case float n when (n >= 25 && n < 50):
-                    return Color.blue;
-                case float n when (n >= 50 && n < 75):
-                    return new Color(0.6f, 0.2f, 1f); // Purple
-                case float n when (n >= 75 && n < 90):
-                    return Color.red;
-                case float n when (n >= 90):
-                    return Color.yellow;
-                default:
-                    return Color.white;
-            }
-        }
-
-        private float GetDamageSize(float damage)
-        {
-            switch (damage)
-            {
-                case float n when (n >= 0 && n < 25):
-                    return 10;
-                case float n when (n >= 25 && n < 50):
-                    return 11;
-                case float n when (n >= 50 && n < 75):
-                    return 12; // Purple
-                case float n when (n >= 75 && n < 90):
-                    return 13;
-                case float n when (n >= 90):
-                    return 15;
-                default:
-                    return 15;
-            }
-        }
+        
     }
 
 }

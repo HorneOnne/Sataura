@@ -3,7 +3,7 @@
     public enum PlayerType
     {
         MainMenuPlayer,
-        ItemSelectionPlayer,
+        InventoryPlayer,
         IngamePlayer,
     }
 }

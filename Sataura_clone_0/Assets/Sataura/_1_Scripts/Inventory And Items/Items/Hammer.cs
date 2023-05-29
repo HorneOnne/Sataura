@@ -38,7 +38,7 @@ namespace Sataura
             }
         }
 
-        public override bool Use(Player player, Vector2 nearestEnemyPosition)
+        public override bool Use(IngamePlayer player, Vector2 nearestEnemyPosition)
         {
             switch (_hammerData.useType)
             {
@@ -63,7 +63,7 @@ namespace Sataura
             return true;
         }
 
-        private void ThrowSingleHammer(Player player)
+        private void ThrowSingleHammer(IngamePlayer player)
         {
             var _projectileObject = Instantiate(hammerProjectilePrefab, transform.position, Quaternion.identity);
             _projectileObject.transform.localScale *= _hammerData.size * player.characterData._currentArea;
@@ -71,7 +71,7 @@ namespace Sataura
             _projectileObject._networkObject.Spawn();
         }
 
-        private void ThrowDoubleHammer(Player player)
+        private void ThrowDoubleHammer(IngamePlayer player)
         {
             ThrowSingleHammer(player);
 
@@ -80,7 +80,7 @@ namespace Sataura
                 ThrowSingleHammer(player);
             }));
         }
-        private void ThrowTripleHammer(Player player)
+        private void ThrowTripleHammer(IngamePlayer player)
         {
             ThrowSingleHammer(player);
 
@@ -96,14 +96,14 @@ namespace Sataura
         }
 
 
-        private void ThrowSingleNoMoreHammer(Player player, Vector2 spawnPosition)
+        private void ThrowSingleNoMoreHammer(IngamePlayer player, Vector2 spawnPosition)
         {
             var _projectileObject = Instantiate(noMoreHammerProjectilePrefab, spawnPosition, Quaternion.identity);
             _projectileObject.transform.localScale *= _hammerData.size * player.characterData._currentArea;
             _projectileObject.SetData(_hammerData);
             _projectileObject._networkObject.Spawn();
         }
-        private void Evo(Player player)
+        private void Evo(IngamePlayer player)
         {
             Vector2 baseSpawnPosition = (Vector2)player.transform.position + new Vector2(0, 50);
             ThrowSingleNoMoreHammer(player, baseSpawnPosition);

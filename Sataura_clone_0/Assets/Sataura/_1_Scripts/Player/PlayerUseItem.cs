@@ -10,7 +10,7 @@ namespace Sataura
     public class PlayerUseItem : NetworkBehaviour
     {
         [Header("References")]
-        [SerializeField] private Player _player;
+        [SerializeField] private IngamePlayer _player;
         private CharacterData _characterData;
         [SerializeField] private PlayerLoot _playerLoot;
         private PlayerInGameSkills _playerInGameSkills;

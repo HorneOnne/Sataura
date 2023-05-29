@@ -24,12 +24,12 @@ namespace Sataura
 
 
         [Header("References")]
-        private static Player _player;
+        private static IngamePlayer _ingamePlayer;
 
 
         private void Start()
         {
-            _player = GameDataManager.Instance.singleModePlayer.GetComponent<Player>();
+            _ingamePlayer = GameDataManager.Instance.ingamePlayer;
         }
 
         public void SetData(ItemData _itemData)
@@ -80,7 +80,7 @@ namespace Sataura
         {
             Time.timeScale = 1.0f;
             UIManager.Instance.CloseUpgradeItemSkillPanel();
-            var playerIngameSkills = _player.playerIngameSkills;
+            var playerIngameSkills = _ingamePlayer.playerIngameSkills;
 
 
             if (ItemEvolutionManager.Instance.IsEvoItem(itemData))
@@ -185,7 +185,7 @@ namespace Sataura
                 }
                 else
                 {
-                    Debug.Log("Not have this item in ingame Inventory!!!!!!!");
+                    //Debug.Log("Not have this item in ingame Inventory!!!!!!!");
 
                     switch (itemData.itemCategory)
                     {
@@ -203,8 +203,8 @@ namespace Sataura
             }
 
             Debug.LogWarning("Refactory code here.");
-            _player.playerUseItem.ClearAllPassiveItemObjectInInventory();
-            _player.playerUseItem.CreateAllPassiveItemObjectInInventory();
+            _ingamePlayer.playerUseItem.ClearAllPassiveItemObjectInInventory();
+            _ingamePlayer.playerUseItem.CreateAllPassiveItemObjectInInventory();
 
 
             UIPlayerInGameSkills.Instance.UpdateUI();

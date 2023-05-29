@@ -25,7 +25,7 @@ namespace Sataura
             }
         }
 
-        public override bool Use(Player player, Vector2 nearestEnemyPosition)
+        public override bool Use(IngamePlayer player, Vector2 nearestEnemyPosition)
         {           
             switch(_swordData.useType)
             {
@@ -50,7 +50,7 @@ namespace Sataura
        
 
 
-        private void SingleProjectile(Player player, Vector2 nearestEnemyPosition, bool upSide = true)
+        private void SingleProjectile(IngamePlayer player, Vector2 nearestEnemyPosition, bool upSide = true)
         {
             var swordOjbect = Instantiate(woodenSwordProjectilePrefab, transform.position, Quaternion.identity);
             var passiveProjectile = swordOjbect.GetComponent<NetworkProjectile>();
@@ -63,7 +63,7 @@ namespace Sataura
             // -----
         }
 
-        private void MultipleProjectile(Player player, Vector2 nearestEnemyPosition)
+        private void MultipleProjectile(IngamePlayer player, Vector2 nearestEnemyPosition)
         {
             SingleProjectile(player, nearestEnemyPosition, true);
             StartCoroutine(WaitFor(0.3f, () =>
@@ -73,7 +73,7 @@ namespace Sataura
 
         }
 
-        private void Evo(Player player, Vector2 nearestEnemyPosition)
+        private void Evo(IngamePlayer player, Vector2 nearestEnemyPosition)
         {
             var evoSwordOjbect = Instantiate(evoWoodenSwordProjectilePrefab, transform.position, Quaternion.identity);
             var passiveProjectile = evoSwordOjbect.GetComponent<NetworkProjectile>();

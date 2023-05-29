@@ -8,13 +8,13 @@ namespace Sataura
         private SwordData _swordData;
         [SerializeField] private LayerMask _enemyProjectileLayer;
         [SerializeField] private LayerMask _enemyLayer;
-        private Player _player;
+        private IngamePlayer _player;
 
 
         // Healing
         private bool _canHealth = true;
 
-        public void SetUp(Player player, SwordData swordData, Vector2 nearestEnemyPosition)
+        public void SetUp(IngamePlayer player, SwordData swordData, Vector2 nearestEnemyPosition)
         {
             this._swordData = swordData;
             this._player = player;
@@ -36,7 +36,7 @@ namespace Sataura
                 {
                     // Object on the target layer entered the trigger
                     _player.playerCombat.Healing(7);
-                    _player.playerCombat.UpdateMaxHealthSlider();
+                    _player.playerCombat.UpdateHealthBarUI();
                     _canHealth = false;
 
                     // UI

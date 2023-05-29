@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterData: {fileID: 0}
+  _networkObject: {fileID: 3242512103800558084}
 --- !u!114 &3242512103800558084
 MonoBehaviour:
   m_ObjectHideFlags: 0

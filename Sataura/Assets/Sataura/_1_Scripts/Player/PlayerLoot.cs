@@ -10,7 +10,7 @@ namespace Sataura
         [SerializeField] private LayerMask lootableLayer;
 
         // Cached
-        private Player _player;
+        private IngamePlayer _player;
         private CharacterData _characterData;
 
 
@@ -28,7 +28,7 @@ namespace Sataura
 
         private void Start()
         {
-            _player = playerGameObject.GetComponent<Player>();
+            _player = playerGameObject.GetComponent<IngamePlayer>();
             _characterData = _player.characterData;
         }
 

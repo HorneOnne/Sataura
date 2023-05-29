@@ -18,12 +18,17 @@ namespace Sataura
         private void Awake()
         {
             Application.targetFrameRate = limitFps;
-
-
             
         }
 
 
+        private void Update()
+        {
+            if(Input.GetKeyDown(KeyCode.K))
+            {
+                BackToCharacterSelectionScene();
+            }
+        }
 
 
 
@@ -33,12 +38,16 @@ namespace Sataura
         }
 
         public void BackToMainMenu()
-        {
-            SaveManager.Instance.Save();
+        {          
+            SaveManager.Instance.SaveCharacterData();
             NetworkManager.Singleton.Shutdown();
             DestroyAllDontDestroyOnLoadObjects();
-            SceneManager.LoadScene(Loader.Scene._0_MainMenuScene.ToString());
-            
+            SceneManager.LoadScene(Loader.Scene._0_MainMenuScene.ToString());         
+        }
+
+        public void BackToCharacterSelectionScene()
+        {
+            SceneManager.LoadScene(Loader.Scene._1_CharacterInventoryScene.ToString());
         }
 
 

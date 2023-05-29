@@ -6,7 +6,7 @@ namespace Sataura
     public class Boots : Item 
     {
         [Header("Runtime References")]
-        private Player _player;
+        private IngamePlayer _player;
         [SerializeField] private BootData _bootsData;
         [SerializeField] private Rigidbody2D _rb2D;
 
@@ -20,7 +20,7 @@ namespace Sataura
         public override void OnNetworkSpawn()
         {
             _bootsData = ((BootData)ItemData);
-            _player = GameDataManager.Instance.singleModePlayer.GetComponent<Player>();          
+            _player = GameDataManager.Instance.ingamePlayer;          
             _rb2D = _player.playerMovement.Rb2D; 
 
             if (IsServer)

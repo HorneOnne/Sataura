@@ -8,7 +8,7 @@ namespace Sataura
     {
 
         [Header("REFERENCES")]
-        [SerializeField] private Player _player;
+        [SerializeField] private IngamePlayer _player;
         private PlayerInGameSkills _playerInGameInventory;
         private PlayerMovement _playerMovement;
 

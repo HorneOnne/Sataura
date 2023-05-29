@@ -1,15 +1,14 @@
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using System.Collections;
 
 namespace Sataura
 {
     public class ItemInHand : NetworkBehaviour
     {
         [Header("References")]
-        [SerializeField] private ItemSelectionPlayer itemSelectionPlayer;
-
+        [SerializeField] private InventoryPlayer _inventoryPlayer;
         private InputHandler playerInputHandler;
 
 
@@ -42,15 +41,13 @@ namespace Sataura
 
 
 
-
         public override void OnNetworkSpawn()
         {
             uiItemInHand = UIItemInHand.Instance;
-            playerInputHandler = itemSelectionPlayer.playerInputHandler;
-
+            playerInputHandler = _inventoryPlayer.playerInputHandler;        
         }
 
-
+      
 
         public bool HasHandHoldItemInServer()
         {

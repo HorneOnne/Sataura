@@ -69,13 +69,13 @@ namespace Sataura
         }
 
 
-        public virtual void Collect(Player player)
+        public virtual void Collect(IngamePlayer player)
         {
 
         }
 
     
-        public virtual void Drop(Player player, Vector2 position, Vector3 rotation, bool forceDestroyItemObject = false)
+        public virtual void Drop(IngamePlayer player, Vector2 position, Vector3 rotation, bool forceDestroyItemObject = false)
         {
             var itemSlotDrop = new ItemSlot(ItemSlot);
             var itemPrefab = GameDataManager.Instance.itemForDropPrefab;
@@ -95,7 +95,7 @@ namespace Sataura
 
 
 
-        public virtual bool Use(Player player, Vector2 mousePosition)
+        public virtual bool Use(IngamePlayer player, Vector2 mousePosition)
         {
             return true;
         }     

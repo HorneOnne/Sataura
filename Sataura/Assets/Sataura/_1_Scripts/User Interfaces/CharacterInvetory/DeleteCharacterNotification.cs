@@ -39,9 +39,9 @@ namespace Sataura
 
         private void YesBtnHandler()
         {
-            SaveManager.charactersData.Remove(_characterData);           
-            SaveManager.Instance.Save();
-            SaveManager.Instance.Load();
+            SaveManager.Instance.charactersData.Remove(_characterData);           
+            /*SaveManager.Instance.Save();
+            SaveManager.Instance.Load();*/
 
             MainMenuUIManager.Instance.playerSelectionCanvas.SetActive(true);
             UIDisplayCharactersSelection.Instance.ClearAll();

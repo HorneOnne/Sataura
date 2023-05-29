@@ -11,7 +11,7 @@ namespace Sataura
         /// <summary>
         /// The time between two instances of taking damage.
         /// </summary>
-        public float Cooldown { get; set; }
+        public float cooldown { get; set; }
 
         /// <summary>
         /// Called when the object is attacked.

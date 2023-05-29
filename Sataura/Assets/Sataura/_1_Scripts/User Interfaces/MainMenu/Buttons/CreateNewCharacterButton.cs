@@ -30,12 +30,12 @@ namespace Sataura
             characterData.accessoriesData = CreateAccessoriesData();
             
 
-            SaveManager.charactersData.Add(characterData);
+            SaveManager.Instance.charactersData.Add(characterData);
         }
 
         private CharacterMovementData CreateCharacterMovementData()
         {
-            CharacterMovementData characterMovementData = Instantiate(SaveManager.Instance.defaultCharacterMovementData);
+            CharacterMovementData characterMovementData = Instantiate(SaveManager.Instance.defaultCharacterData.characterMovementData);
             characterMovementData.name = $"{UICreateNewCharacterManager.Instance.CharacterName}_movementData";
 
             return characterMovementData;
@@ -43,7 +43,7 @@ namespace Sataura
 
         private InventoryData CreateWeaponsData()
         {
-            InventoryData weaponData = Instantiate(SaveManager.Instance.defaultWeaponsData);
+            InventoryData weaponData = Instantiate(SaveManager.Instance.defaultCharacterData.weaponsData);
             weaponData.name = $"{UICreateNewCharacterManager.Instance.CharacterName}_weaponsData";
 
             return weaponData;
@@ -51,7 +51,7 @@ namespace Sataura
 
         private InventoryData CreateAccessoriesData()
         {
-            InventoryData accessoriesData = Instantiate(SaveManager.Instance.defaultAccessoriesData);
+            InventoryData accessoriesData = Instantiate(SaveManager.Instance.defaultCharacterData.accessoriesData);
             accessoriesData.name = $"{UICreateNewCharacterManager.Instance.CharacterName}_accessoriesData";
 
             return accessoriesData;
@@ -59,7 +59,7 @@ namespace Sataura
 
         private InventoryData CreateInventoryData()
         {
-            InventoryData inventoryData = Instantiate(SaveManager.Instance.defaultInventoryData);
+            InventoryData inventoryData = Instantiate(SaveManager.Instance.defaultCharacterData.playerInventoryData);
             inventoryData.name = $"{UICreateNewCharacterManager.Instance.CharacterName}_inventoryData";
 
             return inventoryData;

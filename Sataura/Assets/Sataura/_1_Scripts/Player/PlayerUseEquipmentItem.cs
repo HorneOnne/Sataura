@@ -9,7 +9,7 @@ namespace Sataura
     public class PlayerUseEquipmentItem : NetworkBehaviour
     {
         [Header("References")]
-        [SerializeField] private Player _player;
+        [SerializeField] private IngamePlayer _player;
 
 
         [Header("Equipment Data  (Runtime)")]

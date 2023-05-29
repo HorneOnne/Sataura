@@ -6,7 +6,7 @@ namespace Sataura
     public partial class UIPlayerInGameSkills : Singleton<UIPlayerInGameSkills>
     {
         [Header("Runtime References")]
-        [SerializeField] private Player player;
+        [SerializeField] private IngamePlayer player;
         private PlayerInGameSkills playerInGameSkills;
 
 
@@ -40,7 +40,7 @@ namespace Sataura
 
         public void SetPlayer(GameObject playerObject)
         {
-            this.player = playerObject.GetComponent<Player>();
+            this.player = playerObject.GetComponent<IngamePlayer>();
         }
 
   

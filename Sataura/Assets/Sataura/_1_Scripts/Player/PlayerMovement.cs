@@ -11,7 +11,7 @@ namespace Sataura
     public class PlayerMovement : NetworkBehaviour
     {
         [Header("REFERENCES")]
-        [SerializeField] private Player player;
+        [SerializeField] private IngamePlayer player;
         [SerializeField] private Rigidbody2D rb;
         [SerializeField] public Transform groundCheckPoint;
         private CharacterMovementData characterMovementData;

@@ -29,7 +29,7 @@ namespace Sataura
         private int _effectAnimationStep;
         private float effectFpsCounter = 0f;
         // Cached
-        private Player _playerCached;
+        private IngamePlayer _playerCached;
         private static Debuff _slowlyDebuff;
 
 
@@ -39,7 +39,7 @@ namespace Sataura
             base.SetFollowTarget(target);
 
             if (_playerCached == null)
-                _playerCached = base.playerTranform.GetComponent<Player>();
+                _playerCached = base.playerTranform.GetComponent<IngamePlayer>();
 
             if(_slowlyDebuff == null)
             {

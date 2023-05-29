@@ -17,10 +17,10 @@ MonoBehaviour:
   itemCategory: 0
   itemType: 51
   max_quantity: 1
-  hoverDescription: 
+  hoverDescription: ~Slash a nearest enemy
   equipDescription: 
   unequipDescription: 
-  ingameDescription: Gain sword
+  ingameDescription: Slash a nearest enemy.
   rateOfFire: 1
   currentLevel: 1
   maxLevel: 5

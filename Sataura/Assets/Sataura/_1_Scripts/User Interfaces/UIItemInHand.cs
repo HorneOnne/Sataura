@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,7 +7,7 @@ namespace Sataura
     public class UIItemInHand : Singleton<UIItemInHand>
     {
         [Header("Runtime References")]
-        [SerializeField] private ItemSelectionPlayer itemSelectionPlayer;
+        [SerializeField] private InventoryPlayer _inventoryPlayer;
 
         private ItemInHand itemInHand;
         [SerializeField] GameObject uiSlotPrefab;
@@ -34,12 +35,11 @@ namespace Sataura
 
     
         private bool alreadyLoadReferences;
-        public void LoadReferences()
+        private IEnumerator LoadReferences()
         {
+            yield return new WaitUntil(() => _inventoryPlayer != null);
             mainCamera = Camera.main;
-
-            itemInHand = itemSelectionPlayer.itemInHand;
-
+            itemInHand = _inventoryPlayer.itemInHand;
 
             alreadyLoadReferences = true;
         }
@@ -47,8 +47,8 @@ namespace Sataura
 
         public void SetPlayer(GameObject playerObject)
         {
-            this.itemSelectionPlayer = playerObject.GetComponent<ItemSelectionPlayer>();
-
+            this._inventoryPlayer = playerObject.GetComponent<InventoryPlayer>();
+            StartCoroutine(LoadReferences());
         }
 
         private void Update()
@@ -56,7 +56,7 @@ namespace Sataura
             if (alreadyLoadReferences == false) return;
 
 
-            if (itemSelectionPlayer.itemInHand.HasItemData() && uiSlotDisplay != null)
+            if (_inventoryPlayer.itemInHand.HasItemData() && uiSlotDisplay != null)
             {
                 mainCameraPosition = (Vector2)mainCamera.ScreenToWorldPoint(Input.mousePosition);
                 uiSlotDisplay.GetComponent<RectTransform>().transform.position = mainCameraPosition;

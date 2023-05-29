@@ -38,7 +38,7 @@ namespace Sataura
         }
 
 
-        public override bool Use(Player player, Vector2 nearestEnemyPosition)
+        public override bool Use(IngamePlayer player, Vector2 nearestEnemyPosition)
         {                    
             if (cachedClientIds == null || cachedClientIds.Length == 0)
             {
@@ -74,7 +74,7 @@ namespace Sataura
             callback?.Invoke();
         }
 
-        private void ShootSingleArrow(Player player, Vector2 nearestEnemyPosition)
+        private void ShootSingleArrow(IngamePlayer player, Vector2 nearestEnemyPosition)
         {
             var arrowObject = Instantiate(normalArrowProjectilePrefab, shootingPoints[0].position, transform.rotation);
             arrowObject.transform.localScale *= bowItemData.size * player.characterData._currentArea;
@@ -91,7 +91,7 @@ namespace Sataura
             SoundManager.Instance.PlaySound(SoundType.Bow, playRandom: true, 0.5f);
         }
 
-        private void ShootDoubleArrows(Player player, Vector2 nearestEnemyPosition)
+        private void ShootDoubleArrows(IngamePlayer player, Vector2 nearestEnemyPosition)
         {
             ShootSingleArrow(player, nearestEnemyPosition);
 
@@ -101,7 +101,7 @@ namespace Sataura
             }));    
         }
 
-        private void ShootTripleArrows(Player player, Vector2 nearestEnemyPosition)
+        private void ShootTripleArrows(IngamePlayer player, Vector2 nearestEnemyPosition)
         {
             ShootSingleArrow(player, nearestEnemyPosition);
 
@@ -118,7 +118,7 @@ namespace Sataura
 
 
 
-        private void ShootSingleEvoArrow(Player player, Vector2 nearestEnemyPosition)
+        private void ShootSingleEvoArrow(IngamePlayer player, Vector2 nearestEnemyPosition)
         {
             var arrowObject = Instantiate(evoArrowProjectilePrefab, shootingPoints[0].position, transform.rotation);
             arrowObject.transform.localScale *= bowItemData.size * player.characterData._currentArea;
@@ -146,7 +146,7 @@ namespace Sataura
 
             SoundManager.Instance.PlaySound(SoundType.Bow, playRandom: true, 0.5f);
         }
-        private void EvoShooting(Player player, Vector2 nearestEnemyPosition)
+        private void EvoShooting(IngamePlayer player, Vector2 nearestEnemyPosition)
         {
             ShootSingleEvoArrow(player, nearestEnemyPosition);
 

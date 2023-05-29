@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7f11ce6a06fe5646bda3a398c6fff9a, type: 3}
+  m_Name: Deafult_CharacterData
+  m_EditorClassIdentifier: 
+  characterName: 
+  characterMovementData: {fileID: 11400000, guid: 065c071c566b4e4408dd38924ce3b03e, type: 2}
+  playerInventoryData: {fileID: 11400000, guid: c6d6bf3a9fe93a244a2deb61f45aafd3, type: 2}
+  weaponsData: {fileID: 11400000, guid: 37665d3ce4e027f44b489377b0bc8675, type: 2}
+  accessoriesData: {fileID: 11400000, guid: 830df63cdc82eb546a5bead3603d5a23, type: 2}
+  _defaultMaxHealth: 100
+  _defaultRecovery: 0
+  _defaultArmor: 0
+  _defaultMoveSpeed: 7
+  _defaultJumpForce: 30
+  _defaultAttackSpeed: 1
+  _defaultDuration: 0
+  _defaultArea: 1
+  _defaultCooldown: 0
+  _defaultMagnet: 5
+  _defaultRevival: 0
+  _defaultAware: 50
+  _currentMaxHealth: 100
+  _currentRecovery: 0
+  _currentArmor: 0
+  _currentMoveSpeed: 7
+  _currentJumpForce: 30
+  _currentAttackSpeed: 1
+  _currentDuration: 0
+  _currentArea: 1
+  _currentCooldown: 0
+  _currentMagnet: 5
+  _currentRevival: 0
+  _currentAware: 50
+  helmetData: {fileID: 0}
+  chestplateData: {fileID: 0}
+  leggingData: {fileID: 0}
+  bootsData: {fileID: 0}
+  hookData: {fileID: 0}
+  currencyString: 

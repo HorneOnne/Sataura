@@ -11,7 +11,7 @@ namespace Sataura
         [SerializeField] private int currentHealth;
 
         [Header("Player references")]
-        [SerializeField] private Player player;
+        [SerializeField] private IngamePlayer player;
 
         [Header("References")]
         [SerializeField] private Slider healthBarSlider;
@@ -38,13 +38,15 @@ namespace Sataura
         [SerializeField] private LayerMask enemyLayer;
 
         #region Properties
-        public float Cooldown { get; set; }
+        public float cooldown { get; set; }
         #endregion
 
 
         private void Start()
         {
             healthBarSlider.minValue = 0;
+            currentHealth = player.characterData._currentMaxHealth;
+
             healthBarSlider.maxValue = player.characterData._currentMaxHealth;
             healthBarSlider.value = currentHealth;
 

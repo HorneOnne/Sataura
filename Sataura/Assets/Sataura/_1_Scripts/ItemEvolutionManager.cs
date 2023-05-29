@@ -140,7 +140,7 @@ namespace Sataura
 
 
 
-        private ItemData HasItemEvolution(Player player)
+        private ItemData HasItemEvolution(IngamePlayer player)
         {
             var playerIngameSkills = player.playerIngameSkills;
 
@@ -173,7 +173,7 @@ namespace Sataura
             return null;
         }
 
-        public Dictionary<ItemData, bool> GenerateUpgradeItemData(Player player)
+        public Dictionary<ItemData, bool> GenerateUpgradeItemData(IngamePlayer player)
         {
             Debug.LogWarning("Optimize here. \t GenerateUpgradeItemData");
             Dictionary<ItemData, bool> upgradeItemDataDict = new Dictionary<ItemData, bool>();

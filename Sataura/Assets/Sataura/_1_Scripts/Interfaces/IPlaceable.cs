@@ -25,7 +25,7 @@ namespace Sataura
         /// <param name="player">The player who is placing the item.</param>
         /// <param name="showRay">Whether to show the ray for the check.</param>
         /// <returns>True if the item is above the specified layer mask, otherwise false.</returns>
-        public bool IsAboveGround(Player player, bool showRay = false);
+        public bool IsAboveGround(IngamePlayer player, bool showRay = false);
 
 
         /// <summary>
@@ -34,6 +34,6 @@ namespace Sataura
         /// <param name="placedPosition">The position to place the item at.</param>
         /// <param name="player">The player who is placing the item.</param>
         /// <param name="parent">The transform to parent the item to.</param>
-        public void Placed(Vector3 placedPosition, Player player = null, Transform parent = null);
+        public void Placed(Vector3 placedPosition, IngamePlayer player = null, Transform parent = null);
     }
 }

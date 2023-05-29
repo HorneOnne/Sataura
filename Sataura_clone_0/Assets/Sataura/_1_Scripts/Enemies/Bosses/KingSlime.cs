@@ -88,9 +88,7 @@ namespace Sataura
                 _anim.SetBool("isJump", false);
             }
 
-
-            
-
+     
             if(Time.time - tempTimeCounter > 7.0f)
             {
                 tempTimeCounter = Time.time;

@@ -30,7 +30,7 @@ namespace Sataura
         {
             rb2D = GetComponent<Rigidbody2D>();
             networkObject = GetComponent<NetworkObject>();
-            _playerTransform = GameDataManager.Instance.singleModePlayer.transform;
+            _playerTransform = GameDataManager.Instance.currentPlayer.transform;
 
             Invoke(nameof(Despawn), 30f);
 
@@ -93,7 +93,7 @@ namespace Sataura
         }
 
 
-        public void Collect(Player player)
+        public void Collect(IngamePlayer player)
         {
             canCollect = true;
             this.player = player.transform;

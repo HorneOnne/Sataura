@@ -121,7 +121,7 @@ namespace Sataura
 
         public float GetKnockback()
         {
-            return 0.0f;
+            return 5.0f;
         }
     }
 }

@@ -12,7 +12,7 @@ namespace Sataura
 
         [Header("Refrences:")]
         [SerializeField] private Rigidbody2D characterRb2D;
-        public Transform character;
+        public Transform characterTransform;
         public Transform gunPivot;
         public Transform firePoint;
         public GrappleRope grappleRope;
@@ -51,8 +51,9 @@ namespace Sataura
             _hookData = ((HookData)ItemData);
             m_camera = Camera.main;
             grappleRope.enabled = false;
-            character = GameDataManager.Instance.singleModePlayer.transform;
-            characterRb2D = GameDataManager.Instance.singleModePlayer.GetComponent<Rigidbody2D>();
+            var ingamePlayer = GameDataManager.Instance.ingamePlayer;
+            characterTransform = ingamePlayer.transform;
+            characterRb2D = ingamePlayer.playerMovement.Rb2D;
 
             if (IsServer)
             {
@@ -72,7 +73,7 @@ namespace Sataura
             {
                 if (anchorObject != null) return;
    
-                anchorObject = Instantiate(anchorPrefab, character.position, Quaternion.identity);
+                anchorObject = Instantiate(anchorPrefab, characterTransform.position, Quaternion.identity);
                 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 hookDirection = mousePosition - (Vector2)transform.position;
 

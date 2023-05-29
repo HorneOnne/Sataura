@@ -3536,7 +3536,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 658514532}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
@@ -6577,7 +6577,7 @@ MonoBehaviour:
   uiWeaponsParent: {fileID: 2072749131}
   uiAccessoriesParent: {fileID: 624838361}
   uiSkillSlotPrefab: {fileID: 4415069844975437377, guid: 6e3f8af949dd8cf46a998d1ce4d14b3b, type: 3}
-  _player: {fileID: 0}
+  _inventoryPlayer: {fileID: 0}
   weapons: []
   accessories: []
 --- !u!4 &1277545067
@@ -7105,7 +7105,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff2c9fad21c686a448d66427a000d27c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  networkPlayerPrefab: {fileID: 6036214172868209630, guid: aead3db3567ef874d88a48ff1f160818, type: 3}
+  _playerType: 1
 --- !u!4 &1387464834
 Transform:
   m_ObjectHideFlags: 0
@@ -7510,7 +7510,7 @@ MonoBehaviour:
   _chestplate: {fileID: 95647877}
   _legging: {fileID: 952667762}
   _accessory: {fileID: 971376462}
-  _player: {fileID: 0}
+  _inventoryPlayer: {fileID: 0}
 --- !u!4 &1547477610
 Transform:
   m_ObjectHideFlags: 0
@@ -11708,7 +11708,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2383571142451517696}
   m_HandleRect: {fileID: 2383571142451517699}
   m_Direction: 3
-  m_Value: 1
+  m_Value: 0
   m_Size: 0.1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -11923,7 +11923,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1701dde877910b4dbb5b532a3673d3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemSelectionPlayer: {fileID: 0}
+  _inventoryPlayer: {fileID: 0}
   itemSlotList: []
   itemSlotPrefab: {fileID: 7458145588481894704, guid: 1ecea798bf505ab4a8ef672c1fa8332a, type: 3}
   dragType: 0
@@ -12242,7 +12242,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d27c66fa4fbef24a982d136332ed72c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemSelectionPlayer: {fileID: 0}
+  _inventoryPlayer: {fileID: 0}
   uiSlotPrefab: {fileID: 2781465620887256830, guid: c442bdb9a2a99014c88ecd40ff4ba130, type: 3}
   uiSlotDisplay: {fileID: 0}
   scaleUI: 1.7

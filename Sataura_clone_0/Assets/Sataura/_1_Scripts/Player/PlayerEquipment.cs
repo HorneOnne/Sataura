@@ -9,7 +9,7 @@ namespace Sataura
     public class PlayerEquipment : MonoBehaviour
     {
         [Header("References")]
-        [SerializeField] private ItemSelectionPlayer _player;
+        [SerializeField] private InventoryPlayer _inventoryPlayer;
 
         [Header("Runtime References")]
         [Header("Equipement Data")]
@@ -34,14 +34,14 @@ namespace Sataura
         private IEnumerator LoadEquipment()
         {
             _timer = 0f;
-            yield return new WaitUntil(() => _player.characterData != null);
+            yield return new WaitUntil(() => _inventoryPlayer.characterData != null);
             _isCharacterDataReady = true;
 
-            TryEquip(_player.characterData.helmetData, UIEquipSlot.EquipmentSlotType.Helmet, loadStatsText: false);
-            TryEquip(_player.characterData.chestplateData, UIEquipSlot.EquipmentSlotType.Chestplate, loadStatsText: false);
-            TryEquip(_player.characterData.leggingData, UIEquipSlot.EquipmentSlotType.Legging, loadStatsText: false);
-            TryEquip(_player.characterData.bootsData, UIEquipSlot.EquipmentSlotType.Boots, loadStatsText: false);
-            TryEquip(_player.characterData.hookData, UIEquipSlot.EquipmentSlotType.Hook, loadStatsText: false);
+            TryEquip(_inventoryPlayer.characterData.helmetData, UIEquipSlot.EquipmentSlotType.Helmet, loadStatsText: false);
+            TryEquip(_inventoryPlayer.characterData.chestplateData, UIEquipSlot.EquipmentSlotType.Chestplate, loadStatsText: false);
+            TryEquip(_inventoryPlayer.characterData.leggingData, UIEquipSlot.EquipmentSlotType.Legging, loadStatsText: false);
+            TryEquip(_inventoryPlayer.characterData.bootsData, UIEquipSlot.EquipmentSlotType.Boots, loadStatsText: false);
+            TryEquip(_inventoryPlayer.characterData.hookData, UIEquipSlot.EquipmentSlotType.Hook, loadStatsText: false);
 
             UIEquipmentManager.Instance.UpdateUI();
         }
@@ -76,7 +76,7 @@ namespace Sataura
 
 
                         // Update CharacterData
-                        _player.characterData.bootsData = _bootsData;
+                        _inventoryPlayer.characterData.bootsData = _bootsData;
                         /*_player.characterData._currentMoveSpeed += _bootsData.additionMoveSpeed;
                         _player.characterData._currentJumpForce += _bootsData.additionJumpForce;*/
                         // --------------------
@@ -103,7 +103,7 @@ namespace Sataura
                         _hookData = (HookData)equipmentData;
 
                         // Update CharacterData
-                        _player.characterData.hookData = _hookData;
+                        _inventoryPlayer.characterData.hookData = _hookData;
                         // --------------------
                     }
                     break;
@@ -114,8 +114,8 @@ namespace Sataura
                         _helmetData = (HelmetData)equipmentData;
 
                         // Update CharacterData
-                        _player.characterData.helmetData = _helmetData;
-                        _player.characterData._currentArmor += _helmetData.armor;
+                        _inventoryPlayer.characterData.helmetData = _helmetData;
+                        _inventoryPlayer.characterData._currentArmor += _helmetData.armor;
                         // --------------------
 
                         if (loadStatsText)
@@ -133,8 +133,8 @@ namespace Sataura
                         _chestplateData = (ChestplateData)equipmentData;
 
                         // Update CharacterData
-                        _player.characterData.chestplateData = _chestplateData;
-                        _player.characterData._currentArmor += _chestplateData.armor;
+                        _inventoryPlayer.characterData.chestplateData = _chestplateData;
+                        _inventoryPlayer.characterData._currentArmor += _chestplateData.armor;
                         // --------------------
 
                         if (loadStatsText)
@@ -152,8 +152,8 @@ namespace Sataura
                         _leggingData = (LeggingData)equipmentData;
 
                         // Update CharacterData
-                        _player.characterData.leggingData = _leggingData;
-                        _player.characterData._currentArmor += _leggingData.armor;
+                        _inventoryPlayer.characterData.leggingData = _leggingData;
+                        _inventoryPlayer.characterData._currentArmor += _leggingData.armor;
                         // --------------------
 
                         if (loadStatsText)
@@ -181,7 +181,7 @@ namespace Sataura
                     // Update CharacterData
                     /*_player.characterData._currentMoveSpeed -= _bootsData.additionMoveSpeed;
                     _player.characterData._currentJumpForce -= _bootsData.additionJumpForce;*/
-                    _player.characterData.bootsData = null;
+                    _inventoryPlayer.characterData.bootsData = null;
                     // --------------------
 
                     /*
@@ -203,15 +203,15 @@ namespace Sataura
                     break;
                 case UIEquipSlot.EquipmentSlotType.Hook:
                     // Update CharacterData
-                    _player.characterData.hookData = null;
+                    _inventoryPlayer.characterData.hookData = null;
 
 
                     _hookData = null;
                     break;
                 case UIEquipSlot.EquipmentSlotType.Helmet:
                     // Update CharacterData
-                    _player.characterData._currentArmor -= _helmetData.armor;
-                    _player.characterData.helmetData = null;
+                    _inventoryPlayer.characterData._currentArmor -= _helmetData.armor;
+                    _inventoryPlayer.characterData.helmetData = null;
                     // --------------------
 
                     FloatingStatisticTextManager.Instance.ShowFloatingStatText("Armor", -_helmetData.armor);
@@ -221,8 +221,8 @@ namespace Sataura
                     break;
                 case UIEquipSlot.EquipmentSlotType.Chestplate:
                     // Update CharacterData
-                    _player.characterData._currentArmor -= _chestplateData.armor;
-                    _player.characterData.chestplateData = null;
+                    _inventoryPlayer.characterData._currentArmor -= _chestplateData.armor;
+                    _inventoryPlayer.characterData.chestplateData = null;
 
                     FloatingStatisticTextManager.Instance.ShowFloatingStatText("Armor", -_chestplateData.armor);
                     CharacterStatsManager.Instance.UpdateStatUI(CharacterStats.Armor);
@@ -231,8 +231,8 @@ namespace Sataura
                     break;
                 case UIEquipSlot.EquipmentSlotType.Legging:
                     // Update CharacterData
-                    _player.characterData._currentArmor -= _leggingData.armor;
-                    _player.characterData.leggingData = null;
+                    _inventoryPlayer.characterData._currentArmor -= _leggingData.armor;
+                    _inventoryPlayer.characterData.leggingData = null;
 
                     FloatingStatisticTextManager.Instance.ShowFloatingStatText("Armor", -_leggingData.armor);
                     CharacterStatsManager.Instance.UpdateStatUI(CharacterStats.Armor);

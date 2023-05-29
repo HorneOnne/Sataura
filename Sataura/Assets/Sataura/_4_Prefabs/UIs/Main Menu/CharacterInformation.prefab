@@ -720,8 +720,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e43c3378c91f6d458aaed2bc4fa6a23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterNameText: {fileID: 8248475184346626558}
-  selectCharacterBtn: {fileID: 8248475183459801466}
-  removeCharacterBtn: {fileID: 1269961609463537903}
-  characterData: {fileID: 0}
+  _characterNameText: {fileID: 8248475184346626558}
+  _selectCharacterBtn: {fileID: 8248475183459801466}
+  _removeCharacterBtn: {fileID: 1269961609463537903}
+  _characterData: {fileID: 0}
   index: 0

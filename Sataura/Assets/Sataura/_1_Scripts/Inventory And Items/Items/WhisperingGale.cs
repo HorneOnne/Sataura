@@ -27,7 +27,7 @@ namespace Sataura
             }
         }
 
-        public override bool Use(Player player, Vector2 nearestEnemyPosition)
+        public override bool Use(IngamePlayer player, Vector2 nearestEnemyPosition)
         {
             switch(_whisperingGaleData.useType)
             {
@@ -48,7 +48,7 @@ namespace Sataura
             return true;
         }
 
-        private void FireSingleProjectile(Player player, Vector2 nearestEnemyPosition)
+        private void FireSingleProjectile(IngamePlayer player, Vector2 nearestEnemyPosition)
         {
             Vector2 direction = nearestEnemyPosition - (Vector2)transform.position;
             var _projectileObject = Instantiate(_projectilePrefab, transform.position, Quaternion.identity);
@@ -58,7 +58,7 @@ namespace Sataura
             _bookOfWindProjectile._networkObject.Spawn();
         }
 
-        private void FireDoubleProjectiles(Player player, Vector2 nearestEnemyPosition)
+        private void FireDoubleProjectiles(IngamePlayer player, Vector2 nearestEnemyPosition)
         {
             FireSingleProjectile(player, nearestEnemyPosition);
 
@@ -68,7 +68,7 @@ namespace Sataura
             }));
         }
 
-        private void Evo(Player player, Vector2 nearestEnemyPosition)
+        private void Evo(IngamePlayer player, Vector2 nearestEnemyPosition)
         {
             FireDoubleProjectiles(player, nearestEnemyPosition);
 

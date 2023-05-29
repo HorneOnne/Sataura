@@ -7,7 +7,7 @@ namespace Sataura
         [SerializeField] private Animator _anim;
         private SwordData _swordData;
  
-        public void SetUp(Player player, SwordData swordData, Vector2 nearestEnemyPosition, bool upSide = true)
+        public void SetUp(IngamePlayer player, SwordData swordData, Vector2 nearestEnemyPosition, bool upSide = true)
         {
             this._swordData = swordData;
             transform.localScale *= swordData.size * player.characterData._currentArea;

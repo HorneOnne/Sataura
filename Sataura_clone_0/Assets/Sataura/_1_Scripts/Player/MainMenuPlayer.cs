@@ -3,13 +3,11 @@ using UnityEngine;
 
 namespace Sataura
 {
-    public class MainMenuPlayer : NetworkBehaviour
-    {
-        public CharacterData characterData;
-
+    public class MainMenuPlayer : Player
+    {       
         public override void OnNetworkSpawn()
         {
-            GameDataManager.Instance.singleModePlayer = this.gameObject;
+            GameDataManager.Instance.mainMenuPlayer = this;
         }
     }
 }

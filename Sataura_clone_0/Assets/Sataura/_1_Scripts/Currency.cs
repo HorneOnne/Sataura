@@ -65,7 +65,7 @@ namespace Sataura
 
 
 
-        public void Collect(Player player)
+        public void Collect(IngamePlayer player)
         {
             // Start Testing purpose
             if (player.characterData.currencyString == "")

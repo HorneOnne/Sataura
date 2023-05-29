@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -7,7 +8,7 @@ namespace Sataura
     public class UIPlayerInventory : Singleton<UIPlayerInventory>
     {
         [Header("REFERENCES")]
-        [SerializeField] private ItemSelectionPlayer itemSelectionPlayer;
+        [SerializeField] private InventoryPlayer _inventoryPlayer;
 
         private PlayerInventory playerInventory;
         private InputHandler playerInputHandler;
@@ -49,22 +50,29 @@ namespace Sataura
             EventManager.OnPlayerInventoryUpdated -= UpdateInventoryUI;
         }
 
+        private void Start()
+        {
+            
+        }
+
 
         public void SetPlayer(GameObject playerObject)
         {
-            this.itemSelectionPlayer = playerObject.GetComponent<ItemSelectionPlayer>();
+            this._inventoryPlayer = playerObject.GetComponent<InventoryPlayer>();
 
+            StartCoroutine(LoadReferences());
         }
 
-        public void LoadReferences()
-        {          
+        private IEnumerator LoadReferences()
+        {
+            yield return new WaitUntil(() => _inventoryPlayer != null);
+
             dragType = DragType.Swap;
-            itemInHand = itemSelectionPlayer.itemInHand;
-            playerInventory = itemSelectionPlayer.playerInventory;
-            playerInputHandler = itemSelectionPlayer.playerInputHandler;
+            itemInHand = _inventoryPlayer.itemInHand;
+            playerInventory = _inventoryPlayer.playerInventory;
+            playerInputHandler = _inventoryPlayer.playerInputHandler;
 
             CreateInventory();
-
             // Update Inventory UI at the first time when start game.
             Invoke("UpdateInventoryUI", .1f);
         }
@@ -72,7 +80,7 @@ namespace Sataura
 
         public void CreateInventory()
         {
-            int inventorySize = itemSelectionPlayer.characterData.playerInventoryData.itemSlots.Count;
+            int inventorySize = _inventoryPlayer.characterData.playerInventoryData.itemSlots.Count;
 
             for (int i = 0; i < inventorySize; i++)
             {
@@ -91,13 +99,13 @@ namespace Sataura
 
         public void CreateInventoryType(ItemCategory _category)
         {
-            int inventorySize = itemSelectionPlayer.characterData.playerInventoryData.itemSlots.Count;
+            int inventorySize = _inventoryPlayer.characterData.playerInventoryData.itemSlots.Count;
 
             for (int i = 0; i < inventorySize; i++)
             {
-                if(itemSelectionPlayer.characterData.playerInventoryData.itemSlots[i].HasItemData())
+                if(_inventoryPlayer.characterData.playerInventoryData.itemSlots[i].HasItemData())
                 {
-                    if (itemSelectionPlayer.characterData.playerInventoryData.itemSlots[i].ItemData.itemCategory == _category)
+                    if (_inventoryPlayer.characterData.playerInventoryData.itemSlots[i].ItemData.itemCategory == _category)
                     {
                         GameObject slotObject = Instantiate(itemSlotPrefab, this.transform);
                         slotObject.GetComponent<UIItemSlot>().SetIndex(i);
@@ -169,7 +177,6 @@ namespace Sataura
         #region Interactive Events
         public void OnClick(BaseEventData baseEvent, GameObject clickedObject)
         {
-            Debug.Log("onclick");
             PointerEventData pointerEventData = (PointerEventData)baseEvent;
 
             int index = GetItemSlotIndex(clickedObject);
@@ -177,14 +184,12 @@ namespace Sataura
 
             if (pointerEventData.button == PointerEventData.InputButton.Left)   // Mouse Left Event
             {
-                Debug.Log("Left click");
                 OnLeftClick(index);
             }
 
 
             if (pointerEventData.button == PointerEventData.InputButton.Right)   // Mouse Right Event
             {
-                Debug.Log("Right click");
                 OnRightClick(index);
             }
 

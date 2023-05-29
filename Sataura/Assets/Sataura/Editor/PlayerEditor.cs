@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 
 namespace Sataura
 {
-    [CustomEditor(typeof(Player))]
+    [CustomEditor(typeof(IngamePlayer))]
     public class PlayerEditor : Editor
     {
         /*private SerializedProperty characterDataProperty;

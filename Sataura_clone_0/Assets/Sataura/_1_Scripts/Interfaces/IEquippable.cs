@@ -9,6 +9,6 @@ namespace Sataura
         /// Equips the item to the specified player.
         /// </summary>
         /// <param name="player">The player that will equip the item.</param>
-        public void Equip(Player player);
+        public void Equip(IngamePlayer player);
     }
 }

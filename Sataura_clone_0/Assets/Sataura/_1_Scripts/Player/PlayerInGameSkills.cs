@@ -7,7 +7,7 @@ namespace Sataura
     public class PlayerInGameSkills : NetworkBehaviour
     {
         [Header("REFERENCES")]
-        [SerializeField] private Player _player;
+        [SerializeField] private IngamePlayer _player;
 
 
         [Header("Runtime References")]

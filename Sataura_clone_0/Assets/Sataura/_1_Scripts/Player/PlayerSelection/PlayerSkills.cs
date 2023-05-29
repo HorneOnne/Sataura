@@ -7,7 +7,7 @@ namespace Sataura
 {
     public class PlayerSkills : NetworkBehaviour
     {
-        [SerializeField] private ItemSelectionPlayer _player;
+        [SerializeField] private InventoryPlayer _inventoryPlayer;
         private ItemInHand itemInHand;
 
 
@@ -35,7 +35,7 @@ namespace Sataura
         {
             if (IsOwner || IsServer)
             {
-                itemInHand = _player.itemInHand;
+                itemInHand = _inventoryPlayer.itemInHand;
 
                 StartCoroutine(LoadCharacterData());
             }
@@ -43,10 +43,10 @@ namespace Sataura
 
         public IEnumerator LoadCharacterData()
         {
-            yield return new WaitUntil(() => _player.characterData != null);
+            yield return new WaitUntil(() => _inventoryPlayer.characterData != null);
 
-            weaponsData = _player.characterData.weaponsData;
-            accessoriesData = _player.characterData.accessoriesData;
+            weaponsData = _inventoryPlayer.characterData.weaponsData;
+            accessoriesData = _inventoryPlayer.characterData.accessoriesData;
 
             for(int i = 0; i < accessoriesData.itemSlots.Count; i++)
             {
@@ -179,14 +179,14 @@ namespace Sataura
                     canEquip = true;
 
                     int maxHealthPercentIncrease = ((VitalityBeltData)itemData).maxHealthPercentIncrease;
-                    int currentMaxHealth = _player.characterData._currentMaxHealth;
+                    int currentMaxHealth = _inventoryPlayer.characterData._currentMaxHealth;
                     int incrementMaxHealth = 0;
 
                     // Update CharacterData
-                    _player.characterData._currentMaxHealth += (_player.characterData._currentMaxHealth * maxHealthPercentIncrease / 100);
+                    _inventoryPlayer.characterData._currentMaxHealth += (_inventoryPlayer.characterData._currentMaxHealth * maxHealthPercentIncrease / 100);
                     // ===================
 
-                    incrementMaxHealth = _player.characterData._currentMaxHealth - currentMaxHealth;
+                    incrementMaxHealth = _inventoryPlayer.characterData._currentMaxHealth - currentMaxHealth;
                     if (loadStatsText)
                     {
                         FloatingStatisticTextManager.Instance.ShowFloatingStatText("Max Health", incrementMaxHealth);
@@ -198,14 +198,14 @@ namespace Sataura
                     canEquip = true;
 
                     int magnetIncrease = ((MagnetStoneData)itemData).lootPercentIncrease;
-                    float currentMagnet = _player.characterData._currentMagnet;
+                    float currentMagnet = _inventoryPlayer.characterData._currentMagnet;
                     float incrementMagnet = 0;
 
                     // Update CharacterData
-                    _player.characterData._currentMagnet += (_player.characterData._currentMagnet * magnetIncrease / 100f);
+                    _inventoryPlayer.characterData._currentMagnet += (_inventoryPlayer.characterData._currentMagnet * magnetIncrease / 100f);
                     // ===================
 
-                    incrementMagnet = _player.characterData._currentMagnet - currentMagnet;
+                    incrementMagnet = _inventoryPlayer.characterData._currentMagnet - currentMagnet;
                     if (loadStatsText)
                     {
                         FloatingStatisticTextManager.Instance.ShowFloatingStatText("Magnet", incrementMagnet);
@@ -217,20 +217,20 @@ namespace Sataura
                     canEquip = true;
 
                     int moveSpeedPerecntIncrease = ((SwiftStriders)itemData).moveSpeedPercentIncrease;
-                    float currentMoveSpeed = _player.characterData._currentMoveSpeed;
+                    float currentMoveSpeed = _inventoryPlayer.characterData._currentMoveSpeed;
                     float incrementMoveSpeed = 0;
 
                     int jumpForcePerecntIncrease = ((SwiftStriders)itemData).jumpForcePercentIncrease;
-                    float currentJumpForce = _player.characterData._currentJumpForce;
+                    float currentJumpForce = _inventoryPlayer.characterData._currentJumpForce;
                     float incrementJumpForce = 0;
 
                     // Update CharacterData
-                    _player.characterData._currentMoveSpeed += (_player.characterData._currentMoveSpeed * moveSpeedPerecntIncrease / 100f);
-                    _player.characterData._currentJumpForce += (_player.characterData._currentJumpForce * jumpForcePerecntIncrease / 100f);
+                    _inventoryPlayer.characterData._currentMoveSpeed += (_inventoryPlayer.characterData._currentMoveSpeed * moveSpeedPerecntIncrease / 100f);
+                    _inventoryPlayer.characterData._currentJumpForce += (_inventoryPlayer.characterData._currentJumpForce * jumpForcePerecntIncrease / 100f);
                     // ===================
 
-                    incrementMoveSpeed = _player.characterData._currentMoveSpeed - currentMoveSpeed;
-                    incrementJumpForce = _player.characterData._currentJumpForce - currentJumpForce;
+                    incrementMoveSpeed = _inventoryPlayer.characterData._currentMoveSpeed - currentMoveSpeed;
+                    incrementJumpForce = _inventoryPlayer.characterData._currentJumpForce - currentJumpForce;
                     if (loadStatsText)
                     {
                         FloatingStatisticTextManager.Instance.ShowFloatingStatText("Move Speed", incrementMoveSpeed);
@@ -244,14 +244,14 @@ namespace Sataura
                     canEquip = true;
 
                     int awarePercentIncrease = ((ScopeLens)itemData).awarePercentIncrease;
-                    float currentAware = _player.characterData._currentAware;
+                    float currentAware = _inventoryPlayer.characterData._currentAware;
                     float incrementAware = 0;
 
                     // Update CharacterData
-                    _player.characterData._currentAware += (_player.characterData._currentAware * awarePercentIncrease / 100f);
+                    _inventoryPlayer.characterData._currentAware += (_inventoryPlayer.characterData._currentAware * awarePercentIncrease / 100f);
                     // ===================
 
-                    incrementAware = _player.characterData._currentAware - currentAware;
+                    incrementAware = _inventoryPlayer.characterData._currentAware - currentAware;
                     if (loadStatsText)
                     {
                         FloatingStatisticTextManager.Instance.ShowFloatingStatText("Aware", incrementAware);
@@ -263,14 +263,14 @@ namespace Sataura
                     canEquip = true;
 
                     int areaPercentIncrease = ((AmplifyingBand)itemData).areaPercentIncrease;
-                    float currentArea = _player.characterData._currentArea;
+                    float currentArea = _inventoryPlayer.characterData._currentArea;
                     float incrementArea = 0;
 
                     // Update CharacterData
-                    _player.characterData._currentArea += (_player.characterData._currentArea * areaPercentIncrease / 100f);
+                    _inventoryPlayer.characterData._currentArea += (_inventoryPlayer.characterData._currentArea * areaPercentIncrease / 100f);
                     // ===================
 
-                    incrementArea = _player.characterData._currentArea - currentArea;
+                    incrementArea = _inventoryPlayer.characterData._currentArea - currentArea;
                     if (loadStatsText)
                     {
                         FloatingStatisticTextManager.Instance.ShowFloatingStatText("Area", incrementArea);
@@ -294,14 +294,14 @@ namespace Sataura
             {
                 case ItemType.VitalityBelt:
                     int maxHealthPercentIncrease = ((VitalityBeltData)itemData).maxHealthPercentIncrease;
-                    int currentMaxHealth = _player.characterData._currentMaxHealth;
+                    int currentMaxHealth = _inventoryPlayer.characterData._currentMaxHealth;
                     int decrementMaxHealth = 0;
 
                     // Update CharacterData
-                    _player.characterData._currentMaxHealth = (int)(currentMaxHealth / (1 + maxHealthPercentIncrease / 100f));
+                    _inventoryPlayer.characterData._currentMaxHealth = (int)(currentMaxHealth / (1 + maxHealthPercentIncrease / 100f));
                     // ===================
     
-                    decrementMaxHealth = currentMaxHealth - _player.characterData._currentMaxHealth;
+                    decrementMaxHealth = currentMaxHealth - _inventoryPlayer.characterData._currentMaxHealth;
                     if (loadStatsText)
                     {
                         FloatingStatisticTextManager.Instance.ShowFloatingStatText("Max Health", -decrementMaxHealth);
@@ -311,14 +311,14 @@ namespace Sataura
                     break;
                 case ItemType.MagnetStone:
                     int magnetIncrease = ((MagnetStoneData)itemData).lootPercentIncrease;
-                    float currentMagnet = _player.characterData._currentMagnet;
+                    float currentMagnet = _inventoryPlayer.characterData._currentMagnet;
                     float decrementMagnet = 0;
 
                     // Update CharacterData
-                    _player.characterData._currentMagnet = (int)(currentMagnet / (1 + magnetIncrease / 100f));
+                    _inventoryPlayer.characterData._currentMagnet = (int)(currentMagnet / (1 + magnetIncrease / 100f));
                     // ===================
 
-                    decrementMagnet = currentMagnet - _player.characterData._currentMagnet;
+                    decrementMagnet = currentMagnet - _inventoryPlayer.characterData._currentMagnet;
                     if (loadStatsText)
                     {
                         FloatingStatisticTextManager.Instance.ShowFloatingStatText("Magnet", -decrementMagnet);
@@ -328,20 +328,20 @@ namespace Sataura
                     break;
                 case ItemType.SwiftStriders:
                     int moveSpeedPerecntIncrease = ((SwiftStriders)itemData).moveSpeedPercentIncrease;
-                    float currentMoveSpeed = _player.characterData._currentMoveSpeed;
+                    float currentMoveSpeed = _inventoryPlayer.characterData._currentMoveSpeed;
                     float decrementMoveSpeed = 0;
 
                     int jumpForcePerecntIncrease = ((SwiftStriders)itemData).jumpForcePercentIncrease;
-                    float currentJumpForce = _player.characterData._currentJumpForce;
+                    float currentJumpForce = _inventoryPlayer.characterData._currentJumpForce;
                     float decrementJumpForce = 0;
 
                     // Update CharacterData
-                    _player.characterData._currentMoveSpeed = (currentMoveSpeed / (1 + moveSpeedPerecntIncrease / 100f));
-                    _player.characterData._currentJumpForce = (currentJumpForce / (1 + jumpForcePerecntIncrease / 100f));
+                    _inventoryPlayer.characterData._currentMoveSpeed = (currentMoveSpeed / (1 + moveSpeedPerecntIncrease / 100f));
+                    _inventoryPlayer.characterData._currentJumpForce = (currentJumpForce / (1 + jumpForcePerecntIncrease / 100f));
                     // ===================
 
-                    decrementMoveSpeed = currentMoveSpeed - _player.characterData._currentMoveSpeed;
-                    decrementJumpForce = currentJumpForce - _player.characterData._currentJumpForce;
+                    decrementMoveSpeed = currentMoveSpeed - _inventoryPlayer.characterData._currentMoveSpeed;
+                    decrementJumpForce = currentJumpForce - _inventoryPlayer.characterData._currentJumpForce;
                     if (loadStatsText)
                     {
                         FloatingStatisticTextManager.Instance.ShowFloatingStatText("Move Speed", -decrementMoveSpeed);
@@ -353,14 +353,14 @@ namespace Sataura
                     break;
                 case ItemType.ScopeLens:     
                     int awarePercentIncrease = ((ScopeLens)itemData).awarePercentIncrease;
-                    float currentAware = _player.characterData._currentAware;
+                    float currentAware = _inventoryPlayer.characterData._currentAware;
                     float decrementAware = 0;
 
                     // Update CharacterData
-                    _player.characterData._currentAware = (currentAware / (1 + awarePercentIncrease / 100f));
+                    _inventoryPlayer.characterData._currentAware = (currentAware / (1 + awarePercentIncrease / 100f));
                     // ===================
 
-                    decrementAware = currentAware - _player.characterData._currentAware;
+                    decrementAware = currentAware - _inventoryPlayer.characterData._currentAware;
                     if (loadStatsText)
                     {
                         FloatingStatisticTextManager.Instance.ShowFloatingStatText("Aware", -decrementAware);
@@ -370,14 +370,14 @@ namespace Sataura
                     break;
                 case ItemType.AmplifyingBand:
                     int areaPercentIncrease = ((AmplifyingBand)itemData).areaPercentIncrease;
-                    float currentArea = _player.characterData._currentArea;
+                    float currentArea = _inventoryPlayer.characterData._currentArea;
                     float decrementArea = 0;
 
                     // Update CharacterData
-                    _player.characterData._currentArea = (currentArea  / (1 + areaPercentIncrease / 100f));
+                    _inventoryPlayer.characterData._currentArea = (currentArea  / (1 + areaPercentIncrease / 100f));
                     // ===================
 
-                    decrementArea = currentArea - _player.characterData._currentArea;
+                    decrementArea = currentArea - _inventoryPlayer.characterData._currentArea;
                     if (loadStatsText)
                     {
                         FloatingStatisticTextManager.Instance.ShowFloatingStatText("Area", -decrementArea);

@@ -23,7 +23,7 @@ namespace Sataura
 
 
         [Header("References")]
-        private Player player;
+        private IngamePlayer _ingamePlayer;
         [SerializeField] private Animator fadeOutAnim;
 
 
@@ -91,7 +91,6 @@ namespace Sataura
 
         private void Start()
         {
-            NetworkManager.Singleton.StartHost();
             currentDamagePopupCount = 0;
         }
 
@@ -115,10 +114,10 @@ namespace Sataura
 
         private void GenerateLevelUpVFX()
         {
-            if(player == null)
-                player = GameDataManager.Instance.singleModePlayer.GetComponent<Player>();
+            if(_ingamePlayer == null)
+                _ingamePlayer = GameDataManager.Instance.ingamePlayer;
 
-            var vfxObject = Instantiate(GameDataManager.Instance.levelUpVFX, player.transform.position, Quaternion.identity, player.transform);
+            var vfxObject = Instantiate(GameDataManager.Instance.levelUpVFX, _ingamePlayer.transform.position, Quaternion.identity, _ingamePlayer.transform);
             Destroy(vfxObject, 5f);
         }
 

@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
@@ -9,13 +10,6 @@ namespace Sataura
     /// </summary>
     public class GameDataManager : Singleton<GameDataManager>
     {
-        private const string itemPrefabPrefix = "IP_";
-        private const string projectilePrefabPrefix = "PP_";
-        private const string enemyPrefabPrefix = "EP_";
-        private const string itemDataPrefix = "I_";
-        private const string craftingRecipePrefix = "CR_";
-
-
         [Header("VFX")]
         public GameObject levelUpVFX;
         public GameObject bloodTearVFX_001;
@@ -24,21 +18,19 @@ namespace Sataura
 
 
         [Header("ITEM DATA")]
-        [SerializeField] List<ItemData> itemData;
+        [SerializeField] private List<ItemData> _itemData;
+        public Dictionary<ItemData, int> itemDataDict = new Dictionary<ItemData, int>();
+        public Dictionary<int, ItemData> itemDataById = new Dictionary<int, ItemData>();
 
-        /// <summary>
-        /// A list of all the item prefabs.
-        /// </summary>
+
         [Header("PREFABS")]
-        [SerializeField] List<GameObject> itemPrefabs = new List<GameObject>();
+        [SerializeField] private List<GameObject> _itemPrefabs = new List<GameObject>();
+        [SerializeField] private List<GameObject> _enemyPrefabs = new List<GameObject>();
+        [SerializeField] private List<GameObject> _bossPrefabs = new List<GameObject>();
+        [SerializeField] private List<GameObject> _projectilesPrefab = new List<GameObject>();
+        [SerializeField] private List<Debuff> _debuffVFXPrefabs = new List<Debuff>();
 
-        [SerializeField] List<GameObject> enemyPrefabs = new List<GameObject>();
 
-        [SerializeField] List<GameObject> bossPrefabs = new List<GameObject>();
-
-        [SerializeField] List<Debuff> _debuffVFXPrefabs = new List<Debuff>();
-
-        [SerializeField] List<GameObject> _projectiles = new List<GameObject>();
 
         [Header("Currency")]
         [SerializeField] private GameObject bronzeCoinPrefab;
@@ -46,64 +38,49 @@ namespace Sataura
         [SerializeField] private GameObject goldCoinPrefab;
 
 
-        /// <summary>
-        /// A list of all the recipe data.
-        /// </summary>
         [Header("RECIPE")]
         public List<RecipeData> itemRecipeData;
-
-        /// <summary>
-        /// A dictionary that maps item data to their index in the <see cref="itemData"/> list.
-        /// </summary>
-        public Dictionary<ItemData, int> itemDataDict = new Dictionary<ItemData, int>();
-
-        /// <summary>
-        /// A dictionary that maps item data indices to their corresponding item data.
-        /// </summary>
-        public Dictionary<int, ItemData> itemDataById = new Dictionary<int, ItemData>();
-
-
-        /// <summary>
-        /// A dictionary that maps recipe data to their corresponding item slot.
-        /// </summary>
         public Dictionary<RecipeData, ItemSlot> recipeToItemDict;
-
-        /// <summary>
-        /// A dictionary that maps item data to their corresponding recipe data.
-        /// </summary>
         public Dictionary<ItemData, RecipeData> itemToRecipeDict;
-
-
-        private Dictionary<string, GameObject> projectilePrefabByNameDict = new Dictionary<string, GameObject>();
 
 
 
         [Header("DUST DATA")]
         public List<ProjectileParticleData> projectileParticleDatas;
 
-        //[Space(50)]
-        [Header("NETWORK OBJECT")]
-        public List<GameObject> networkObjects;
-
-
-        [Header("ITEM OBJECT PARENT")]
-        public Transform itemContainerParent;
 
         [Header("ITEM OBJECT PARENT")]
         public GameObject itemForDropPrefab;
 
 
-        [Header("Players")]
+   
         public GameObject damagePopupPrefab;
 
+
+        [Header("Players Prefab")]
+        public IngamePlayer ingamePlayerPrefab;
+        public MainMenuPlayer mainMenuPlayerPrefab;
+        public InventoryPlayer inventoryPlayerPrefab;
+
+
         [Header("Players (Runtime)")]
-        public GameObject singleModePlayer;
-        public Dictionary<ulong, Player> players = new Dictionary<ulong, Player>();
+        public Player currentPlayer;
+        [HideInInspector] public MainMenuPlayer mainMenuPlayer;
+        [HideInInspector] public IngamePlayer ingamePlayer;
+        [HideInInspector] public InventoryPlayer inventoryPlayer;
 
-        
+
+        public Dictionary<ulong, IngamePlayer> players = new Dictionary<ulong, IngamePlayer>();
 
 
-
+        public enum GameDataType
+        {
+            Item,
+            Enemy,
+            Boss,
+            Projectile,
+            VFX,
+        }
 
         /// <summary>
         /// Initializes the item data and prefab dictionaries, and generates the recipe dictionaries.
@@ -114,46 +91,86 @@ namespace Sataura
 
             GenerateItemDataDict();
             InitializeRecipes();
+            
 
             if (NetworkManager.Singleton == null)
             {
                 return;
             }
-
-
-            for (int i = 0; i < networkObjects.Count; i++)
-            {
-                NetworkManager.Singleton.AddNetworkPrefab(networkObjects[i]);
-            }
+            
         }
-
 
         private void Start()
         {
-           /* if (NetworkManager.Singleton == null)
-            {
-                return;
-            }
-
-            for (int i = 0; i < networkObjects.Count; i++)
-            {
-                NetworkManager.Singleton.AddNetworkPrefab(networkObjects[i]);
-            }*/
+            LoadNetworkObjectIntoNetworkManager();
         }
+
+        private IEnumerator PerformanceLoadNetworkObjectIntoNetworkManager()
+        {
+            for (int i = 0; i < _itemPrefabs.Count; i++)
+            {
+                NetworkManager.Singleton.AddNetworkPrefab(_itemPrefabs[i]);
+            }
+            yield return null;
+            for (int i = 0; i < _enemyPrefabs.Count; i++)
+            {
+                NetworkManager.Singleton.AddNetworkPrefab(_enemyPrefabs[i]);
+            }
+            yield return null;
+            for (int i = 0; i < _bossPrefabs.Count; i++)
+            {
+                NetworkManager.Singleton.AddNetworkPrefab(_bossPrefabs[i]);
+            }
+            yield return null;
+            for (int i = 0; i < _projectilesPrefab.Count; i++)
+            {
+                NetworkManager.Singleton.AddNetworkPrefab(_projectilesPrefab[i]);
+            }
+            yield return null;
+        }
+
+        private void LoadNetworkObjectIntoNetworkManager()
+        {
+            for (int i = 0; i < _itemPrefabs.Count; i++)
+            {
+                NetworkManager.Singleton.AddNetworkPrefab(_itemPrefabs[i]);
+            }
+            for (int i = 0; i < _enemyPrefabs.Count; i++)
+            {
+                NetworkManager.Singleton.AddNetworkPrefab(_enemyPrefabs[i]);
+            }
+            for (int i = 0; i < _bossPrefabs.Count; i++)
+            {
+                NetworkManager.Singleton.AddNetworkPrefab(_bossPrefabs[i]);
+            }
+            for (int i = 0; i < _projectilesPrefab.Count; i++)
+            {
+                NetworkManager.Singleton.AddNetworkPrefab(_projectilesPrefab[i]);
+            }
+        }
+
+        private void Update()
+        {
+            if(Input.GetKeyDown(KeyCode.A))
+            {
+                
+            }
+        }
+
 
         /// <summary>
         /// Generates the <see cref="itemDataDict"/> and <see cref="itemDataById"/> dictionaries.
         /// </summary>
         private void GenerateItemDataDict()
         {
-            for (int i = 0; i < itemData.Count; i++)
+            for (int i = 0; i < _itemData.Count; i++)
             {
-                if (itemData[i] != null && itemDataDict.ContainsKey(itemData[i]))
+                if (_itemData[i] != null && itemDataDict.ContainsKey(_itemData[i]))
                     Debug.LogError($"[ItemDictionary]: \tItem at {i} already exist.");
                 else
                 {
-                    itemDataDict.Add(itemData[i], i);
-                    itemDataById.Add(i, itemData[i]);
+                    itemDataDict.Add(_itemData[i], i);
+                    itemDataById.Add(i, _itemData[i]);
                 }
             }
         }
@@ -178,23 +195,22 @@ namespace Sataura
 
 
 
-
+        #region Item Prefab
         private GameObject GetItemPrefabType<T>()
         {
-            for (int i = 0; i < itemPrefabs.Count; i++)
+            for (int i = 0; i < _itemPrefabs.Count; i++)
             {
-                if (itemPrefabs[i].GetComponent<T>() != null)
+                if (_itemPrefabs[i].GetComponent<T>() != null)
                 {
-                    return itemPrefabs[i];
-                }               
+                    return _itemPrefabs[i];
+                }
             }
             return null;
         }
-
         public GameObject GetItemPrefab(ItemType itemType)
         {
             GameObject itemPrefab = null;
-            switch(itemType)
+            switch (itemType)
             {
                 case ItemType.Sword:
                     itemPrefab = GetItemPrefabType<Sword>();
@@ -214,7 +230,7 @@ namespace Sataura
                 case ItemType.Hook:
                     itemPrefab = GetItemPrefabType<Hook>();
                     break;
-                default: 
+                default:
                     break;
             }
 
@@ -223,42 +239,13 @@ namespace Sataura
             else
                 return itemPrefab;
         }
-
-     
- 
+        #endregion Item Prefab
 
 
-        /// <summary>
-        /// Gets the projectile prefab for the item with the specified name.
-        /// </summary>
-        /// <param name="name">The name of the item prefab to retrieve.</param>
-        /// <returns>The prefab for the item with the specified name, or null if no prefab with that name exists.</returns>
-        public GameObject GetProjectilePrefab(string name)
-        {
-            if (projectilePrefabByNameDict.ContainsKey(name))
-                return projectilePrefabByNameDict[name];
-            else
-            {
-                throw new System.Exception($"Not found projectile prefab name {name} in GameDataManager.cs.");
-            }
-        }
 
 
-        public GameObject GetProjectilePrefab<T>(T item)
-        {
-            string name = $"{projectilePrefabPrefix}{typeof(T).Name}";
-            if (projectilePrefabByNameDict.ContainsKey($"{name}"))
-                return projectilePrefabByNameDict[name];
-            else
-            {
-                throw new System.Exception($"Not found projectile prefab name {name} in GameDataManager.cs.");
-            }
-        }
 
-
- 
-
-
+        #region Item Recipe
         /// <summary>
         /// Initializes the recipe dictionaries.
         /// </summary>
@@ -324,6 +311,8 @@ namespace Sataura
             }
             return null;
         }
+        #endregion Item Recipe
+
 
 
 
@@ -343,13 +332,15 @@ namespace Sataura
 
 
 
+
+        #region Enemies
         private GameObject GetEnemyPrefabByType<T>()
         {
-            for (int i = 0; i < enemyPrefabs.Count; i++)
+            for (int i = 0; i < _enemyPrefabs.Count; i++)
             {
-                if (enemyPrefabs[i].GetComponent<T>() != null)
+                if (_enemyPrefabs[i].GetComponent<T>() != null)
                 {
-                    return enemyPrefabs[i];
+                    return _enemyPrefabs[i];
                 }
             }
             return null;
@@ -384,26 +375,29 @@ namespace Sataura
                     enemyPrefab = GetEnemyPrefabByType<PurpleSkull>();
                     break;
                 case EnemyType.ObsidianMaw:
-                    enemyPrefab = GetEnemyPrefabByType<Golem>();               
+                    enemyPrefab = GetEnemyPrefabByType<Golem>();
                     break;
                 default:
                     break;
             }
 
-            if (enemyPrefab != null) 
+            if (enemyPrefab != null)
                 return enemyPrefab;
             else
                 return null;
         }
+        #endregion Enemies
 
 
+
+        #region Bosses
         private GameObject GetBossPrefabByType<T>()
         {
-            for (int i = 0; i < bossPrefabs.Count; i++)
+            for (int i = 0; i < _bossPrefabs.Count; i++)
             {
-                if (bossPrefabs[i].GetComponent<T>() != null)
+                if (_bossPrefabs[i].GetComponent<T>() != null)
                 {
-                    return bossPrefabs[i];
+                    return _bossPrefabs[i];
                 }
             }
             return null;
@@ -415,7 +409,7 @@ namespace Sataura
             {
                 case BossType.KingSlime:
                     bossPrefab = GetBossPrefabByType<KingSlime>();
-                    break;              
+                    break;
                 default:
                     break;
             }
@@ -425,13 +419,15 @@ namespace Sataura
             else
                 return null;
         }
+        #endregion Bosses
+
 
         public Sataura.Debuff GetDebuffEffectVFXPrefabs(DebuffEffect debuffEffect)
         {
-            switch(debuffEffect)
+            switch (debuffEffect)
             {
                 case DebuffEffect.Slowly:
-                    for(int i = 0; i < _debuffVFXPrefabs.Count; i++)
+                    for (int i = 0; i < _debuffVFXPrefabs.Count; i++)
                     {
                         if (_debuffVFXPrefabs[i]._DebuffEffect == DebuffEffect.Slowly)
                         {
@@ -498,18 +494,18 @@ namespace Sataura
         }
         private GameObject GetProjectilePrefabByType<T>()
         {
-            for (int i = 0; i < _projectiles.Count; i++)
+            for (int i = 0; i < _projectilesPrefab.Count; i++)
             {
-                if (_projectiles[i].GetComponent<T>() != null)
+                if (_projectilesPrefab[i].GetComponent<T>() != null)
                 {
-                    return _projectiles[i];
+                    return _projectilesPrefab[i];
                 }
             }
             return null;
         }
 
 
-        public void AddNetworkPlayer(ulong clientId, Player player)
+        public void AddNetworkPlayer(ulong clientId, IngamePlayer player)
         {
             if (players.ContainsKey(clientId) == false)
                 players.Add(clientId, player);

@@ -12,7 +12,7 @@ namespace Sataura
     public class PlayerInventory : NetworkBehaviour
     {
         [Header("REFERENCES")]
-        [SerializeField] private ItemSelectionPlayer itemSelectionPlayer;
+        [SerializeField] private InventoryPlayer _inventoryPlayer;
 
         private ItemInHand itemInHand;
 
@@ -51,13 +51,14 @@ namespace Sataura
 
         private IEnumerator WaitPlayerReference()
         {
-            yield return new WaitUntil(() => itemSelectionPlayer != null);
-            itemInHand = itemSelectionPlayer.itemInHand;
+            yield return new WaitUntil(() => _inventoryPlayer != null);
+            itemInHand = _inventoryPlayer.itemInHand;
+            UpdateCharacterData();
         }
 
-        public void UpdateCharacterData()
+        private void UpdateCharacterData()
         {
-            playerInventoryData = itemSelectionPlayer.characterData.playerInventoryData;
+            playerInventoryData = _inventoryPlayer.characterData.playerInventoryData;
             playerInventory = playerInventoryData.itemSlots;
         }
 

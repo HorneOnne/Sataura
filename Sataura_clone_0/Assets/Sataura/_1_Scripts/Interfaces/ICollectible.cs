@@ -10,7 +10,7 @@ namespace Sataura
         /// Collects the item and adds it to the player's inventory.
         /// </summary>
         /// <param name="player">The player that collects the item.</param>
-        public void Collect(Player player);
+        public void Collect(IngamePlayer player);
     }
 
 }

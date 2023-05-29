@@ -26,7 +26,7 @@ namespace Sataura
         }
 
 
-        public override bool Use(Player player, Vector2 nearestEnemy)
+        public override bool Use(IngamePlayer player, Vector2 nearestEnemy)
         {
             switch(_lightningStaffData.useType)
             {
@@ -49,7 +49,7 @@ namespace Sataura
             return true;
         }   
 
-        private void SummonSingleLightning(Player player, Vector2 nearestEnemy)
+        private void SummonSingleLightning(IngamePlayer player, Vector2 nearestEnemy)
         {
             var _projectileObject = Instantiate(_projectilePrefab, transform.position, Quaternion.identity);
             var _lightningStaffProjectile = _projectileObject.GetComponent<LightningStaffProjectile>();
@@ -57,7 +57,7 @@ namespace Sataura
             _lightningStaffProjectile._networkObject.Spawn();
         }
 
-        private void SummonDoubleLightning(Player player, Vector2 nearestEnemy)
+        private void SummonDoubleLightning(IngamePlayer player, Vector2 nearestEnemy)
         {
             SummonSingleLightning(player, nearestEnemy);
             StartCoroutine(WaitAfter(0.2f, () =>
@@ -66,7 +66,7 @@ namespace Sataura
             }));
         }
 
-        private void SummonTripleLightning(Player player, Vector2 nearestEnemy)
+        private void SummonTripleLightning(IngamePlayer player, Vector2 nearestEnemy)
         {
             SummonSingleLightning(player, nearestEnemy);
 
@@ -82,7 +82,7 @@ namespace Sataura
         }
 
 
-        private void SummonSingleEvoLightning(Player player, Vector2 nearestEnemy)
+        private void SummonSingleEvoLightning(IngamePlayer player, Vector2 nearestEnemy)
         {
             var _projectileObject = Instantiate(_blackWandprojectilePrefab, transform.position, Quaternion.identity);
             var _lightningStaffProjectile = _projectileObject.GetComponent<BlackWandProjectile>();
@@ -90,7 +90,7 @@ namespace Sataura
             _lightningStaffProjectile.SetData(_lightningStaffData, nearestEnemy, _lightningStaffData.size * player.characterData._currentArea);
            
         }
-        private void Evo(Player player, Vector2 nearestEnemy)
+        private void Evo(IngamePlayer player, Vector2 nearestEnemy)
         {
             SummonSingleEvoLightning(player, nearestEnemy);
 

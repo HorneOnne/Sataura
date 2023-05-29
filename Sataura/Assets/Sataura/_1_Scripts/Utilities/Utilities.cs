@@ -27,7 +27,7 @@ namespace Sataura
             {
                 returnGameObject = MonoBehaviour.Instantiate(itemPrefab, parent);
                 returnGameObject.GetComponent<Item>().SetData(itemSlot);
-  
+
             }
             else
             {
@@ -41,7 +41,7 @@ namespace Sataura
         {
             GameObject returnGameObject = null;
             var itemData = GameDataManager.Instance.GetItemData(itemID);
-            
+
             var itemPrefab = GameDataManager.Instance.GetItemPrefab(itemData.itemType);
             if (itemPrefab != null)
             {
@@ -96,7 +96,7 @@ namespace Sataura
 
         public static ItemSlot GetUpgradeItemSlot(ItemData itemData)
         {
-            return new ItemSlot(itemData.upgradeRecipe.outputItemSlot.itemData,1);
+            return new ItemSlot(itemData.upgradeRecipe.outputItemSlot.itemData, 1);
         }
 
         public static Color HexToColor(string hexCode)
@@ -143,6 +143,44 @@ namespace Sataura
             characterMovementData.maxFallVelocity = characterMovementDataStruct.maxFallVelocity;
 
             return characterMovementData;
+        }
+
+        public static Color GetDamageColor(float damage)
+        {
+            switch (damage)
+            {
+                case float n when (n >= 0 && n < 25):
+                    return Color.green;
+                case float n when (n >= 25 && n < 50):
+                    return Color.blue;
+                case float n when (n >= 50 && n < 75):
+                    return new Color(0.6f, 0.2f, 1f); // Purple
+                case float n when (n >= 75 && n < 90):
+                    return Color.red;
+                case float n when (n >= 90):
+                    return Color.yellow;
+                default:
+                    return Color.white;
+            }
+        }
+
+        public static float GetDamageSize(float damage)
+        {
+            switch (damage)
+            {
+                case float n when (n >= 0 && n < 25):
+                    return 10;
+                case float n when (n >= 25 && n < 50):
+                    return 11;
+                case float n when (n >= 50 && n < 75):
+                    return 12; // Purple
+                case float n when (n >= 75 && n < 90):
+                    return 13;
+                case float n when (n >= 90):
+                    return 15;
+                default:
+                    return 15;
+            }
         }
     }
 }

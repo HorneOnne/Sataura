@@ -9,21 +9,21 @@ namespace Sataura
     public class UICharacterInformation : MonoBehaviour
     {
         [Header("References")]
-        [SerializeField] private TextMeshProUGUI characterNameText;
-        [SerializeField] private Button selectCharacterBtn;
-        [SerializeField] private Button removeCharacterBtn;
+        [SerializeField] private TextMeshProUGUI _characterNameText;
+        [SerializeField] private Button _selectCharacterBtn;
+        [SerializeField] private Button _removeCharacterBtn;
         
 
         [Header("Runtime References")]
-        [SerializeField] private CharacterData characterData;
+        [SerializeField] private CharacterData _characterData;
 
         public int index;
 
         public void SetCharacterData(CharacterData characterData)
         {
-            this.characterData = characterData;
-            removeCharacterBtn.onClick.AddListener(RemoveCharacter);
-            selectCharacterBtn.onClick.AddListener(SelectCharacter);
+            this._characterData = characterData;
+            _removeCharacterBtn.onClick.AddListener(RemoveCharacter);
+            _selectCharacterBtn.onClick.AddListener(SelectCharacter);
             UpdateUI();
         }
 
@@ -31,30 +31,21 @@ namespace Sataura
         {
             MainMenuUIManager.Instance.playerSelectionCanvas.SetActive(false);
             MainMenuUIManager.Instance.SetActiveNotificationCanvas(true);
-            NotificationManager.Instance.OpenCharacterNotification(characterData);
-
-            /*SaveManager.charactersData.Remove(characterData);           
-            SaveManager.Instance.Save();
-            SaveManager.Instance.Load();
-
-            UIDisplayCharactersSelection.Instance.ClearAll();
-            UIDisplayCharactersSelection.Instance.CreateList();
-            Destroy(this.gameObject);*/
+            NotificationManager.Instance.OpenCharacterNotification(_characterData);
         }
 
 
         private void SelectCharacter()
         {
-            SaveManager.selectionCharacterDataIndex = index;
-            GameDataManager.Instance.singleModePlayer.GetComponent<MainMenuPlayer>().characterData = SaveManager.charactersData[index];
+            SaveManager.Instance.selectionCharacterDataIndex = index;
+            GameDataManager.Instance.currentPlayer.characterData = SaveManager.Instance.charactersData[index];
             Loader.LoadNetwork(Loader.Scene._1_CharacterInventoryScene);
         }
 
         private void UpdateUI()
         {
-            if (characterData == null) return;
-
-            characterNameText.text = characterData.characterName;
+            if (_characterData == null) return;
+            _characterNameText.text = _characterData.characterName;
         }
 
     }

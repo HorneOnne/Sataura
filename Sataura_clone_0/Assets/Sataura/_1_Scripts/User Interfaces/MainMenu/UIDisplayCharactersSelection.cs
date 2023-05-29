@@ -42,7 +42,7 @@ namespace Sataura
 
         public void CreateList()
         {
-            int size = SaveManager.charactersData.Count;
+            int size = SaveManager.Instance.charactersData.Count;
             if (size == 0) return;
 
 
@@ -50,7 +50,7 @@ namespace Sataura
             {
                 var uiObject = Instantiate(uiCharacterInformationPrefab, parent);
                 uiObject.index = i;
-                uiObject.SetCharacterData(SaveManager.charactersData[i]);
+                uiObject.SetCharacterData(SaveManager.Instance.charactersData[i]);
                 uiCharacterInformations.Add(uiObject);
             }
         }

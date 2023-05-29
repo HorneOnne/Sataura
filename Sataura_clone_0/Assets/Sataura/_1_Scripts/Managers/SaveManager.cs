@@ -10,18 +10,15 @@ namespace Sataura
     public class SaveManager : Singleton<SaveManager>
     {
         [Header("Default Character Data")]
-        public CharacterMovementData defaultCharacterMovementData;
-        public InventoryData defaultWeaponsData;
-        public InventoryData defaultAccessoriesData;
-        public InventoryData defaultInventoryData;
+        public CharacterData defaultCharacterData;
 
 
         [Space(20)]
         private SaveData saveData;
 
         [Space(20)]
-        public static List<CharacterData> charactersData = new List<CharacterData>();
-        public static int selectionCharacterDataIndex;
+        public List<CharacterData> charactersData = new List<CharacterData>();
+        public int selectionCharacterDataIndex;
 
         private void Awake()
         {
@@ -30,11 +27,13 @@ namespace Sataura
 
         private void Start()
         {
-            Load();
+            LoadCharacterData();
         }
 
-        public void Save()
+        public void SaveCharacterData()
         {
+            UpdateCurrentCharacterData();
+
             List<CharacterDataStruct> characterDataStructs = new List<CharacterDataStruct>();
             for (int i = 0; i < charactersData.Count; i++)
             {
@@ -58,8 +57,8 @@ namespace Sataura
             saveData.SaveAllData();
         }
 
-        public void Load()
-        {
+        public void LoadCharacterData()
+        {          
             List<CharacterDataStruct> characterDataStructs = new List<CharacterDataStruct>();
             saveData = new SaveData(characterDataStructs);
             saveData.LoadAllData();
@@ -97,21 +96,17 @@ namespace Sataura
         private void OnApplicationQuit()
         {
             Debug.Log("OnApplicationQuit");
-            if (GameDataManager.Instance.singleModePlayer == null)
+            SaveCharacterData();
+        }
+
+        private void UpdateCurrentCharacterData()
+        {
+            if (GameDataManager.Instance.currentPlayer == null)
+                return;
+            if (GameDataManager.Instance.currentPlayer.characterData == null)
                 return;
 
-
-            if (GameDataManager.Instance.singleModePlayer.GetComponent<MainMenuPlayer>() != null)
-                if (GameDataManager.Instance.singleModePlayer.GetComponent<MainMenuPlayer>().characterData != null)
-                    charactersData[selectionCharacterDataIndex] = Instantiate(GameDataManager.Instance.singleModePlayer.GetComponent<MainMenuPlayer>().characterData);
-
-            if (GameDataManager.Instance.singleModePlayer.GetComponent<Player>() != null)
-                if (GameDataManager.Instance.singleModePlayer.GetComponent<Player>().characterData != null)
-                    charactersData[selectionCharacterDataIndex] = Instantiate(GameDataManager.Instance.singleModePlayer.GetComponent<Player>().characterData);
-
-            //Debug.Log($"OnApplicationQuit: {charactersData.Count} \t {charactersData[0] == null}");
-
-            Save();
+            charactersData[selectionCharacterDataIndex] = Instantiate(GameDataManager.Instance.currentPlayer.characterData);
         }
 
     }

@@ -9,7 +9,7 @@ namespace Sataura
     public class InputHandler : NetworkBehaviour
     {
         [Header("REFERENCES")]
-        [SerializeField] private ItemSelectionPlayer itemSelectionPlayer;
+        [SerializeField] private InventoryPlayer _inventoryPlayer;
 
         private PlayerInventory playerInventory;
         private PlayerInGameSkills playerInGameInventory;
@@ -87,8 +87,8 @@ namespace Sataura
 
         public override void OnNetworkSpawn()
         {
-            playerInventory = itemSelectionPlayer.playerInventory;
-            itemInHand = itemSelectionPlayer.itemInHand;
+            playerInventory = _inventoryPlayer.playerInventory;
+            itemInHand = _inventoryPlayer.itemInHand;
         }
 
     

@@ -14,6 +14,6 @@ namespace Sataura
         /// <param name="position">The position to drop the item at.</param>
         /// <param name="rotation">The rotation of the dropped item.</param>
         /// <param name="forceDestroyItemObject">Whether to force destroy the item object.</param>
-        public void Drop(Player player, Vector2 position, Vector3 rotation, bool forceDestroyItemObject);
+        public void Drop(IngamePlayer player, Vector2 position, Vector3 rotation, bool forceDestroyItemObject);
     }
 }

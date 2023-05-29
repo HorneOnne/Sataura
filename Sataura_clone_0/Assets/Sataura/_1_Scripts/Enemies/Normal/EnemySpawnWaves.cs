@@ -96,6 +96,7 @@ namespace Sataura
         }
 
 
+
         private void Update()
         {
             if (!IsServer) return;
@@ -103,7 +104,9 @@ namespace Sataura
             {
                 /*if (Input.GetKeyDown(KeyCode.J))
                 {
-                    //GenerateLeftWaveEnemies(players[0].position + new Vector3(-3, 20, 0), EnemyType.ObsidianMaw, Random.Range(1, 2));
+                    //SpawnDummy(EnemyType.ObsidianMaw, Camera.main.ScreenToWorldPoint(Input.mousePosition), Quaternion.identity);
+                    //Spawn(EnemyType.ObsidianMaw, Camera.main.ScreenToWorldPoint(Input.mousePosition), Quaternion.identity);
+
                     //SpawnBoss(BossType.KingSlime, Camera.main.ScreenToWorldPoint(Input.mousePosition), Quaternion.identity);
                 }*/
 
@@ -133,7 +136,6 @@ namespace Sataura
 
                 if (Wait(10.0f))
                 {
-                    Debug.Log("15 - 14.30");
                     if (IngameInformationManager.Instance.currentTotalEnemiesIngame < 30)
                     {
                         Wave01();
@@ -158,7 +160,6 @@ namespace Sataura
 
                 if (Wait(8.0f))
                 {
-                    Debug.Log("14 - 13.00");
                     if (IngameInformationManager.Instance.currentTotalEnemiesIngame < 70)
                     {
                         Wave02();
@@ -471,6 +472,18 @@ namespace Sataura
             var enemyNetworkObject = enemyObject.GetComponent<NetworkObject>();
             enemyNetworkObject.Spawn();
             IngameInformationManager.Instance.currentTotalEnemiesIngame++;
+        }
+
+        private void SpawnDummy(EnemyType enemyType, Vector2 position, Quaternion rotation)
+        {
+            var enemyPrefab = GetEnemyPrefabByType(enemyType);
+            var enemyObject = Instantiate(enemyPrefab, position, rotation);
+
+            //enemyObject.GetComponent<BaseEnemy>().SetFollowTarget(players[0]);
+
+            var enemyNetworkObject = enemyObject.GetComponent<NetworkObject>();
+            enemyNetworkObject.Spawn();
+            //IngameInformationManager.Instance.currentTotalEnemiesIngame++;
         }
 
         private BaseEnemy SpawnBoss(BossType bossType, Vector2 position, Quaternion rotation)
