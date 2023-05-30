@@ -132,7 +132,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 0}
   _networkObject: {fileID: 3588018770445165844}
-  vfxDoubleJumpPrefab: {fileID: 2597314236992537918, guid: 4b665a09b96ee134cadd7eee83aacb00, type: 3}
+  _bootsData: {fileID: 0}
+  _rb2D: {fileID: 0}
 --- !u!114 &3588018770445165844
 MonoBehaviour:
   m_ObjectHideFlags: 0

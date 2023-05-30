@@ -2,7 +2,7 @@
 
 namespace Sataura
 {
-    public class EvoWoodenSwordProejctile : NetworkProjectile, ICanCauseDamage
+    public class EvoWoodenSwordProejctile : NetworkProjectile
     {
         [SerializeField] private Animator _anim;
         private SwordData _swordData;
@@ -66,9 +66,9 @@ namespace Sataura
 
         public void DespawnNetworkObject()
         {
-            if (base._networkObject.IsSpawned)
+            if (base.networkObject.IsSpawned)
             {
-                base._networkObject.Despawn();
+                base.networkObject.Despawn();
             }
 
         }

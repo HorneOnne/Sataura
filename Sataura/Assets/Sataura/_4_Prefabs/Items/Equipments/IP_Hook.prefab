@@ -291,21 +291,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23f747551a7ea8042a82bdf8a7ecf124, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <ItemData>k__BackingField: {fileID: 0}
   spriteRenderer: {fileID: 0}
   _networkObject: {fileID: -4841114728243118690}
   grappableLayer:
     serializedVersion: 2
     m_Bits: 2164260864
   characterRb2D: {fileID: 0}
-  character: {fileID: 0}
+  characterTransform: {fileID: 0}
   gunPivot: {fileID: 2529793786759640598}
   firePoint: {fileID: 7191933044160411405}
   grappleRope: {fileID: 7171198848660655314}
   rotateOverTime: 0
   rotationSpeed: 25
-  maxDistance: 30
-  hookLaunchForce: 2000
   characterDragForce: 40
   anchorPrefab: {fileID: 6465391690019927953, guid: ebb15d4ccee79234b97fa93357ed6aaf, type: 3}
   anchorObject: {fileID: 0}
+  _hookData: {fileID: 0}

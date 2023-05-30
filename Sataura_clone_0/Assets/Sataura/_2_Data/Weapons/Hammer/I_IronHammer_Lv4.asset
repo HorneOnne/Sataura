@@ -30,6 +30,7 @@ MonoBehaviour:
       itemData: {fileID: 11400000, guid: 85f11a099d612f747af53047f27a41ae, type: 2}
       quantity: 1
   damage: 15
-  releaseForce: 15
+  knockback: 10
   size: 3
   useType: 3
+  releaseForce: 15

@@ -181,11 +181,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77cf95b892a523b48b4ab2fd36bb23ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  useGravity: 0
-  _networkObject: {fileID: -8973804671705556007}
-  spriteRenderer: {fileID: 0}
-  rb: {fileID: 2942270104973382695}
-  _hammerData: {fileID: 0}
+  networkObject: {fileID: -8973804671705556007}
+  spriteRenderer: {fileID: 1251238356877273029}
+  rb2D: {fileID: 2942270104973382695}
+  damageType: 3
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 1610612736
+  weaponData: {fileID: 0}
 --- !u!114 &-8973804671705556007
 MonoBehaviour:
   m_ObjectHideFlags: 0

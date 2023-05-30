@@ -15,7 +15,7 @@ namespace Sataura
         private GameObject evoArrowProjectilePrefab;
 
         [Header("Runtime References")]
-        [SerializeField] private BowData bowItemData;
+        [SerializeField] private BowData _bowData;
         
 
 
@@ -25,13 +25,13 @@ namespace Sataura
 
         public override void OnNetworkSpawn()
         {
-            bowItemData = (BowData)this.ItemData;
+            _bowData = (BowData)ItemData;
             normalArrowProjectilePrefab = GameDataManager.Instance.GetProjectilePrefab(ProjectileType.NormalArrow);
             evoArrowProjectilePrefab = GameDataManager.Instance.GetProjectilePrefab(ProjectileType.EvoArrow);
 
             if (IsServer)
             {
-                int itemID = GameDataManager.Instance.GetItemID(bowItemData);
+                int itemID = GameDataManager.Instance.GetItemID(_bowData);
                 SetDataServerRpc(itemID, 1);
             }
             
@@ -47,7 +47,7 @@ namespace Sataura
 
 
 
-            switch (bowItemData.useType)
+            switch (_bowData.useType)
             {
                 case 1:
                     ShootSingleArrow(player, nearestEnemyPosition);
@@ -76,18 +76,11 @@ namespace Sataura
 
         private void ShootSingleArrow(IngamePlayer player, Vector2 nearestEnemyPosition)
         {
-            var arrowObject = Instantiate(normalArrowProjectilePrefab, shootingPoints[0].position, transform.rotation);
-            arrowObject.transform.localScale *= bowItemData.size * player.characterData._currentArea;
+            var arrowObject = Instantiate(normalArrowProjectilePrefab, shootingPoints[0].position, transform.rotation);   
             var normalArrowProjectile = arrowObject.GetComponent<NormalArrowProjectile>();
-            Utilities.RotateObjectTowardMouse2D(nearestEnemyPosition, normalArrowProjectile.transform, -45);
-           
-            int arrowID = GameDataManager.Instance.GetItemID(arrowData);
-            normalArrowProjectile.SetDataServerRpc(arrowID, true);  
-            normalArrowProjectile.Shoot(bowItemData, arrowData);
-
-            if (normalArrowProjectile._networkObject.IsSpawned == false)
-                normalArrowProjectile._networkObject.Spawn();
-
+            Utilities.RotateObjectTowardMouse2D(nearestEnemyPosition, normalArrowProjectile.transform, -45);           
+            
+            normalArrowProjectile.Fire(player, nearestEnemyPosition, _bowData);
             SoundManager.Instance.PlaySound(SoundType.Bow, playRandom: true, 0.5f);
         }
 
@@ -121,28 +114,24 @@ namespace Sataura
         private void ShootSingleEvoArrow(IngamePlayer player, Vector2 nearestEnemyPosition)
         {
             var arrowObject = Instantiate(evoArrowProjectilePrefab, shootingPoints[0].position, transform.rotation);
-            arrowObject.transform.localScale *= bowItemData.size * player.characterData._currentArea;
+            arrowObject.transform.localScale *= _bowData.size * player.characterData._currentArea;
             var normalArrowProjectile = arrowObject.GetComponent<EvoArrowProjectile>();
             Utilities.RotateObjectTowardMouse2D(nearestEnemyPosition, normalArrowProjectile.transform, -45);
 
             int arrowID = GameDataManager.Instance.GetItemID(arrowData);
-            normalArrowProjectile.SetDataServerRpc(arrowID, true);
 
 
             var nearestEnemy = player.playerUseItem.DetectNearestEnemy();
             if (nearestEnemy != null)
             {
-                normalArrowProjectile.Shoot(bowItemData, arrowData, nearestEnemy);
+                normalArrowProjectile.Shoot(_bowData, nearestEnemy);
             }
             else
             {
-                normalArrowProjectile.Shoot(bowItemData, arrowData, nearestEnemy);
+                normalArrowProjectile.Shoot(_bowData, nearestEnemy);
             }
 
-
-
-            if (normalArrowProjectile._networkObject.IsSpawned == false)
-                normalArrowProjectile._networkObject.Spawn();
+            normalArrowProjectile.NetworkSpawn();
 
             SoundManager.Instance.PlaySound(SoundType.Bow, playRandom: true, 0.5f);
         }

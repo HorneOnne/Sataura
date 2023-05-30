@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Sataura
 {
-    public class GolemBullet : NetworkBehaviour, ICanCauseDamage
+    public class GolemBullet : NetworkBehaviour
     {       
         [Header("References")]
         [SerializeField] protected NetworkObject networkObject;

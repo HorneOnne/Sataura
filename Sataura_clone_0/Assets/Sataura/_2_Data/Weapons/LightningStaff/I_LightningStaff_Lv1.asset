@@ -30,8 +30,9 @@ MonoBehaviour:
       itemData: {fileID: 11400000, guid: 4c67e7458c947254fae1e9f33b376113, type: 2}
       quantity: 1
   damage: 10
+  knockback: 10
+  size: 1
+  useType: 1
   timeExist: 1
   attackCycle: 0.3
-  size: 0.5
   lightingDamgedZone: 1
-  useType: 1

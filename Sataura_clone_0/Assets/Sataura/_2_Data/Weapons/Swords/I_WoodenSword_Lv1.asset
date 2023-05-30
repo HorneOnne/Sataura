@@ -31,5 +31,5 @@ MonoBehaviour:
       quantity: 1
   damage: 10
   knockback: 10
-  size: 4
+  size: 2.5
   useType: 1

@@ -30,7 +30,7 @@ namespace Sataura
             switch(_swordData.useType)
             {
                 case 1:
-                    SingleProjectile(player, nearestEnemyPosition);
+                    SingleProjectile(player, nearestEnemyPosition, true);
                     break;
                 case 2:
                     MultipleProjectile(player, nearestEnemyPosition);
@@ -50,13 +50,13 @@ namespace Sataura
        
 
 
-        private void SingleProjectile(IngamePlayer player, Vector2 nearestEnemyPosition, bool upSide = true)
+        private void SingleProjectile(IngamePlayer player, Vector2 nearestEnemyPosition, bool upSide)
         {
             var swordOjbect = Instantiate(woodenSwordProjectilePrefab, transform.position, Quaternion.identity);
-            var passiveProjectile = swordOjbect.GetComponent<NetworkProjectile>();
-            passiveProjectile._networkObject.Spawn();
+            var woodenSwordProjectile = swordOjbect.GetComponent<WoodenSwordProjectile>();
 
-            swordOjbect.GetComponent<WoodenSwordProejctile>().SetUp(player, _swordData, nearestEnemyPosition, upSide);
+            woodenSwordProjectile.SetUpside(upSide);
+            woodenSwordProjectile.Fire(player, nearestEnemyPosition, _swordData);
 
             // Sound
             SoundManager.Instance.PlaySound(SoundType.Sword, playRandom: true);
@@ -77,7 +77,7 @@ namespace Sataura
         {
             var evoSwordOjbect = Instantiate(evoWoodenSwordProjectilePrefab, transform.position, Quaternion.identity);
             var passiveProjectile = evoSwordOjbect.GetComponent<NetworkProjectile>();
-            passiveProjectile._networkObject.Spawn();
+            passiveProjectile.NetworkSpawn();
 
             evoSwordOjbect.GetComponent<EvoWoodenSwordProejctile>().SetUp(player, _swordData, nearestEnemyPosition);
         }

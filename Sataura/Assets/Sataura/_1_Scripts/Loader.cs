@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -21,13 +19,13 @@ namespace Sataura
         public static void Load(Scene targetScene)
         {
             Loader.targetScene = targetScene;
-
-            SceneManager.LoadScene(Scene._0_MainMenuScene.ToString());
+            SceneManager.LoadScene(Loader.targetScene.ToString());
         }
 
         public static void LoadNetwork(Scene targetScene)
         {
-            NetworkManager.Singleton.SceneManager.LoadScene(targetScene.ToString(), LoadSceneMode.Single);
+            var status = NetworkManager.Singleton.SceneManager.LoadScene(targetScene.ToString(), LoadSceneMode.Single);
+            Debug.Log($"status: {status}");
         }
 
         public static void LoaderCallback()

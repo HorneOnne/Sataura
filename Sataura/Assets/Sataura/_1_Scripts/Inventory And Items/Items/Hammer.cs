@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Sataura
 {
 
-    public class Hammer : Item, ICanCauseDamage
+    public class Hammer : Item
     {
         [Header("Runtime References")]
         [SerializeField] private HammerData _hammerData;
@@ -67,8 +67,7 @@ namespace Sataura
         {
             var _projectileObject = Instantiate(hammerProjectilePrefab, transform.position, Quaternion.identity);
             _projectileObject.transform.localScale *= _hammerData.size * player.characterData._currentArea;
-            _projectileObject.SetData(_hammerData);
-            _projectileObject._networkObject.Spawn();
+            _projectileObject.Fire(player, Vector2.zero, _hammerData);
         }
 
         private void ThrowDoubleHammer(IngamePlayer player)
@@ -101,7 +100,7 @@ namespace Sataura
             var _projectileObject = Instantiate(noMoreHammerProjectilePrefab, spawnPosition, Quaternion.identity);
             _projectileObject.transform.localScale *= _hammerData.size * player.characterData._currentArea;
             _projectileObject.SetData(_hammerData);
-            _projectileObject._networkObject.Spawn();
+            _projectileObject.NetworkSpawn();
         }
         private void Evo(IngamePlayer player)
         {

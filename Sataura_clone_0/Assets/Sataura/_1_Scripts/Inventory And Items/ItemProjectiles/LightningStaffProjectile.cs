@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Sataura
 {
-    public class LightningStaffProjectile : NetworkBehaviour, ICanCauseDamage
+    public class LightningStaffProjectile : NetworkBehaviour
     {
         [Header("References")]
         public NetworkObject _networkObject;

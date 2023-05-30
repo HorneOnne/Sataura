@@ -11,10 +11,9 @@ namespace Sataura
     {
         [Header("Canvas")]
         public GameObject playerInGameInventoryCanvas;
-        public GameObject playerInformationCanvas;
         public Canvas bossHealthBarCanvas;
-        public GameObject menuCanvas;
         public Canvas victoryCanvas;
+        public UIPauseCanvas uiPauseCanvas;
 
         [Header("Panel")]
         public GameObject upgradeItemSkillPanel;
@@ -38,15 +37,32 @@ namespace Sataura
                 playerInGameInventoryCanvas.SetActive(true);
 
 
-            if (menuCanvas != null)
-                menuCanvas.SetActive(true);
-
             if (bossHealthBarCanvas != null)
                 bossHealthBarCanvas.enabled = false;
 
             if (victoryCanvas != null)
                 victoryCanvas.enabled = false;
+
+            if (uiPauseCanvas != null)
+                uiPauseCanvas.Canvas.enabled = false;
         }
+
+
+        public void TogglePause()
+        {
+            if (uiPauseCanvas.Canvas.enabled)
+            {
+                uiPauseCanvas.Canvas.enabled = false;
+                Time.timeScale = 1.0f;
+            }
+            else
+            {
+                uiPauseCanvas.Canvas.enabled = true;
+                Time.timeScale = 0.0f;
+            }
+        }
+
+    
 
 
 

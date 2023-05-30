@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using Mono.Cecil;
 using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
@@ -6,44 +7,33 @@ using UnityEngine;
 
 namespace Sataura
 {
-    public class NormalArrowProjectile : NetworkProjectile, ICanCauseDamage
+    public class NormalArrowProjectile : SingleTargetPhysicalProjectile
     {
-        [Header("REFERENCES")]
-        [SerializeField] private GameObject explosionObjectPrefab;
-        [SerializeField] private Transform explosionSpawnPosition;
-
-
-        [Header("Properties")]
+        [Space(10)]
+        [Header("===== NormalArrowProjectile =====")]
+        [Space(3)]
         [SerializeField] private LayerMask groundLayer;
 
-
-        // Cached variables
-        private BoxCollider2D arrowCollider;
-        [SerializeField] private BowData currentBowData;
-
+        // Cached
+        private BowData _bowData;
 
         public override void OnNetworkSpawn()
         {
-            arrowCollider = GetComponent<BoxCollider2D>();
-
-            StartCoroutine(Despawn(7f));
+            NetworkDespawnAfter(7.0f);
         }
 
 
-        /// <summary>
-        /// Shoots the arrow with given bow and arrow data.
-        /// </summary>
-        /// <param name="bowData">The bow data to use for the shot.</param>
-        /// <param name="arrowData">The arrow data to use for the shot.</param>
-        public void Shoot(BowData bowData, ArrowData arrowData)
+        public override void Fire(IngamePlayer fromPlayer, Vector2 targetPosition, WeaponData weaponData, bool updateProjectileSize = true)
         {
-            this.currentBowData = bowData;
-            SetDustServerRpc(arrowData.particle);
+            base.Fire(fromPlayer, targetPosition, weaponData);
+            
+            _bowData = (BowData)weaponData;
+            LogicalProjectile();
+        }
 
-            if (rb == null)
-                rb = GetComponent<Rigidbody2D>();
-
-            rb.velocity = Quaternion.Euler(0, 0, 45) * transform.right * bowData.releaseSpeed;
+        private void LogicalProjectile()
+        {
+            rb2D.velocity = Quaternion.Euler(0, 0, 45) * transform.right * _bowData.releaseSpeed;
         }
 
 
@@ -51,7 +41,7 @@ namespace Sataura
         {
             if (!IsServer) return;
 
-            Vector2 direction = rb.velocity;
+            Vector2 direction = rb2D.velocity;
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.Euler(0, 0, -45) * Quaternion.AngleAxis(angle, Vector3.forward);
         }
@@ -62,66 +52,35 @@ namespace Sataura
         private void OnTriggerEnter2D(Collider2D collision)
         {
             if (!IsServer) return;
-         
+
             if (groundLayer == (groundLayer | (1 << collision.gameObject.layer)))
             {
                 // Collision detected with a game object that is in the canHookLayers LayerMask
                 // You can add your desired code or logic here
                 ArrowPropertiesWhenCollide();
-                StartCoroutine(Despawn(1f));
+                NetworkDespawnAfter(1.0f);
 
                 SoundManager.Instance.PlaySound(SoundType.ArrowProjectileHitGround, playRandom: true, collision.transform.position);
             }
+
+            if (enemyLayer == (enemyLayer | (1 << collision.gameObject.layer)))
+            {
+                ArrowPropertiesWhenCollide();
+                NetworkDespawnAfter(1.0f);
+
+            }
         }
 
-    
-        private IEnumerator Despawn(float time)
-        {
-            yield return new WaitForSeconds(time);
-            if (_networkObject.IsSpawned)
-                _networkObject.Despawn();
-        }
 
-
-
-
-        /// <summary>
-        /// Returns the arrow projectile to the pool.
-        /// </summary>
-        private void ReturnToNetworkPool()
-        {
-            if(_networkObject.IsSpawned)
-                _networkObject.Despawn();       
-        }
-
-  
 
         /// <summary>
         /// Sets the arrow properties when it collides with something.
         /// </summary>
         private void ArrowPropertiesWhenCollide()
         {
-            rb.isKinematic = true;
-            spriteRenderer.enabled = false;
-            arrowCollider.enabled = false;
-            rb.velocity = Vector2.zero;           
-        }
-
-
-        public int GetDamage()
-        {
-            ArrowPropertiesWhenCollide();
-            var returnDamage = currentBowData.baseAttackDamage;
-            
-            if (_networkObject.IsSpawned)
-                _networkObject.Despawn();
-
-            return returnDamage;
-        }
-
-        public float GetKnockback()
-        {
-            return 5.0f;
-        }
+            rb2D.velocity = Vector2.zero;
+            rb2D.isKinematic = true;
+            spriteRenderer.enabled = false;     
+        }     
     }
 }

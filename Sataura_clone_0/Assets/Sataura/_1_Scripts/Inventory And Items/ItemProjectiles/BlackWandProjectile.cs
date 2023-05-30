@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Sataura
 {
-    public class BlackWandProjectile : NetworkBehaviour, ICanCauseDamage
+    public class BlackWandProjectile : NetworkBehaviour
     {
         [Header("References")]
         public NetworkObject _networkObject;

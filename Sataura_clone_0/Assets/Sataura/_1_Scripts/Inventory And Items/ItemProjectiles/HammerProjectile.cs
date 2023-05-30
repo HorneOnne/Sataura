@@ -1,53 +1,24 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Unity.Netcode;
 
 namespace Sataura
 {
-
-    public class HammerProjectile : NetworkProjectile, ICanCauseDamage
+    public class HammerProjectile : MultipleTargetPhysicalProjectile
     {
-        [Header("Runtime References")]
-        [SerializeField] private HammerData _hammerData = null;
-
-        public void SetData(HammerData data)
+        public override void Fire(IngamePlayer fromPlayer, Vector2 targetPosition, WeaponData weaponData, bool updateProjectileSize = true)
         {
-            _hammerData = data;
+            base.Fire(fromPlayer, targetPosition, weaponData);
+            
+            ThrowUp();
+            Invoke(nameof(base.NetworkDespawn), 7.0f);
         }
 
-        private IEnumerator ThrowUp()
-        {
-            yield return new WaitUntil(() => _hammerData != null);
 
+        private void ThrowUp()
+        {
             Vector2 throwUpVector = Vector2.up + new Vector2(Random.Range(-1f, 1f), 0f);
-            rb.AddForce(throwUpVector.normalized * _hammerData.releaseForce, ForceMode2D.Impulse);
-            rb.AddTorque(10f, ForceMode2D.Impulse);
-        }
-
-        public override void OnNetworkSpawn()
-        {
-            StartCoroutine(Despawn());
-            StartCoroutine(ThrowUp());
-        }
-
-
-
-        private IEnumerator Despawn()
-        {
-            yield return new WaitUntil(() => _hammerData != null);
-            yield return new WaitForSeconds(7.0f);
-            if (_networkObject.IsSpawned)
-                _networkObject.Despawn();
-        }
-
-        public int GetDamage()
-        {
-            return _hammerData.damage;
-        }
-
-        public float GetKnockback()
-        {
-            return 0.0f;
+            rb2D.AddForce(throwUpVector.normalized * ((HammerData)weaponData).releaseForce, ForceMode2D.Impulse);
+            rb2D.AddTorque(10f, ForceMode2D.Impulse);
         }
     }
 }

@@ -4,7 +4,7 @@ using System.Collections;
 
 namespace Sataura
 {
-    public class BlackWandDamageZone : NetworkBehaviour, ICanCauseDamage
+    public class BlackWandDamageZone : NetworkBehaviour
     {
         [Header("References")]
         [SerializeField] private NetworkObject _networkObject;

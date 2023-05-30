@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.EventSystems;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
@@ -39,6 +38,7 @@ namespace Sataura
         {
             SaveManager.Instance.selectionCharacterDataIndex = index;
             GameDataManager.Instance.currentPlayer.characterData = SaveManager.Instance.charactersData[index];
+
             Loader.LoadNetwork(Loader.Scene._1_CharacterInventoryScene);
         }
 
