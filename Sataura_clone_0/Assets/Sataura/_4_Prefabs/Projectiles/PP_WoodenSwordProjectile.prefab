@@ -165,14 +165,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 5105516432297543255}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05a2d9029a48ec048853dc5db7bd60ac, type: 3}
+  m_Script: {fileID: 11500000, guid: ccfd7a5e8bb342c4a8f93e89ddc00518, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <ItemData>k__BackingField: {fileID: 0}
-  useGravity: 0
-  _networkObject: {fileID: 5038828210219697253}
-  spriteRenderer: {fileID: 0}
-  rb: {fileID: 7211560207306139828}
+  networkObject: {fileID: 5038828210219697253}
+  spriteRenderer: {fileID: 887047863221117599}
+  rb2D: {fileID: 7211560207306139828}
+  damageType: 3
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 1610612736
+  weaponData: {fileID: 0}
   _anim: {fileID: 1923852434087265612}
 --- !u!114 &5038828210219697253
 MonoBehaviour:

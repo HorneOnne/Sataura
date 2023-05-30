@@ -122,6 +122,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 454ec6d0676df884a9720f090b2ebbf9, type: 2}
   - {fileID: 11400000, guid: 297e403bad90bee4babfd0428e9e7ee5, type: 2}
   - {fileID: 11400000, guid: 89a6414ba648c874db6c99e0d02751ac, type: 2}
+  - {fileID: 11400000, guid: af35a522cd21d764fabe95092e687b5f, type: 2}
   _itemPrefabs:
   - {fileID: 7603960275652137570, guid: 53262f99ff17183409f9fc0d8a8159bd, type: 3}
   - {fileID: 2349573720829118872, guid: b60aba05a81bc9f4fb600f47c1f35a91, type: 3}
@@ -160,11 +161,8 @@ MonoBehaviour:
   - {fileID: 8193197116097527256, guid: b5cdbccaff5d02845b665f882eb18d64, type: 3}
   - {fileID: 3139863566514667555, guid: 2df01702708932345b34d9c6cb49d296, type: 3}
   - {fileID: 9168622277915590887, guid: 490ae5352e1ece74aaa05d0c0cc25fd5, type: 3}
-  - {fileID: 1029242142444853136, guid: 9a08a7f63d9a6fc4d93a8c47b66c05de, type: 3}
   - {fileID: 3388775813500125219, guid: 72b4a69d061cd2b4b9a9795130893745, type: 3}
   - {fileID: 4973538020444718908, guid: 9962602cb9502cc49a3bd5d756c92401, type: 3}
-  - {fileID: 7163825116418857947, guid: 2d276384e0de20546b28f4964dfc5b99, type: 3}
-  - {fileID: 7163825116418857947, guid: aa4acba40e2529c42803af340f2eee4b, type: 3}
   - {fileID: 5105516432297543255, guid: 22b0f50535791364aa0f290782b842e5, type: 3}
   - {fileID: 8452128729472812040, guid: c7cece62720706e4a934b73209c28a44, type: 3}
   _debuffVFXPrefabs:
@@ -258,7 +256,6 @@ MonoBehaviour:
     - {fileID: 1620155514, guid: f92440ba9d066c641aaac5f0da37c943, type: 3}
     - {fileID: 91930958, guid: f92440ba9d066c641aaac5f0da37c943, type: 3}
     - {fileID: -1767183998, guid: f92440ba9d066c641aaac5f0da37c943, type: 3}
-  itemContainerParent: {fileID: 0}
   itemForDropPrefab: {fileID: 7190463713838927434, guid: 0f8f403f6cc7da44db42c306f69ba98f, type: 3}
   damagePopupPrefab: {fileID: 2482577687471222703, guid: 894c71f07ccefd2478c51cfd0704ffa5, type: 3}
   ingamePlayerPrefab: {fileID: 5207464968289795732, guid: 76dca213e545aea408be6333805ae122, type: 3}

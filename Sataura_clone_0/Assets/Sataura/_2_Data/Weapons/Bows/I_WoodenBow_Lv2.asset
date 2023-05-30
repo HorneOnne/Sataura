@@ -35,7 +35,8 @@ MonoBehaviour:
     outputItemSlot:
       itemData: {fileID: 11400000, guid: 5fdfcf54a38a2dd4780a4b7bf5978252, type: 2}
       quantity: 1
-  baseAttackDamage: 10
-  releaseSpeed: 25
+  damage: 10
+  knockback: 10
   size: 1
   useType: 2
+  releaseSpeed: 25

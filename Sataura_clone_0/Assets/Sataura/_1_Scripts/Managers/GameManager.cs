@@ -21,12 +21,11 @@ namespace Sataura
             
         }
 
-
         private void Update()
         {
-            if(Input.GetKeyDown(KeyCode.K))
+            if (Input.GetKeyDown(KeyCode.Escape))
             {
-                BackToCharacterSelectionScene();
+                UIManager.Instance.TogglePause();
             }
         }
 
@@ -45,10 +44,8 @@ namespace Sataura
             SceneManager.LoadScene(Loader.Scene._0_MainMenuScene.ToString());         
         }
 
-        public void BackToCharacterSelectionScene()
-        {
-            SceneManager.LoadScene(Loader.Scene._1_CharacterInventoryScene.ToString());
-        }
+        
+
 
 
         public void Exit()

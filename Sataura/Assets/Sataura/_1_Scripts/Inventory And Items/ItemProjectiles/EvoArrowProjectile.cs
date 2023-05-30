@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Sataura
 {
-    public class EvoArrowProjectile : NetworkProjectile, ICanCauseDamage
+    public class EvoArrowProjectile : NetworkProjectile
     { 
         [Header("Properties")]
         [SerializeField] private LayerMask groundLayer;
@@ -27,12 +27,11 @@ namespace Sataura
 
 
    
-        public void Shoot(BowData bowData, ArrowData arrowData, Transform target)
+        public void Shoot(BowData bowData, Transform target)
         {
             this.bowData = bowData;
             this._target = target;
             _randomReleaseDirection = new Vector3(Random.Range(-1, 1f), Random.Range(-1, 1f), 0);
-            SetDustServerRpc(arrowData.particle);     
         }
 
 
@@ -44,21 +43,21 @@ namespace Sataura
             _timeExist += Time.fixedDeltaTime;
             if(_timeExist < 0.5f)
             {
-                rb.velocity = (transform.up + _randomReleaseDirection).normalized * bowData.releaseSpeed;
+                rb2D.velocity = (transform.up + _randomReleaseDirection).normalized * bowData.releaseSpeed;
             }
             else
             {
                 if (_target == null)
                 {
-                    rb.velocity = transform.up * bowData.releaseSpeed;
+                    rb2D.velocity = transform.up * bowData.releaseSpeed;
                     return;
                 }
 
-                Vector2 direction = (Vector2)_target.position - rb.position;
+                Vector2 direction = (Vector2)_target.position - rb2D.position;
                 direction.Normalize();
                 float rotateAmount = Vector3.Cross(direction, transform.up).z;
-                rb.angularVelocity = -rotateAmount * 300f;
-                rb.velocity = transform.up * bowData.releaseSpeed;
+                rb2D.angularVelocity = -rotateAmount * 300f;
+                rb2D.velocity = transform.up * bowData.releaseSpeed;
             }
 
                   
@@ -86,8 +85,8 @@ namespace Sataura
         private IEnumerator Despawn(float time)
         {
             yield return new WaitForSeconds(time);
-            if (_networkObject.IsSpawned)
-                _networkObject.Despawn();
+            if (networkObject.IsSpawned)
+                networkObject.Despawn();
         }
 
 
@@ -99,20 +98,20 @@ namespace Sataura
         /// </summary>
         private void ArrowPropertiesWhenCollide()
         {
-            rb.isKinematic = true;
+            rb2D.isKinematic = true;
             spriteRenderer.enabled = false;
             arrowCollider.enabled = false;
-            rb.velocity = Vector2.zero;
+            rb2D.velocity = Vector2.zero;
         }
 
 
         public int GetDamage()
         {
             ArrowPropertiesWhenCollide();
-            var returnDamage = bowData.baseAttackDamage;
+            var returnDamage = bowData.damage;
 
-            if (_networkObject.IsSpawned)
-                _networkObject.Despawn();
+            if (networkObject.IsSpawned)
+                networkObject.Despawn();
 
             return returnDamage;
         }

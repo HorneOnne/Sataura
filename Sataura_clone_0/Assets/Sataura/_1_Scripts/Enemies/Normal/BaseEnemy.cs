@@ -7,7 +7,10 @@ namespace Sataura
 
     public abstract class BaseEnemy : NetworkBehaviour, IDamageable, IShowDamage
     {
-        [Header("Base properties")]
+        public enum EnemyState { Alive, Death, }
+        [Header("===== BaseEnemy =====")]
+        [Space(3)]
+        [Header("References")]
         [SerializeField] protected Rigidbody2D rb2D;
         [SerializeField] protected BoxCollider2D boxCollider2D;
         [SerializeField] protected SpriteRenderer sr;
@@ -15,17 +18,23 @@ namespace Sataura
         [SerializeField] protected ItemDropData itemDropData;
         protected NetworkObject networkObject;
         protected NetworkObjectPool networkObjectPool;
-
-
         [SerializeField] private GameObject damagedPopupPrefab;
-        protected bool isDeath = false;
 
 
         [Header("Effects")]
         public bool blackHole = false;
 
-        #region Properties
-        [field: SerializeField] public float cooldown { get; set; }
+
+
+
+        // Cached
+        protected bool isBeingKnockback;
+        protected bool isDead = false;
+        protected Transform playerTranform;
+        [SerializeField] protected NetworkVariable<int> currentHealth = new NetworkVariable<int>(0);
+
+
+        #region Properties      
         public int CurrentHealth { get => currentHealth.Value; }
         public int MaxHealth { get => enemyData.maxHealth; }
         public Rigidbody2D Rb2D { get => rb2D; }
@@ -42,12 +51,6 @@ namespace Sataura
         #endregion
 
 
-        // Cached
-        protected bool canTrigger = true;
-        protected bool isBeingKnockback;
-        protected bool isDead = false;
-        protected Transform playerTranform;
-        [SerializeField] protected NetworkVariable<int> currentHealth = new NetworkVariable<int>(0);
 
 
         private void OnEnable()
@@ -67,7 +70,7 @@ namespace Sataura
             {
                 OnEnemyDead();
                 Despawn();
-            }                
+            }
         }
 
 
@@ -90,7 +93,7 @@ namespace Sataura
             {
                 Invoke(nameof(ResetBlackHoleEffect), 0.2f);
                 return;
-            }          
+            }
         }
 
         private void ResetBlackHoleEffect()
@@ -145,16 +148,16 @@ namespace Sataura
 
 
 
-        private void OnTriggerStay2D(Collider2D collision)
+        private void OnTriggerEnter2D(Collider2D collision)
         {
             if (!IsServer) return;
 
-            if (canTrigger)
+            IPhysicalDamage physicProjectile;
+            if (collision.gameObject.TryGetComponent<IPhysicalDamage>(out physicProjectile))
             {
-                ICanCauseDamage projectile = collision.gameObject.GetComponent<ICanCauseDamage>();
-                if (projectile != null)
+                if (physicProjectile != null)
                 {
-                    int damageReceived = projectile.GetDamage();
+                    int damageReceived = physicProjectile.GetPhysicalDamage();
                     if (damageReceived <= 0) return;
 
                     TakeDamage(damageReceived);
@@ -180,19 +183,15 @@ namespace Sataura
                         ShowDamage(damageReceived);
 
                         Vector2 direction = transform.position - collision.transform.position;
-                        direction.Normalize();
-                        Knockback(direction, projectile.GetKnockback());
+                        Knockback(direction.normalized, physicProjectile.GetKnockback());
                     }
                 }
-                canTrigger = false;
-                Invoke("ResetTrigger", cooldown);
-            }
+            }    
+                
         }
 
-        private void ResetTrigger()
-        {
-            canTrigger = true;
-        }
+
+
 
         public void GetLightningDamaged(int damageReceived)
         {
@@ -221,7 +220,7 @@ namespace Sataura
         protected abstract void Despawn();
 
 
-  
+
 
 
         // DROP ITEM HANDLE
@@ -298,13 +297,13 @@ namespace Sataura
 
             // Experiences
             // ===============================
-            if(IngameInformationManager.Instance.currentExpCount < 150)
+            if (IngameInformationManager.Instance.currentExpCount < 150)
             {
                 var expObject = Instantiate(itemDropData.exp, transform.position, Quaternion.identity);
                 expObject.GetComponent<NetworkObject>().Spawn();
             }
-            
-       
+
+
 
 
             // Test Probability
@@ -376,7 +375,7 @@ namespace Sataura
         // ==========================================================
         public void ShowDamage(int damaged)
         {
-            if(IngameInformationManager.Instance.currentDamagePopupCount > 30)
+            if (IngameInformationManager.Instance.currentDamagePopupCount > 30)
             {
                 return;
             }
@@ -395,7 +394,7 @@ namespace Sataura
             textNetworkObject.GetComponent<DamagePopup>().SetUp(damaged, Utilities.GetDamageColor(damaged), Utilities.GetDamageSize(damaged), moveTextObjectVector, textObjectRotation);
         }
 
-        
+
     }
 
 }

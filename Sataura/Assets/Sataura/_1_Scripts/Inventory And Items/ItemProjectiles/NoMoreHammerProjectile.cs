@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace Sataura
 {
-    public class NoMoreHammerProjectile : NetworkProjectile, ICanCauseDamage
+    public class NoMoreHammerProjectile : NetworkProjectile
     {
         [Header("Runtime References")]
         [SerializeField] private HammerData _hammerData = null;
@@ -16,7 +16,7 @@ namespace Sataura
         private IEnumerator Fall()
         {
             yield return new WaitUntil(() => _hammerData != null);
-            rb.AddForce(Vector2.down * _hammerData.releaseForce, ForceMode2D.Impulse);
+            rb2D.AddForce(Vector2.down * _hammerData.releaseForce, ForceMode2D.Impulse);
         }
 
         public override void OnNetworkSpawn()
@@ -31,8 +31,8 @@ namespace Sataura
         {
             yield return new WaitUntil(() => _hammerData != null);
             yield return new WaitForSeconds(5.0f);
-            if (_networkObject.IsSpawned)
-                _networkObject.Despawn();
+            if (networkObject.IsSpawned)
+                networkObject.Despawn();
         }
 
         public int GetDamage()

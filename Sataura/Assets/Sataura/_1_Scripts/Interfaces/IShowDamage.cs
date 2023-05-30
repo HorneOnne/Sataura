@@ -1,7 +1,7 @@
 ﻿namespace Sataura
 {
     /// <summary>
-    /// Interface for showing a popup text object that represents damage caused by <see cref="ICanCauseDamage"/>.
+    /// Interface for showing a popup text object that represents damage caused by <see cref="IPhysicalDamage"/>.
     /// </summary>
     public interface IShowDamage
     {

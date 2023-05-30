@@ -1,5 +1,4 @@
 ﻿using Unity.Netcode;
-using UnityEngine.SceneManagement;  
 
 namespace Sataura
 {
@@ -12,14 +11,6 @@ namespace Sataura
             mainMenuUIManager.SetActiveMainMenuCanvas(false);
             mainMenuUIManager.SetActivePlayerSelectionCanvas(true);
         }
-
-        /*public override void OnClick()
-        {
-            SceneManager.LoadScene(Loader.Scene.GameScene.ToString());
-        
-            *//*mainMenuUIManager.SetActiveMainMenuCanvas(false);
-            mainMenuUIManager.SetActivePlayerSelectionCanvas(true);*//*
-        }*/
     }
 }
 

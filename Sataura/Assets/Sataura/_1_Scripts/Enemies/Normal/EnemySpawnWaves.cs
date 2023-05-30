@@ -102,19 +102,19 @@ namespace Sataura
             if (!IsServer) return;
             if (IngameInformationManager.Instance.CurrentGameState == IngameInformationManager.GameState.Play)
             {
-                /*if (Input.GetKeyDown(KeyCode.J))
+                if (Input.GetKeyDown(KeyCode.J))
                 {
                     //SpawnDummy(EnemyType.ObsidianMaw, Camera.main.ScreenToWorldPoint(Input.mousePosition), Quaternion.identity);
-                    //Spawn(EnemyType.ObsidianMaw, Camera.main.ScreenToWorldPoint(Input.mousePosition), Quaternion.identity);
+                    SpawnDummy(EnemyType.ObsidianMaw, Camera.main.ScreenToWorldPoint(Input.mousePosition), Quaternion.identity);
 
                     //SpawnBoss(BossType.KingSlime, Camera.main.ScreenToWorldPoint(Input.mousePosition), Quaternion.identity);
-                }*/
+                }
 
 
-                if (_isSummonKingSlime == false)
+                /*if (_isSummonKingSlime == false)
                 {
                     Map001WaveGeneration();
-                }
+                }*/
 
             }
 

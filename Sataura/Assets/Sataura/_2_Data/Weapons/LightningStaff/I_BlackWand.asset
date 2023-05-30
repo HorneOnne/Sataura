@@ -30,8 +30,9 @@ MonoBehaviour:
       itemData: {fileID: 0}
       quantity: 0
   damage: 30
+  knockback: 10
+  size: 1
+  useType: 4
   timeExist: 1
   attackCycle: 0.3
-  size: 0.7
   lightingDamgedZone: 1.4
-  useType: 4

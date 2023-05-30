@@ -4838,8 +4838,8 @@ GameObject:
   - component: {fileID: 7336492794728775023}
   - component: {fileID: 5063044543830364984}
   - component: {fileID: 4195194987273758580}
-  - component: {fileID: 4195194987273758581}
   - component: {fileID: 4175954331295289048}
+  - component: {fileID: 4195194987273758581}
   - component: {fileID: 8377612271296678808}
   - component: {fileID: 3746937414380528612}
   m_Layer: 7
@@ -4914,29 +4914,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.25629014, y: 0.246961}
   m_EdgeRadius: 0
---- !u!114 &4195194987273758581
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4973538020444718908}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df73a4ca757b5ab40af703a4f07aae4b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <ItemData>k__BackingField: {fileID: 11400000, guid: af35a522cd21d764fabe95092e687b5f, type: 2}
-  useGravity: 0
-  _networkObject: {fileID: 4175954331295289048}
-  spriteRenderer: {fileID: 0}
-  rb: {fileID: 5063044543830364984}
-  explosionObjectPrefab: {fileID: 7070060414050384019, guid: afa7d8e101f07904081040c98e567783, type: 3}
-  explosionSpawnPosition: {fileID: 6306378342690964625}
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 2147483648
-  currentBowData: {fileID: 0}
 --- !u!114 &4175954331295289048
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4953,6 +4930,29 @@ MonoBehaviour:
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 1
   AutoObjectParentSync: 1
+--- !u!114 &4195194987273758581
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4973538020444718908}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df73a4ca757b5ab40af703a4f07aae4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  networkObject: {fileID: 4175954331295289048}
+  spriteRenderer: {fileID: 9208679925938053338}
+  rb2D: {fileID: 5063044543830364984}
+  damageType: 3
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 2147483648
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 1610612736
+  currentBowData: {fileID: 0}
 --- !u!114 &8377612271296678808
 MonoBehaviour:
   m_ObjectHideFlags: 0

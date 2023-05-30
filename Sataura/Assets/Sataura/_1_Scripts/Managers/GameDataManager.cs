@@ -102,7 +102,7 @@ namespace Sataura
 
         private void Start()
         {
-            LoadNetworkObjectIntoNetworkManager();
+            //LoadNetworkObjectIntoNetworkManager();
         }
 
         private IEnumerator PerformanceLoadNetworkObjectIntoNetworkManager()
@@ -149,14 +149,7 @@ namespace Sataura
             }
         }
 
-        private void Update()
-        {
-            if(Input.GetKeyDown(KeyCode.A))
-            {
-                
-            }
-        }
-
+   
 
         /// <summary>
         /// Generates the <see cref="itemDataDict"/> and <see cref="itemDataById"/> dictionaries.
@@ -448,7 +441,7 @@ namespace Sataura
             switch (projectileType)
             {
                 case ProjectileType.WoodenSwordProjectile:
-                    projectilePrefab = GetProjectilePrefabByType<WoodenSwordProejctile>();
+                    projectilePrefab = GetProjectilePrefabByType<WoodenSwordProjectile>();
                     break;
                 case ProjectileType.EvoWoodenSwordProjectile:
                     projectilePrefab = GetProjectilePrefabByType<EvoWoodenSwordProejctile>();
