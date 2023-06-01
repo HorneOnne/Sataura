@@ -36,7 +36,6 @@ namespace Sataura
             if (IsOwner || IsServer)
             {
                 itemInHand = _inventoryPlayer.itemInHand;
-
                 StartCoroutine(LoadCharacterData());
             }
         }

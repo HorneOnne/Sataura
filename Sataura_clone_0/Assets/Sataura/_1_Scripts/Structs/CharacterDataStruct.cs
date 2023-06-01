@@ -19,5 +19,7 @@
         public int accessoryDataID;
 
         public string currencyString;
+
+        public string dateCreated;
     }
 }

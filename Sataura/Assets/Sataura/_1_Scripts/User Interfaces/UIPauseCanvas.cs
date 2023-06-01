@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using Unity.Netcode;
 
 namespace Sataura
 {
@@ -33,7 +34,7 @@ namespace Sataura
         }
 
         private void BackToCharacterSelectionScene()
-        {
+        {        
             Loader.LoadNetwork(Loader.Scene._1_CharacterInventoryScene);
         }
     }

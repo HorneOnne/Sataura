@@ -5,11 +5,14 @@ namespace Sataura
     public class SinglePlayerButton : SatauraButton
     {
         public override void OnClick()
-        {          
-            NetworkManager.Singleton.StartHost();
+        {
+            MainMenuUIManager.Instance.CloseAll();
+            MainMenuUIManager.Instance.DisplaySingleplayerCharacterSelection(true);
 
-            mainMenuUIManager.SetActiveMainMenuCanvas(false);
-            mainMenuUIManager.SetActivePlayerSelectionCanvas(true);
+            GameDataManager.Instance.mainMenuInformation.SetPlayMode(MainMenuInfomation.PlayMode.SinglePlayer);
+
+            // Start host
+            NetworkManager.Singleton.StartHost();
         }
     }
 }

@@ -11,7 +11,7 @@ namespace Sataura
             _0_MainMenuScene,
             _1_CharacterInventoryScene,
             _2_GameScene,
-            
+            _3_TestingScene,
         }
 
         private static Scene targetScene;

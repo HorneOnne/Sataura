@@ -1,56 +1,118 @@
-using System.Collections;
-using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Sataura
 {
     public class MainMenuUIManager : Singleton<MainMenuUIManager>
     {
-        public GameObject mainMenuCanvas;
-        public GameObject playerSelectionCanvas;
-        public GameObject createNewCharacterCanvas;
-        public GameObject notificationCanvas;
+        public UIMainMenu mainMenu;
+
+        public UISinglelayerCharactersSelection singleplayerCharacterSelection;
+        public UIMultiplayerCharactersSelection multiplayerCharacterSelection;
+        public UIMultiplayerSelection uiMultiplayerSelection;
+        public UICreateNewSingleplayerCharacter createNewSingleplayerCharacter;
+        public UICreateNewMultiplayerCharacter createNewMultiplayerCharacter;
+        public UIDeleteSingleplayerCharacterNotification uiDeleteSingleplayerCharacterNotification;
+        public UIDeleteMultiplayerCharacterNotification uiDeleteMultiplayerCharacterNotification;
+
+        [Header("Multiplayer")]
+        public UIEnterServerIP uiEnterServerIP;
+        public UIEnterServerPort uiEnterServerPort;
+
+        [Header("Loading")]
+        public UILoadingToServer uiLoadingToServer;
+
 
         private void Start()
         {
-            
-            if (mainMenuCanvas != null)
-                mainMenuCanvas.SetActive(true);
+            CloseAll();
+            DisplayMainMenu(true);
+        }
 
-            // InActivate all UI canvases on start (except main menu).
-            if (playerSelectionCanvas != null)
-                playerSelectionCanvas.SetActive(false);
-
-            if (createNewCharacterCanvas != null)
-                createNewCharacterCanvas.SetActive(false);
-
-            if (notificationCanvas != null)
-                notificationCanvas.SetActive(false);
+        public void CloseAll()
+        {
+            DisplaySingleplayerCharacterSelection(false);
+            DisplayMultiplayerCharacterSelection(false);
+            DisplayCreateNewSingleplayerCharacter(false);
+            DisplayCreateNewMultiplayerCharacter(false);
+            DisplayMultiplayerSelection(false);
+            DisplayDeleteSingleplayerCharacterNotification(false);
+            DisplayDeleteMultiplayerCharacterNotification(false);
+            DisplayUIEnterServerIP(false);
+            DisplayMainMenu(false);
+            DisplayUIEnterServerPort(false);
+            DisplayUILoadingToServer(false);
 
         }
 
-
-        public void SetActiveMainMenuCanvas(bool isActive)
+        public void DisplayMainMenu(bool isActive)
         {
-            mainMenuCanvas.SetActive(isActive);
+            mainMenu.DisplayCanvas(isActive);
         }
  
 
-        public void SetActivePlayerSelectionCanvas(bool isActive)
+        public void DisplaySingleplayerCharacterSelection(bool isActive)
         {
-            playerSelectionCanvas.SetActive(isActive);
+            singleplayerCharacterSelection.DisplayCanvas(isActive);
+        }
+
+        public void DisplayMultiplayerCharacterSelection(bool isActive)
+        {
+            multiplayerCharacterSelection.DisplayCanvas(isActive);
         }
 
 
-        public void SetActiveCreateNewCharacterCanvas(bool isActive)
+        public void DisplayCreateNewSingleplayerCharacter(bool isActive)
         {
-            createNewCharacterCanvas.SetActive(isActive);
+            createNewSingleplayerCharacter.DisplayCanvas(isActive);
         }
 
-        public void SetActiveNotificationCanvas(bool isActive)
+        public void DisplayCreateNewMultiplayerCharacter(bool isActive)
         {
-            notificationCanvas.SetActive(isActive);
+            createNewMultiplayerCharacter.DisplayCanvas(isActive);
         }
+
+
+        public void DisplayMultiplayerSelection(bool isActive)
+        {
+            uiMultiplayerSelection.DisplayCanvas(isActive);
+        }
+
+        public void DisplayDeleteSingleplayerCharacterNotification(bool isActive)
+        {
+            uiDeleteSingleplayerCharacterNotification.DisplayCanvas(isActive);
+        }
+
+        public void DisplayDeleteMultiplayerCharacterNotification(bool isActive)
+        {
+            uiDeleteMultiplayerCharacterNotification.DisplayCanvas(isActive);
+        }
+        public void DisplayUIEnterServerIP(bool isActive)
+        {
+            uiEnterServerIP.DisplayCanvas(isActive);
+        }
+
+        public void DisplayUIEnterServerPort(bool isActive)
+        {
+            uiEnterServerPort.DisplayCanvas(isActive);
+        }
+
+
+        public void DisplayUILoadingToServer(bool isActive)
+        {
+            uiLoadingToServer.DisplayCanvas(isActive);
+        }
+
+        public void BackToMainMenu()
+        {
+            // Toggle UI
+            CloseAll();
+            DisplayMainMenu(true);
+
+
+            // Shutdown NetworkManager
+            NetworkManager.Singleton.Shutdown();
+        }  
     }
 
 }

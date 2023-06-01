@@ -53,19 +53,20 @@ namespace Sataura
         public GameObject itemForDropPrefab;
 
 
-   
+
         public GameObject damagePopupPrefab;
+
+        [Header("MainmenuInformation References")]
+        public MainMenuInfomation mainMenuInformation;
 
 
         [Header("Players Prefab")]
         public IngamePlayer ingamePlayerPrefab;
-        public MainMenuPlayer mainMenuPlayerPrefab;
         public InventoryPlayer inventoryPlayerPrefab;
 
 
         [Header("Players (Runtime)")]
         public Player currentPlayer;
-        [HideInInspector] public MainMenuPlayer mainMenuPlayer;
         [HideInInspector] public IngamePlayer ingamePlayer;
         [HideInInspector] public InventoryPlayer inventoryPlayer;
 
@@ -82,22 +83,31 @@ namespace Sataura
             VFX,
         }
 
+        public static GameDataManager Instance;
         /// <summary>
         /// Initializes the item data and prefab dictionaries, and generates the recipe dictionaries.
         /// </summary>
         private void Awake()
         {
             DontDestroyOnLoad(this.gameObject);
+            if (Instance == null)
+            {
+                Instance = this;
+            }
+            else
+            {
+                Destroy(this.gameObject);
+            }
+
 
             GenerateItemDataDict();
             InitializeRecipes();
-            
 
             if (NetworkManager.Singleton == null)
             {
                 return;
             }
-            
+
         }
 
         private void Start()
@@ -149,7 +159,7 @@ namespace Sataura
             }
         }
 
-   
+
 
         /// <summary>
         /// Generates the <see cref="itemDataDict"/> and <see cref="itemDataById"/> dictionaries.
