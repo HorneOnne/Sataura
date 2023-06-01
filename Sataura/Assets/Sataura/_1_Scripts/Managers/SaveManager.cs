@@ -50,6 +50,8 @@ namespace Sataura
                     leggingDataID = GameDataManager.Instance.GetItemID(charactersData[i].leggingData),
                     bootsDataID = GameDataManager.Instance.GetItemID(charactersData[i].bootsData),
                     hookDataID = GameDataManager.Instance.GetItemID(charactersData[i].hookData),
+
+                    dateCreated = charactersData[i].dateCreated,
                 });
             }
 
@@ -85,6 +87,7 @@ namespace Sataura
                 characterData.hookData = (HookData)GameDataManager.Instance.GetItemData(accountData.charactersDataStruct[i].hookDataID);
 
                 characterData.currencyString = accountData.charactersDataStruct[i].currencyString;
+                characterData.dateCreated = accountData.charactersDataStruct[i].dateCreated;
                
                 charactersData.Add(characterData);
             }

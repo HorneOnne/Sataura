@@ -60,6 +60,9 @@ namespace Sataura
         public string currencyString;
         public BigInteger currency;
 
+        [Header("Others")]
+        public string dateCreated;
+
 
         private void Awake()
         {

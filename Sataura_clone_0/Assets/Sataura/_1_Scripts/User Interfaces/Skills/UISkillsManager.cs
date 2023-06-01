@@ -26,7 +26,7 @@ namespace Sataura
 
         private void Start()
         {
-            StartCoroutine(WaitForCharacterData(5f, ()=>
+            StartCoroutine(WaitForCharacterData(timeOut: 1f, () =>
             {
                 _inventoryPlayer = GameDataManager.Instance.inventoryPlayer;
                 itemInHand = _inventoryPlayer.itemInHand;
@@ -38,36 +38,33 @@ namespace Sataura
 
         private IEnumerator WaitForCharacterData(float timeOut, System.Action callback)
         {
-            float elapseTime = 0f;
-            bool conditionMet = false;
+            System.DateTime startTime = System.DateTime.Now;
 
-            while(!conditionMet && elapseTime < timeOut)
-            {
-                if(GameDataManager.Instance.currentPlayer != null)
-                    conditionMet = GameDataManager.Instance.currentPlayer.characterData != null;
-            }
-            yield return new WaitForSeconds(0.02f);
-            elapseTime += 0.02f;          
-            
-            if(!conditionMet)
-            {
-                Debug.LogError("Cannot found CharacterData.");
-                yield break;
-            }
+            yield return new WaitUntil(() => GameDataManager.Instance.currentPlayer != null || System.DateTime.Now - startTime >= System.TimeSpan.FromSeconds(timeOut));
+            yield return new WaitUntil(() => GameDataManager.Instance.currentPlayer.characterData != null || System.DateTime.Now - startTime >= System.TimeSpan.FromSeconds(timeOut));
 
+            if (GameDataManager.Instance.currentPlayer == null)
+            {
+#if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+#else
+            // Quit the application in standalone builds
+            Application.Quit();
+#endif
+            }
             callback?.Invoke();
         }
 
         private void LoadUI()
         {
-            for(int i = 0; i < _inventoryPlayer.playerSkills.weaponsData.itemSlots.Count; i++)
+            for (int i = 0; i < _inventoryPlayer.playerSkills.weaponsData.itemSlots.Count; i++)
             {
                 var skillSlotObject = Instantiate(uiSkillSlotPrefab, uiWeaponsParent.transform);
                 skillSlotObject.SetItemCategory(ItemCategory.Skill_Weapons);
                 AddUIEvent(skillSlotObject);
                 weapons.Add(skillSlotObject);
 
-                if(i == 0)
+                if (i == 0)
                 {
                     skillSlotObject.SetUnlockState();
                 }
@@ -85,7 +82,7 @@ namespace Sataura
                 {
                     skillSlotObject.SetUnlockState();
                 }
-            }           
+            }
         }
 
 
@@ -101,9 +98,9 @@ namespace Sataura
             PointerEventData pointerEventData = (PointerEventData)baseEvent;
             UISkillSlot clickedUISkillSlot = clickedObject.GetComponent<UISkillSlot>();
             if (clickedUISkillSlot.IsLocking) return;
-            
+
             var slotCategory = clickedUISkillSlot.ItemSlotCategory;
-            int index = GetClickedUISkillSlotIndex(clickedUISkillSlot, slotCategory);     
+            int index = GetClickedUISkillSlotIndex(clickedUISkillSlot, slotCategory);
             ItemSlot skillSlotData = GetPlayerSkillSlot(slotCategory, index);
 
 
@@ -119,7 +116,7 @@ namespace Sataura
                     //Debug.Log("HAND: EMPTY \t SLOT: HAS ITEM");
                     _inventoryPlayer.playerSkills.UpdateStatsUnequip(skillSlotData.ItemData);
 
-                    itemInHand.SetItem(skillSlotData);           
+                    itemInHand.SetItem(skillSlotData);
                     skillSlotData.ClearSlot();
                 }
             }
@@ -165,13 +162,13 @@ namespace Sataura
 
         private int GetClickedUISkillSlotIndex(UISkillSlot clickedObject, ItemCategory itemSlotCategory)
         {
-            switch(itemSlotCategory)
+            switch (itemSlotCategory)
             {
                 case ItemCategory.Skill_Weapons:
-                    for(int i = 0; i < weapons.Count; i++)
+                    for (int i = 0; i < weapons.Count; i++)
                     {
-                        if(clickedObject == weapons[i])
-                            return i;  
+                        if (clickedObject == weapons[i])
+                            return i;
                     }
                     break;
                 case ItemCategory.Skill_Accessories:

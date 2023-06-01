@@ -4,12 +4,10 @@
     {
         public override void OnClick()
         {
-            mainMenuUIManager.SetActivePlayerSelectionCanvas(false);
-            mainMenuUIManager.SetActiveMainMenuCanvas(true);     
-            mainMenuUIManager.SetActiveNotificationCanvas(false);     
-            
-            
+            MainMenuUIManager.Instance.CloseAll();
+            MainMenuUIManager.Instance.BackToMainMenu();
         }
     }
+
 }
 

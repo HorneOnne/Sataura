@@ -1,8 +1,5 @@
 ﻿using UnityEngine;
 using Cinemachine;
-using System.Collections.Generic;
-using Unity.Netcode;
-using UnityEngine.SceneManagement;
 
 namespace Sataura
 {
@@ -36,17 +33,8 @@ namespace Sataura
             Loader.LoadNetwork(Loader.Scene._2_GameScene);
         }
 
-        public void BackToMainMenu()
-        {          
-            SaveManager.Instance.SaveCharacterData();
-            NetworkManager.Singleton.Shutdown();
-            DestroyAllDontDestroyOnLoadObjects();
-            SceneManager.LoadScene(Loader.Scene._0_MainMenuScene.ToString());         
-        }
 
-        
-
-
+       
 
         public void Exit()
         {
@@ -57,30 +45,6 @@ namespace Sataura
 #endif
         }
 
-        public void DestroyAllDontDestroyOnLoadObjects()
-        {
-            var go = new GameObject("Sacrificial Lamb");
-            DontDestroyOnLoad(go);
-
-            foreach (var root in go.scene.GetRootGameObjects())
-            {
-                if(root.GetComponent<NetworkManager>() != null)
-                {
-                    //root.GetComponent<NetworkManager>().Shutdown();
-                    //Destroy(root);
-
-                    //NetworkManager.Singleton.Shutdown();
-                    if (NetworkManager.Singleton != null)
-                    {
-                        //Destroy the extra instance
-                        Destroy(NetworkManager.Singleton.gameObject);
-                    }
-                    //Destroy(root);
-                }
-                else
-                    Destroy(root);
-
-            }              
-        }
+        
     }
 }
