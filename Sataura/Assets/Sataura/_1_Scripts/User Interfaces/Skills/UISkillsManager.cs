@@ -11,15 +11,10 @@ namespace Sataura
         public static UISkillsManager Instance { get; private set; }
 
         [Header("References")]
+        [SerializeField] private InventoryPlayer inventoryPlayer;
         [SerializeField] private Transform uiWeaponsParent;
         [SerializeField] private Transform uiAccessoriesParent;
-        [SerializeField] private UISkillSlot uiSkillSlotPrefab;
-
-
-
-
-        [Header("Runtime References")]
-        [SerializeField] private InventoryPlayer _inventoryPlayer;
+        [SerializeField] private UISkillSlot uiSkillSlotPrefab;  
         private ItemInHand itemInHand;
         public List<UISkillSlot> weapons;
         public List<UISkillSlot> accessories;
@@ -31,38 +26,16 @@ namespace Sataura
 
         private void Start()
         {
-            StartCoroutine(WaitForCharacterData(timeOut: 1f, () =>
-            {
-                _inventoryPlayer = GameDataManager.Instance.inventoryPlayer;
-                itemInHand = _inventoryPlayer.itemInHand;
-                LoadUI();
-                UpdateUI();
-            }));
+            itemInHand = inventoryPlayer.itemInHand;
+            LoadUI();
+            UpdateUI();
         }
 
 
-        private IEnumerator WaitForCharacterData(float timeOut, System.Action callback)
-        {
-            System.DateTime startTime = System.DateTime.Now;
-
-            yield return new WaitUntil(() => GameDataManager.Instance.currentPlayer != null || System.DateTime.Now - startTime >= System.TimeSpan.FromSeconds(timeOut));
-            yield return new WaitUntil(() => GameDataManager.Instance.currentPlayer.characterData != null || System.DateTime.Now - startTime >= System.TimeSpan.FromSeconds(timeOut));
-
-            if (GameDataManager.Instance.currentPlayer == null)
-            {
-#if UNITY_EDITOR
-                UnityEditor.EditorApplication.isPlaying = false;
-#else
-            // Quit the application in standalone builds
-            Application.Quit();
-#endif
-            }
-            callback?.Invoke();
-        }
 
         private void LoadUI()
         {
-            for (int i = 0; i < _inventoryPlayer.playerSkills.weaponsData.itemSlots.Count; i++)
+            for (int i = 0; i < inventoryPlayer.playerSkills.weaponsData.itemSlots.Count; i++)
             {
                 var skillSlotObject = Instantiate(uiSkillSlotPrefab, uiWeaponsParent.transform);
                 skillSlotObject.SetItemCategory(ItemCategory.Skill_Weapons);
@@ -76,7 +49,7 @@ namespace Sataura
             }
 
 
-            for (int i = 0; i < _inventoryPlayer.playerSkills.accessoriesData.itemSlots.Count; i++)
+            for (int i = 0; i < inventoryPlayer.playerSkills.accessoriesData.itemSlots.Count; i++)
             {
                 var skillSlotObject = Instantiate(uiSkillSlotPrefab, uiAccessoriesParent.transform);
                 skillSlotObject.SetItemCategory(ItemCategory.Skill_Accessories);
@@ -119,7 +92,7 @@ namespace Sataura
                 else
                 {
                     //Debug.Log("HAND: EMPTY \t SLOT: HAS ITEM");
-                    _inventoryPlayer.playerSkills.UpdateStatsUnequip(skillSlotData.ItemData);
+                    inventoryPlayer.playerSkills.UpdateStatsUnequip(skillSlotData.ItemData);
 
                     itemInHand.SetItem(skillSlotData);
                     skillSlotData.ClearSlot();
@@ -136,7 +109,7 @@ namespace Sataura
                     skillSlotData.AddItemsFromAnotherSlot(itemInHand.GetSlot());
                     itemInHand.ClearSlot();
 
-                    _inventoryPlayer.playerSkills.UpdateStatsEquip(skillSlotData.ItemData);
+                    inventoryPlayer.playerSkills.UpdateStatsEquip(skillSlotData.ItemData);
                 }
                 else
                 {
@@ -156,9 +129,9 @@ namespace Sataura
             switch (itemSlotCategory)
             {
                 case ItemCategory.Skill_Weapons:
-                    return _inventoryPlayer.playerSkills.weaponsData.itemSlots[index];
+                    return inventoryPlayer.playerSkills.weaponsData.itemSlots[index];
                 case ItemCategory.Skill_Accessories:
-                    return _inventoryPlayer.playerSkills.accessoriesData.itemSlots[index];
+                    return inventoryPlayer.playerSkills.accessoriesData.itemSlots[index];
                 default:
                     throw new System.Exception();
             }
@@ -193,12 +166,12 @@ namespace Sataura
         {
             for (int i = 0; i < weapons.Count; i++)
             {
-                weapons[i].UpdateItemImage(_inventoryPlayer.playerSkills.weaponsData.itemSlots[i].ItemData);
+                weapons[i].UpdateItemImage(inventoryPlayer.playerSkills.weaponsData.itemSlots[i].ItemData);
             }
 
             for (int i = 0; i < accessories.Count; i++)
             {
-                accessories[i].UpdateItemImage(_inventoryPlayer.playerSkills.accessoriesData.itemSlots[i].ItemData);
+                accessories[i].UpdateItemImage(inventoryPlayer.playerSkills.accessoriesData.itemSlots[i].ItemData);
             }
         }
     }

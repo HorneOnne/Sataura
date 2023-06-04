@@ -1,11 +1,11 @@
 using Unity.Netcode;
 using UnityEngine;
 using System.Collections.Generic;
-using System.Collections;
+
 
 namespace Sataura
 {
-    public class ItemInHand : NetworkBehaviour
+    public class ItemInHand : MonoBehaviour
     {
         [Header("References")]
         [SerializeField] private InventoryPlayer _inventoryPlayer;
@@ -27,7 +27,7 @@ namespace Sataura
         /// The current item that is held in this hand.
         /// </summary>
         [SerializeField] private Item currentItemObject;
-        public NetworkVariable<int> currentHoldHandItemID = new NetworkVariable<int>(-1);
+        public int currentHoldHandItemID;
 
 
 
@@ -41,7 +41,7 @@ namespace Sataura
 
 
 
-        public override void OnNetworkSpawn()
+        private void Start()
         {
             uiItemInHand = UIItemInHand.Instance;
             playerInputHandler = _inventoryPlayer.playerInputHandler;        
@@ -51,7 +51,7 @@ namespace Sataura
 
         public bool HasHandHoldItemInServer()
         {
-            return currentHoldHandItemID.Value != -1;
+            return currentHoldHandItemID != -1;
         }
 
 
@@ -285,7 +285,7 @@ namespace Sataura
         [ServerRpc]
         public void SetHandHoldItemIDServerRpc(int itemID)
         {
-            currentHoldHandItemID.Value = itemID;
+            currentHoldHandItemID = itemID;
         }
 
 

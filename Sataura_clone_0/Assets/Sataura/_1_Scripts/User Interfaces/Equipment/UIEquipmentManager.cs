@@ -6,8 +6,14 @@ namespace Sataura
 {
     public class UIEquipmentManager : MonoBehaviour
     {
-        public static UIEquipmentManager Instance{get; private set;}    
+        public static UIEquipmentManager Instance{get; private set;}
 
+
+        [Header("References")]
+        [SerializeField] private InventoryPlayer inventoryPlayer;
+
+
+        private ItemInHand itemInHand;
         [Header("Preview Camera References")]
         public Transform _previewCameraParent;
 
@@ -20,9 +26,6 @@ namespace Sataura
         [SerializeField] private UIEquipSlot _accessory;
  
 
-        [Header("Runtime References")]
-        [SerializeField] private InventoryPlayer _inventoryPlayer;
-        private ItemInHand itemInHand;
 
         private void Awake()
         {
@@ -31,7 +34,7 @@ namespace Sataura
 
         private void Start()
         {
-            StartCoroutine(ReferencePlayer());
+            itemInHand = inventoryPlayer.itemInHand;
 
             AddUIItemSLotEvent(_uiHook);
             AddUIItemSLotEvent(_uiBoots);
@@ -42,14 +45,7 @@ namespace Sataura
         }
 
 
-        private IEnumerator ReferencePlayer()
-        {
-            yield return new WaitUntil(() => GameDataManager.Instance.inventoryPlayer != null);
-
-            _inventoryPlayer = GameDataManager.Instance.inventoryPlayer;
-            itemInHand = _inventoryPlayer.itemInHand;
-
-        }
+ 
 
         private void AddUIItemSLotEvent(UIEquipSlot slot)
         {
@@ -64,7 +60,7 @@ namespace Sataura
             PointerEventData pointerEventData = (PointerEventData)baseEvent;
 
             var equipmentSlotType = clickedObject.GetComponent<UIEquipSlot>().EequipmentType;
-            var equipmentData = _inventoryPlayer.playerEquipment.GetEquipmentData(equipmentSlotType);
+            var equipmentData = inventoryPlayer.playerEquipment.GetEquipmentData(equipmentSlotType);
 
             if (itemInHand.HasItemData() == false)
             {
@@ -77,7 +73,7 @@ namespace Sataura
                 {
                     //Debug.Log("HAND: EMPTY \t SLOT: HAS ITEM");
                     itemInHand.SetItem(new ItemSlot(equipmentData,1), slotIndex: -1, storageType: StoredType.Another, true);
-                    _inventoryPlayer.playerEquipment.ClearData(equipmentSlotType);
+                    inventoryPlayer.playerEquipment.ClearData(equipmentSlotType);
                 }
             }
             else
@@ -86,7 +82,7 @@ namespace Sataura
                 {
                     //Debug.Log("HAND: HAS ITEM \t SLOT: EMPTY");
 
-                    bool canEquip = _inventoryPlayer.playerEquipment.TryEquip(itemInHand.GetItemData(), equipmentSlotType);
+                    bool canEquip = inventoryPlayer.playerEquipment.TryEquip(itemInHand.GetItemData(), equipmentSlotType);
                     if (canEquip)
                     {
                         itemInHand.ClearSlot();
@@ -106,12 +102,12 @@ namespace Sataura
        
         public void UpdateUI()
         {
-            _uiHook.UpdateItemImage(_inventoryPlayer.playerEquipment._hookData);
-            _uiBoots.UpdateItemImage(_inventoryPlayer.playerEquipment._bootsData);
-            _helmet.UpdateItemImage(_inventoryPlayer.playerEquipment._helmetData);
-            _chestplate.UpdateItemImage(_inventoryPlayer.playerEquipment._chestplateData);
-            _legging.UpdateItemImage(_inventoryPlayer.playerEquipment._leggingData);
-            _accessory.UpdateItemImage(_inventoryPlayer.playerEquipment._accessoryData);
+            _uiHook.UpdateItemImage(inventoryPlayer.playerEquipment._hookData);
+            _uiBoots.UpdateItemImage(inventoryPlayer.playerEquipment._bootsData);
+            _helmet.UpdateItemImage(inventoryPlayer.playerEquipment._helmetData);
+            _chestplate.UpdateItemImage(inventoryPlayer.playerEquipment._chestplateData);
+            _legging.UpdateItemImage(inventoryPlayer.playerEquipment._leggingData);
+            _accessory.UpdateItemImage(inventoryPlayer.playerEquipment._accessoryData);
         }
     }
 }

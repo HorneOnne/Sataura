@@ -5,11 +5,9 @@ using Unity.Netcode;
 
 namespace Sataura
 {
-    public class PlayerSkills : NetworkBehaviour
+    public class PlayerSkills : MonoBehaviour
     {
         [SerializeField] private InventoryPlayer _inventoryPlayer;
-        private ItemInHand itemInHand;
-
 
         [Header("Runtime References")]
         public InventoryData weaponsData;
@@ -31,30 +29,17 @@ namespace Sataura
         #endregion
 
 
-        public override void OnNetworkSpawn()
+        public void Start()
         {
-            if (IsOwner || IsServer)
-            {
-                itemInHand = _inventoryPlayer.itemInHand;
-                StartCoroutine(LoadCharacterData());
-            }
-        }
-
-        public IEnumerator LoadCharacterData()
-        {
-            yield return new WaitUntil(() => _inventoryPlayer.characterData != null);
-
             weaponsData = _inventoryPlayer.characterData.weaponsData;
             accessoriesData = _inventoryPlayer.characterData.accessoriesData;
 
-            for(int i = 0; i < accessoriesData.itemSlots.Count; i++)
+            for (int i = 0; i < accessoriesData.itemSlots.Count; i++)
             {
                 UpdateStatsEquip(accessoriesData.itemSlots[i].ItemData, loadStatsText: false);
             }
-                
+
         }
-
-
 
 
         public bool AddWeapons(ItemData itemData)

@@ -201,8 +201,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5347117360715799577}
-  - component: {fileID: 124986639603381088}
   - component: {fileID: 2394409112032363785}
+  - component: {fileID: 8186403842810045393}
   m_Layer: 18
   m_Name: InventoryPlayer
   m_TagString: Player
@@ -226,12 +226,29 @@ Transform:
   - {fileID: 5596761179594084960}
   - {fileID: 7638924969945184857}
   - {fileID: 6179549591904312310}
-  - {fileID: 4908695423109837496}
   - {fileID: 5225474658888932098}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &124986639603381088
+--- !u!114 &2394409112032363785
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6036214172868209630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbf4b1b5d1cf9ef4a9c7f89a6762ccbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerInventory: {fileID: 2634828554441456175}
+  playerEquipment: {fileID: 5842295735568528823}
+  playerSkills: {fileID: 2549216069281235705}
+  itemInHand: {fileID: 8678849116941744660}
+  playerInputHandler: {fileID: 5687187838430798410}
+  characterData: {fileID: 0}
+--- !u!114 &8186403842810045393
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -247,25 +264,6 @@ MonoBehaviour:
   AlwaysReplicateAsRoot: 0
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
---- !u!114 &2394409112032363785
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6036214172868209630}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dbf4b1b5d1cf9ef4a9c7f89a6762ccbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _networkObject: {fileID: 124986639603381088}
-  characterData: {fileID: 0}
-  playerInventory: {fileID: 2634828554441456175}
-  playerEquipment: {fileID: 5842295735568528823}
-  playerSkills: {fileID: 2549216069281235705}
-  itemInHand: {fileID: 7611364362188039311}
-  playerInputHandler: {fileID: 5687187838430798410}
 --- !u!1 &6379759707292145728
 GameObject:
   m_ObjectHideFlags: 0
@@ -296,7 +294,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5347117360715799577}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8678849116941744660
 MonoBehaviour:
@@ -315,56 +313,4 @@ MonoBehaviour:
     <ItemData>k__BackingField: {fileID: 0}
     <ItemQuantity>k__BackingField: 0
   currentItemObject: {fileID: 0}
-  currentHoldHandItemID:
-    m_InternalValue: -1
---- !u!1 &7275925297335046152
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4908695423109837496}
-  - component: {fileID: 7611364362188039311}
-  m_Layer: 18
-  m_Name: ItemInHand Handler
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4908695423109837496
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7275925297335046152}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 5347117360715799577}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7611364362188039311
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7275925297335046152}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ef5a7f2c73a73c4592e4bc05550db24, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _inventoryPlayer: {fileID: 2394409112032363785}
-  itemSlot:
-    <ItemData>k__BackingField: {fileID: 0}
-    <ItemQuantity>k__BackingField: 0
-  currentItemObject: {fileID: 0}
-  currentHoldHandItemID:
-    m_InternalValue: -1
+  currentHoldHandItemID: 0

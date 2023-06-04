@@ -9,7 +9,7 @@ namespace Sataura
     /// <summary>
     /// Manages the player's inventory.
     /// </summary>
-    public class PlayerInventory : NetworkBehaviour
+    public class PlayerInventory : MonoBehaviour
     {
         [Header("REFERENCES")]
         [SerializeField] private InventoryPlayer _inventoryPlayer;
@@ -39,13 +39,9 @@ namespace Sataura
 
         // Initializes the inventory with empty item slots.
 
-        public override void OnNetworkSpawn()
+        public void Start()
         {
-            if (IsOwner || IsServer)
-            {
-                //itemInHand = itemSelectionPlayer.ItemInHand;
-                StartCoroutine(WaitPlayerReference());
-            }
+            StartCoroutine(WaitPlayerReference());
         }
 
 

@@ -64,13 +64,12 @@ namespace Sataura
 
         [Header("Players Prefab")]
         public IngamePlayer ingamePlayerPrefab;
-        public InventoryPlayer inventoryPlayerPrefab;
+
 
 
         [Header("Players (Runtime)")]
         public Player currentPlayer;
         [HideInInspector] public IngamePlayer ingamePlayer;
-        [HideInInspector] public InventoryPlayer inventoryPlayer;
 
 
         public Dictionary<ulong, IngamePlayer> players = new Dictionary<ulong, IngamePlayer>();
