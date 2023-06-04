@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 namespace Sataura
@@ -8,11 +7,13 @@ namespace Sataura
     {
         public static CharacterStatsManager Instance { get; private set; }
 
-        [Header("Runtime References")]
-        [SerializeField] private CharacterData _characterData;
-
+       
         [Header("References")]
+        [SerializeField] private InventoryPlayer inventoryPlayer;
         [SerializeField] private List<CharacterStatsSlot> _characterStatSlots;
+
+        [Header("Runtime References")]
+        private CharacterData _characterData;
 
         private void Awake()
         {
@@ -21,14 +22,7 @@ namespace Sataura
 
         private void Start()
         {
-            StartCoroutine(ReferencePlayer());
-        }
-
-        private IEnumerator ReferencePlayer()
-        {
-            yield return new WaitUntil(() => GameDataManager.Instance.currentPlayer != null);          
-            _characterData = GameDataManager.Instance.currentPlayer.characterData;
-
+            _characterData = inventoryPlayer.characterData;
 
             UpdateStatUI(CharacterStats.MaxHealth);
             UpdateStatUI(CharacterStats.Recovery);
@@ -45,11 +39,9 @@ namespace Sataura
 
 
 
+
         public void UpdateStatUI(CharacterStats characterStat)
         {
-            if (_characterData == null)
-                _characterData = GameDataManager.Instance.currentPlayer.characterData;
-
             for (int i = 0; i < _characterStatSlots.Count; i++)
             {
                 if (_characterStatSlots[i]._characterStat == characterStat)

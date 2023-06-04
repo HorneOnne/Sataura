@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 namespace Sataura
 {
-    public class InventoryPlayer : Player
+    public class InventoryPlayer : MonoBehaviour
     {
         [Header("CHARACTER DATA")]
         public PlayerInventory playerInventory;
@@ -14,22 +14,26 @@ namespace Sataura
         public InputHandler playerInputHandler;
 
 
+        [Header("Runtime References")]
+        public CharacterData characterData;
+
+
         #region Properties
         public PlayerInput PlayerInput { get; private set; }
         #endregion
 
+        private void Awake()
+        {
+            characterData = SaveManager.Instance.charactersData[SaveManager.Instance.selectionCharacterDataIndex];
+        }
 
-        public override void OnNetworkSpawn()
+        public void Start()
         {
             PlayerInput = GetComponent<PlayerInput>();
 
+            UIPlayerInventory.Instance.SetPlayer(this.gameObject);
+            UIItemInHand.Instance.SetPlayer(this.gameObject);
 
-            if (IsOwner)
-            {
-                UIPlayerInventory.Instance.SetPlayer(this.gameObject);
-                UIItemInHand.Instance.SetPlayer(this.gameObject);
-            }
-           
         }
     }
 }

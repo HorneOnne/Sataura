@@ -27,13 +27,7 @@ namespace Sataura
 
             switch (_playerType)
             { 
-                case PlayerType.InventoryPlayer:
-                    var inventoryPlayer = Instantiate(GameDataManager.Instance.inventoryPlayerPrefab);
-                    inventoryPlayer.NetObject.SpawnAsPlayerObject(NetworkManager.Singleton.LocalClientId);
-                    GameDataManager.Instance.inventoryPlayer = inventoryPlayer;
-                    GameDataManager.Instance.currentPlayer = GameDataManager.Instance.inventoryPlayer;
-                    GameDataManager.Instance.currentPlayer.characterData = Instantiate(characterData);
-                    break;
+ 
                 case PlayerType.IngamePlayer:
                     var ingamePlayer = Instantiate(GameDataManager.Instance.ingamePlayerPrefab);
                     ingamePlayer.NetObject.SpawnAsPlayerObject(NetworkManager.Singleton.LocalClientId);
