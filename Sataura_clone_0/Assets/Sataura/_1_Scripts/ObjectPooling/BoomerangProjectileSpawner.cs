@@ -3,8 +3,9 @@ using UnityEngine.Pool;
 
 namespace Sataura
 {
-    public class BoomerangProjectileSpawner : Singleton<BoomerangProjectileSpawner>
+    public class BoomerangProjectileSpawner : MonoBehaviour
     {
+        public static BoomerangProjectileSpawner Instance { get; private set; }
         public GameObject prefab;
 
         /// <summary>
@@ -32,6 +33,10 @@ namespace Sataura
             }
         }
 
+        private void Awake()
+        {
+            Instance = this;
+        }
 
 
         /// <summary>

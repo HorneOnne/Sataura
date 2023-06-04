@@ -3,8 +3,10 @@ using UnityEngine.Pool;
 
 namespace Sataura
 {
-    public class SworldProjectile002Spawner : Singleton<SworldProjectile002Spawner>
+    public class SworldProjectile002Spawner : MonoBehaviour
     {
+        public static SworldProjectile002Spawner Instance { get; private set; } 
+
         public GameObject prefab;
 
         /// <summary>
@@ -32,6 +34,10 @@ namespace Sataura
             }
         }
 
+        private void Awake()
+        {
+            Instance = this;
+        }
 
 
         /// <summary>

@@ -6,8 +6,10 @@ namespace Sataura
     /// <summary>
     /// A class for managing the creation and use of arrows in a game using an object pool.
     /// </summary>
-    public class ArrowProjectileSpawner : Singleton<ArrowProjectileSpawner>
+    public class ArrowProjectileSpawner : MonoBehaviour
     {
+        public static ArrowProjectileSpawner Instance { get; private set; }
+
         public GameObject arrowPrefab;
 
         /// <summary>
@@ -21,6 +23,7 @@ namespace Sataura
         public int maxPoolSize = 10;
 
         IObjectPool<GameObject> m_Pool;
+
 
 
         /// <summary>
@@ -39,7 +42,10 @@ namespace Sataura
             }
         }
 
-
+        private void Awake()
+        {
+            Instance = this;
+        }
 
         /// <summary>
         /// Creates a new arrow to be added to the object pool.

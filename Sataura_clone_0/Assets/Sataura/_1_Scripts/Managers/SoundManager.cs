@@ -4,8 +4,10 @@ using UnityEngine;
 
 namespace Sataura
 {
-    public class SoundManager : Singleton<SoundManager>
+    public class SoundManager : MonoBehaviour
     {
+        public static SoundManager Instance { get; private set; }
+
         private static Dictionary<SoundType, float> soundTimerDictionary;
         public SoundAudioClip[] soundAudioClips;
 
@@ -14,6 +16,7 @@ namespace Sataura
 
         private void Awake()
         {
+            Instance = this;
             Initialized();
         }
 

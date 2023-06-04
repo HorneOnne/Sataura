@@ -4,8 +4,10 @@ using UnityEngine;
 
 namespace Sataura
 {
-    public class FloatingStatisticTextManager : Singleton<FloatingStatisticTextManager>
+    public class FloatingStatisticTextManager : MonoBehaviour
     {
+        public static FloatingStatisticTextManager Instance { get; private set; }
+
         [Header("References")]
         [SerializeField] private FloatingStatisticText _floatingStatTextPrefab;
         [SerializeField] private RectTransform _showPosition;
@@ -13,6 +15,11 @@ namespace Sataura
 
         [Header("Properties")]
         public int _totalFloatingStatsTextOnScene = 0;
+
+        private void Awake()
+        {
+            Instance = this;
+        }
 
         public void ShowFloatingStatText(string statsName, float statsValue)
         {

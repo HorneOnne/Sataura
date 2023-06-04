@@ -3,8 +3,10 @@ using TMPro;
 
 namespace Sataura
 {
-    public class CountdownTimer : Singleton<CountdownTimer> 
+    public class CountdownTimer :MonoBehaviour
     {
+        public static CountdownTimer Instance { get; private set; }  
+
         public float totalTime = 120f; // Total time for the countdown in seconds
         private float timeLeft; // Time left for the countdown in seconds
 
@@ -12,8 +14,13 @@ namespace Sataura
 
 
         #region Properties
-        public float TimeLeft { get { return timeLeft; } }  
+        public float TimeLeft { get { return timeLeft; } }
         #endregion
+
+        private void Awake()
+        {
+            Instance = this;
+        }
 
         void Start()
         {

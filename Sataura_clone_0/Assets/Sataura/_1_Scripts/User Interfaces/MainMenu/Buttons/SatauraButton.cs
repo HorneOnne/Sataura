@@ -8,10 +8,13 @@ namespace Sataura
     public class SatauraButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         [Header("References")]
-        [SerializeField] private TextMeshProUGUI btnText;
-        [SerializeField] private Button button;
+        protected TextMeshProUGUI btnText;
+        protected Button button;
 
 
+        #region Properties
+        public Button Button { get { return button; } }    
+        #endregion
 
         private void OnEnable()
         {
@@ -23,6 +26,12 @@ namespace Sataura
             button.onClick.RemoveListener(OnClick);
         }
 
+
+        private void Awake()
+        {
+            button = GetComponent<Button>();
+            btnText = button.GetComponentInChildren<TextMeshProUGUI>();
+        }
 
         public void OnPointerEnter(PointerEventData eventData)
         {

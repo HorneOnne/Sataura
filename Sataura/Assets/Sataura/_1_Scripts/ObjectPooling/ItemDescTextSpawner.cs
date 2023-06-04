@@ -3,8 +3,10 @@ using UnityEngine.Pool;
 
 namespace Sataura
 {
-    public class ItemDescTextSpawner : Singleton<ItemDescTextSpawner>
+    public class ItemDescTextSpawner : MonoBehaviour
     {
+        public static ItemDescTextSpawner Instance { get; private set; }
+
         public GameObject prefab;
 
         /// <summary>
@@ -32,6 +34,10 @@ namespace Sataura
             }
         }
 
+        private void Awake()
+        {
+            Instance = this;
+        }
 
 
         /// <summary>

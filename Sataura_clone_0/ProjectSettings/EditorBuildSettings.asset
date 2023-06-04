@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Sataura/_0_Scenes/_-1_Startup.unity
+    guid: 31d26b1cb6696da4eb0351bf66b24f5f
+  - enabled: 1
     path: Assets/Sataura/_0_Scenes/_0_MainMenuScene.unity
     guid: 6095df6425fed5d4fbde24cb350f4919
   - enabled: 1

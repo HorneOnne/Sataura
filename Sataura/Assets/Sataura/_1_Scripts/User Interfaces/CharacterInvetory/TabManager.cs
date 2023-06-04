@@ -5,8 +5,10 @@ using UnityEngine.UI;
 
 namespace Sataura
 {
-    public class TabManager : Singleton<TabManager>
+    public class TabManager : MonoBehaviour
     {
+        public static TabManager Instance { get; private set; }
+
         [SerializeField] private Sprite _defaultSprite;
         [SerializeField] private Sprite _selectedSprite;
         [SerializeField] private Button _allTabs;
@@ -16,6 +18,11 @@ namespace Sataura
 
 
 
+        private void Awake()
+        {
+            Instance = this;
+        }
+
         private void OnEnable()
         {          
             _allTabs.onClick.AddListener(AllTabClicked);
@@ -23,9 +30,6 @@ namespace Sataura
             _armorTabs.onClick.AddListener(ArmorsTabClicked);
         }
 
-       
-
-             
         private void Start()
         {
             AllTabClicked();

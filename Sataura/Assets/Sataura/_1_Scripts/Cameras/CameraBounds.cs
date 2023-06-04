@@ -3,10 +3,17 @@ using Unity.Netcode;
 
 namespace Sataura
 {
-    public class CameraBounds : Singleton<CameraBounds>
+    public class CameraBounds : MonoBehaviour
     {
+        public static CameraBounds Instance { get; private set; }
+
         public Transform localPlayer;
 
+
+        private void Awake()
+        {
+            Instance = this;
+        }
 
         public void SetHostLocalClient(ulong clientId)
         {

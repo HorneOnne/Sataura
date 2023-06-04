@@ -5,8 +5,10 @@ using UnityEngine.EventSystems;
 
 namespace Sataura
 {
-    public class UIPlayerInventory : Singleton<UIPlayerInventory>
-    {
+    public class UIPlayerInventory : MonoBehaviour 
+    {   
+        public static UIPlayerInventory Instance { get; private set; }
+
         [Header("REFERENCES")]
         [SerializeField] private InventoryPlayer _inventoryPlayer;
 
@@ -39,6 +41,11 @@ namespace Sataura
         private bool slotHasItem;
         private float pressIntervalTimeCount = 0.0f;
 
+
+        private void Awake()
+        {
+            Instance = this;
+        }
 
         private void OnEnable()
         {

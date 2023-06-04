@@ -4,8 +4,10 @@ using UnityEngine.UI;
 
 namespace Sataura
 {
-    public class UIItemInHand : Singleton<UIItemInHand>
+    public class UIItemInHand : MonoBehaviour
     {
+        public static UIItemInHand Instance {get; private set;}
+
         [Header("Runtime References")]
         [SerializeField] private InventoryPlayer _inventoryPlayer;
 
@@ -21,6 +23,11 @@ namespace Sataura
         // Cached
         Camera mainCamera;
         Vector2 mainCameraPosition;
+
+        private void Awake()
+        {
+            Instance = this;
+        }
 
         private void OnEnable()
         {

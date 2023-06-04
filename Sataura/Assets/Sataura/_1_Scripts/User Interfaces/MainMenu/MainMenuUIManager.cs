@@ -3,8 +3,9 @@ using UnityEngine;
 
 namespace Sataura
 {
-    public class MainMenuUIManager : Singleton<MainMenuUIManager>
+    public class MainMenuUIManager : MonoBehaviour
     {
+        public static MainMenuUIManager Instance { get; private set; }  
         public UIMainMenu mainMenu;
 
         public UISinglelayerCharactersSelection singleplayerCharacterSelection;
@@ -14,6 +15,7 @@ namespace Sataura
         public UICreateNewMultiplayerCharacter createNewMultiplayerCharacter;
         public UIDeleteSingleplayerCharacterNotification uiDeleteSingleplayerCharacterNotification;
         public UIDeleteMultiplayerCharacterNotification uiDeleteMultiplayerCharacterNotification;
+        public UIUnityRelay uiUnityRelay;
 
         [Header("Multiplayer")]
         public UIEnterServerIP uiEnterServerIP;
@@ -22,6 +24,10 @@ namespace Sataura
         [Header("Loading")]
         public UILoadingToServer uiLoadingToServer;
 
+        private void Awake()
+        {
+            Instance = this;
+        }
 
         private void Start()
         {
@@ -42,14 +48,19 @@ namespace Sataura
             DisplayMainMenu(false);
             DisplayUIEnterServerPort(false);
             DisplayUILoadingToServer(false);
-
+            DisplayUIUnityRelay(false);
         }
 
         public void DisplayMainMenu(bool isActive)
         {
             mainMenu.DisplayCanvas(isActive);
         }
- 
+
+
+        public void DisplayUIUnityRelay(bool isActive)
+        {
+            uiUnityRelay.DisplayCanvas(isActive);
+        }
 
         public void DisplaySingleplayerCharacterSelection(bool isActive)
         {
@@ -108,10 +119,6 @@ namespace Sataura
             // Toggle UI
             CloseAll();
             DisplayMainMenu(true);
-
-
-            // Shutdown NetworkManager
-            NetworkManager.Singleton.Shutdown();
         }  
     }
 

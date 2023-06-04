@@ -6,8 +6,10 @@ namespace Sataura
     /// <summary>
     /// A class that manages the pooling of Magic Staff projectiles for efficient object instantiation
     /// </summary>
-    public class MagicStaffProjectileSpawner : Singleton<MagicStaffProjectileSpawner>
+    public class MagicStaffProjectileSpawner : MonoBehaviour
     {
+        public static MagicStaffProjectileSpawner Instance { get; private set; }
+
         /// <summary>
         /// The prefab for the Magic Staff projectile
         /// </summary>
@@ -40,6 +42,11 @@ namespace Sataura
 
                 return m_Pool;
             }
+        }
+
+        private void Awake()
+        {
+            Instance = this;
         }
 
 

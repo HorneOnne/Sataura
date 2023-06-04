@@ -7,8 +7,10 @@ namespace Sataura
     /// <summary>
     /// The UIManager class manages all the UI canvas in the game and provides easy access to them through properties.
     /// </summary>
-    public class UIManager : Singleton<UIManager>
+    public class UIManager : MonoBehaviour
     {
+        public static UIManager Instance { get; private set; }
+
         [Header("Canvas")]
         public GameObject playerInGameInventoryCanvas;
         public Canvas bossHealthBarCanvas;
@@ -32,6 +34,8 @@ namespace Sataura
 
         private void Awake()
         {
+            Instance = this;
+
             // Activate all UI canvases on awake.
             if(playerInGameInventoryCanvas != null)
                 playerInGameInventoryCanvas.SetActive(true);

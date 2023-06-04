@@ -8,6 +8,9 @@ namespace Sataura
         [Header("References")]
         [SerializeField] private Transform parent;
         [SerializeField] private UICharacterInformation _uiCharacterInfoPrefab;
+        [SerializeField] private SatauraButton createBtn;
+        [SerializeField] private SatauraButton backBtn;
+
 
         // Cached
         private SaveManager _saveManager;
@@ -29,6 +32,28 @@ namespace Sataura
         {
             ClearAll();
         }
+
+        private void Start()
+        {
+            createBtn.Button.onClick.AddListener(() =>
+            {
+                MainMenuUIManager.Instance.CloseAll();
+                MainMenuUIManager.Instance.DisplayCreateNewSingleplayerCharacter(true);
+            });
+
+            backBtn.Button.onClick.AddListener(() =>
+            {
+                MainMenuUIManager.Instance.CloseAll();
+                MainMenuUIManager.Instance.BackToMainMenu();
+            });
+        }
+
+        private void OnDestroy()
+        {
+            createBtn.Button.onClick.RemoveAllListeners();
+            backBtn.Button.onClick.RemoveAllListeners();
+        }
+
 
         public override void DisplayCanvas(bool isDisplay)
         {
