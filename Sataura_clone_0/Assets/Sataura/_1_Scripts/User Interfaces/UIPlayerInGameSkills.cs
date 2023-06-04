@@ -3,8 +3,10 @@ using UnityEngine;
 
 namespace Sataura
 {
-    public partial class UIPlayerInGameSkills : Singleton<UIPlayerInGameSkills>
+    public partial class UIPlayerInGameSkills : MonoBehaviour
     {
+        public static UIPlayerInGameSkills Instance { get; private set; }
+
         [Header("Runtime References")]
         [SerializeField] private IngamePlayer player;
         private PlayerInGameSkills playerInGameSkills;
@@ -13,9 +15,12 @@ namespace Sataura
         [Header("References")]
         public List<GameObject> weaponSlotList;
         public List<GameObject> accessorySlotList;
-        
 
 
+        private void Start()
+        {
+            Instance = this;
+        }
 
         private void OnEnable()
         {

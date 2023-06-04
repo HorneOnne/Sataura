@@ -5,8 +5,10 @@ using Unity.Netcode;
 
 namespace Sataura
 {
-    public class IngameInformationManager : Singleton<IngameInformationManager>
+    public class IngameInformationManager : MonoBehaviour
     {
+        public static IngameInformationManager Instance {get; private set;}
+
         public static event System.Action OnPlayerLevelUp;
 
         public int currentTotalEnemiesIngame;
@@ -59,6 +61,8 @@ namespace Sataura
 
         private void Awake()
         {
+            Instance = this;
+
             level = 0;
             experience = 0;
             experienceToNextLevel = initialexperienceToNextLevelValue;

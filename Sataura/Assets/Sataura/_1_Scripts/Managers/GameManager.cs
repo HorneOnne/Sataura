@@ -3,8 +3,10 @@ using Cinemachine;
 
 namespace Sataura
 {
-    public class GameManager : Singleton<GameManager> 
+    public class GameManager : MonoBehaviour
     {
+        public static GameManager Instance { get; private set; }
+
         [SerializeField] private int limitFps = 144;
         [SerializeField] private CinemachineVirtualCamera cinemachineVirtualCamera;
 
@@ -14,6 +16,7 @@ namespace Sataura
 
         private void Awake()
         {
+            Instance = this;
             Application.targetFrameRate = limitFps;
             
         }

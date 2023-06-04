@@ -5,8 +5,10 @@ using UnityEditor;
 
 namespace Sataura
 {
-    public class ItemEvolutionManager : Singleton<ItemEvolutionManager>
+    public class ItemEvolutionManager : MonoBehaviour
     {
+        public static ItemEvolutionManager Instance { get; private set; }
+
         [Header("Evolution Recipe")]
         public List<ItemEvolution> itemEvolutions;
         private List<ItemData> evoItems;
@@ -15,6 +17,10 @@ namespace Sataura
         [Header("Base item datas")]
         public List<ItemData> baseItems;
 
+        private void Awake()
+        {
+            Instance = this;
+        }
 
         private void Start()
         {

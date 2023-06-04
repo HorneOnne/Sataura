@@ -6,8 +6,10 @@ using UnityEngine.UI;
 
 namespace Sataura
 {
-    public class UIIngameInformationManager : Singleton<UIIngameInformationManager>
+    public class UIIngameInformationManager : MonoBehaviour
     {
+        public static UIIngameInformationManager Instance{get; private set;}
+
         [Header("UI Kill")]
         [SerializeField] private TextMeshProUGUI killAmountText;
 
@@ -53,6 +55,10 @@ namespace Sataura
             //IngameInformationManager.OnPlayerLevelUp -= GenerateUpgradeList;
         }
 
+        private void Awake()
+        {
+            Instance = this;
+        }
 
         private void Start()
         {

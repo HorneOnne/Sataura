@@ -4,14 +4,20 @@ using UnityEngine;
 
 namespace Sataura
 {
-    public class CharacterStatsManager : Singleton<CharacterStatsManager>
+    public class CharacterStatsManager : MonoBehaviour
     {
+        public static CharacterStatsManager Instance { get; private set; }
+
         [Header("Runtime References")]
         [SerializeField] private CharacterData _characterData;
 
         [Header("References")]
         [SerializeField] private List<CharacterStatsSlot> _characterStatSlots;
 
+        private void Awake()
+        {
+            Instance = this;
+        }
 
         private void Start()
         {

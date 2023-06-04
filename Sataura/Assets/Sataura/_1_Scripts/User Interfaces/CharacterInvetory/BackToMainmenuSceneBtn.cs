@@ -11,7 +11,6 @@ namespace Sataura
             base.OnClick();
 
             SaveManager.Instance.SaveCharacterData();
-            NetworkManager.Singleton.Shutdown();
             DestroyAllDontDestroyOnLoadObjects();
             SceneManager.LoadScene(Loader.Scene._0_MainMenuScene.ToString());
         }

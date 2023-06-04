@@ -4,8 +4,10 @@ using System.Collections;
 
 namespace Sataura
 {
-    public class UICanvasGameOver : Singleton<UICanvasGameOver>
+    public class UICanvasGameOver : MonoBehaviour
     {
+        public static UICanvasGameOver Instance { get; private set; }
+
         [Header("References")]
         [SerializeField] private Canvas canvasObject;
         [SerializeField] private Image borderImage;
@@ -14,6 +16,11 @@ namespace Sataura
 
         [SerializeField] private float fadeDuration = 1.0f; // The duration of the fade out in seconds
         private float timer = 0.0f; // A timer to keep track of the current elapsed time
+
+        private void Awake()
+        {
+            Instance = this;
+        }
 
 
         private void Start()

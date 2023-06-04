@@ -4,12 +4,19 @@ using TMPro;
 
 namespace Sataura
 {
-    public class ItemDesc : Singleton<ItemDesc>
+    public class ItemDesc : MonoBehaviour
     {
+        public static ItemDesc Instance { get; private set; }
+
         [Header("References")]
         [SerializeField] private TextMeshProUGUI _nameText;
         [SerializeField] private TextMeshProUGUI _descTextPrefab;
         private List<TextMeshProUGUI> _descList = new List<TextMeshProUGUI>();
+
+        private void Awake()
+        {
+            Instance = this;
+        }
 
         public void CreateDesc(ItemData itemData)
         {

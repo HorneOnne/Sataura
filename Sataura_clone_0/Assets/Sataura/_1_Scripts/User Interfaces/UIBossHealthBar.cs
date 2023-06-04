@@ -3,8 +3,9 @@ using UnityEngine.UI;
 
 namespace Sataura
 {
-    public class UIBossHealthBar : Singleton<UIBossHealthBar>
+    public class UIBossHealthBar : MonoBehaviour
     {
+        public static UIBossHealthBar Instance { get;private set; }
         public static event System.Action OnBossAppeared;
 
         [SerializeField] private Slider _healthBarSlider;
@@ -12,7 +13,10 @@ namespace Sataura
 
 
 
-   
+        private void Awake()
+        {
+            Instance = this;
+        }
 
         public void SetBossHealthValue(KingSlime kingSlime)
         {

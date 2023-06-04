@@ -10,9 +10,6 @@ namespace Sataura
             MainMenuUIManager.Instance.DisplaySingleplayerCharacterSelection(true);
 
             GameDataManager.Instance.mainMenuInformation.SetPlayMode(MainMenuInfomation.PlayMode.SinglePlayer);
-
-            // Start host
-            NetworkManager.Singleton.StartHost();
         }
     }
 }

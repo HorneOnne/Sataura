@@ -7,8 +7,10 @@ namespace Sataura
     /// <summary>
     /// Manages saving and loading game data, including the player inventory and items and chests on the ground.
     /// </summary>
-    public class SaveManager : Singleton<SaveManager>
+    public class SaveManager : MonoBehaviour
     {
+        public static SaveManager Instance { get; private set; }
+
         [Header("Default Character Data")]
         public CharacterData defaultCharacterData;
 
@@ -22,6 +24,7 @@ namespace Sataura
 
         private void Awake()
         {
+            Instance = this;
             DontDestroyOnLoad(this.gameObject);
         }
 

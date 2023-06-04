@@ -6,8 +6,10 @@ namespace Sataura
     /// <summary>
     /// A singleton class for managing the object pooling of damage pop-up text GameObjects.
     /// </summary>
-    public class DamagePopupSpawner : Singleton<DamagePopupSpawner>
+    public class DamagePopupSpawner : MonoBehaviour
     {
+        public static DamagePopupSpawner Instance { get; private set; }
+
         /// <summary>
         /// The prefab to be used as the basis for creating new damage pop-up text GameObjects.
         /// </summary>
@@ -41,6 +43,11 @@ namespace Sataura
             }
         }
 
+
+        private void Awake()
+        {
+            Instance = this;
+        }
 
         // <summary>
         /// Creates a new damage pop-up text GameObject to add to the object pool.

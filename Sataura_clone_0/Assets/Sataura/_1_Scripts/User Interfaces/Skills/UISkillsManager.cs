@@ -6,8 +6,10 @@ using Unity.VisualScripting;
 
 namespace Sataura
 {
-    public class UISkillsManager : Singleton<UISkillsManager>
+    public class UISkillsManager : MonoBehaviour
     {
+        public static UISkillsManager Instance { get; private set; }
+
         [Header("References")]
         [SerializeField] private Transform uiWeaponsParent;
         [SerializeField] private Transform uiAccessoriesParent;
@@ -22,7 +24,10 @@ namespace Sataura
         public List<UISkillSlot> weapons;
         public List<UISkillSlot> accessories;
 
-
+        private void Awake()
+        {
+            Instance = this;
+        }
 
         private void Start()
         {

@@ -8,8 +8,10 @@ namespace Sataura
     /// <summary>
     /// Manages all the item data, recipes, prefabs, and dust particle data,...
     /// </summary>
-    public class GameDataManager : Singleton<GameDataManager>
+    public class GameDataManager : MonoBehaviour
     {
+        public static GameDataManager Instance { get; private set; }
+
         [Header("VFX")]
         public GameObject levelUpVFX;
         public GameObject bloodTearVFX_001;
@@ -83,7 +85,7 @@ namespace Sataura
             VFX,
         }
 
-        public static GameDataManager Instance;
+  
         /// <summary>
         /// Initializes the item data and prefab dictionaries, and generates the recipe dictionaries.
         /// </summary>
@@ -102,12 +104,6 @@ namespace Sataura
 
             GenerateItemDataDict();
             InitializeRecipes();
-
-            if (NetworkManager.Singleton == null)
-            {
-                return;
-            }
-
         }
 
         private void Start()

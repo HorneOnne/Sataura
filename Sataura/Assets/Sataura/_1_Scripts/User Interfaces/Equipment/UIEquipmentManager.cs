@@ -4,8 +4,10 @@ using UnityEngine;
 
 namespace Sataura
 {
-    public class UIEquipmentManager : Singleton<UIEquipmentManager> 
+    public class UIEquipmentManager : MonoBehaviour
     {
+        public static UIEquipmentManager Instance{get; private set;}    
+
         [Header("Preview Camera References")]
         public Transform _previewCameraParent;
 
@@ -22,6 +24,10 @@ namespace Sataura
         [SerializeField] private InventoryPlayer _inventoryPlayer;
         private ItemInHand itemInHand;
 
+        private void Awake()
+        {
+            Instance = this;
+        }
 
         private void Start()
         {
