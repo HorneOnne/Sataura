@@ -30,13 +30,6 @@ namespace Sataura
         }
 
 
-
-        public void GotoGameScene()
-        {
-            Loader.LoadNetwork(Loader.Scene._2_GameScene);
-        }
-
-
        
 
         public void Exit()

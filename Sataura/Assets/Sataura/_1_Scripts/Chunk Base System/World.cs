@@ -1,8 +1,8 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Collections;
 using Unity.Netcode;
 using UnityEngine;
+using Unity.VisualScripting;
 
 namespace Sataura
 {
@@ -11,6 +11,7 @@ namespace Sataura
         [Header("References")]
         [SerializeField] private GameObject chunkPrefab;
         [SerializeField] private int chunkSize;
+        private SatauraGameManager satauraGameManager;
 
 
         [Header("Containers")]
@@ -19,7 +20,6 @@ namespace Sataura
 
 
         [Header("References To Player")]
-        public List<Transform> players = new List<Transform>();
         public List<Vector2> lastPlayerPosition = new List<Vector2>();
 
 
@@ -32,46 +32,43 @@ namespace Sataura
         public override void OnNetworkSpawn()
         {
             if (!IsServer) return;
+            satauraGameManager = SatauraGameManager.Instance;
 
-            NetworkManager.OnClientConnectedCallback += SetClient;
+            StartCoroutine(LoadPlayerPosition());           
+        }
 
+        private IEnumerator LoadPlayerPosition()
+        {
+            yield return new WaitUntil(() => satauraGameManager.state.Value != SatauraGameManager.State.CountdownToStart);
+            for (int i = 0; i < satauraGameManager.players.Count; i++)
+            {
+                lastPlayerPosition.Add(satauraGameManager.players[i].transform.position);
+            }
 
-            SetLocalClient();
             CreateChunk(new Vector2Int(0, 0));
             UpdateWorld();
         }
-
-        public void SetClient(ulong clientId)
-        {
-            players.Add(NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.transform);
-            lastPlayerPosition.Add(new Vector2(0, 0));
-        }
-
-        public void SetLocalClient()
-        {
-            //players.Add(GameDataManager.Instance.singleModePlayer.transform);
-            players.Add(NetworkManager.Singleton.LocalClient.PlayerObject.transform);
-            lastPlayerPosition.Add(new Vector2(0, 0));
-        }
-
 
 
 
         private void Update()
         {
-            if (!IsServer) return;
-
-            if (players.Count == 0)
+            if (!IsServer) return;       
+            if (satauraGameManager.state.Value != SatauraGameManager.State.GamePlaying)
                 return;
 
-            for (int i = 0; i < players.Count; i++)
+
+            if (satauraGameManager.players.Count == 0)
+                return;
+
+            for (int i = 0; i < satauraGameManager.players.Count; i++)
             {
-                if (players[i] == null)
+                if (satauraGameManager.players[i] == null)
                     continue;
 
-                if (Mathf.Abs(players[i].position.x - lastPlayerPosition[i].x) > chunkSize / 3)
+                if (Mathf.Abs(satauraGameManager.players[i].position.x - lastPlayerPosition[i].x) > chunkSize / 3)
                 {
-                    lastPlayerPosition[i] = new Vector2(players[i].position.x, lastPlayerPosition[i].y);
+                    lastPlayerPosition[i] = new Vector2(satauraGameManager.players[i].position.x, lastPlayerPosition[i].y);
                     UpdateWorld();
                 }
             }
@@ -81,12 +78,12 @@ namespace Sataura
 
         public void UpdateWorld()
         {
-            if (players.Count == 0)
+            if (satauraGameManager.players.Count == 0)
                 return;
 
-            for (int i = 0; i < players.Count; i++)
+            for (int i = 0; i < satauraGameManager.players.Count; i++)
             {
-                int posX = Mathf.FloorToInt(players[i].position.x / chunkSize);
+                int posX = Mathf.FloorToInt(satauraGameManager.players[i].position.x / chunkSize);
                 Vector2Int currentPos;
 
                 for (int x = posX - 1; x <= posX + 1; x++)
@@ -128,7 +125,7 @@ namespace Sataura
             /*chunk.indexPosition = chunkIndex;
             chunk.position = chunkPosition;
             chunk.players = players;*/
-            chunk.SetChunkProperties(chunkIndex, chunkPosition, players, this);
+            chunk.SetChunkProperties(chunkIndex, chunkPosition, satauraGameManager.players, this);
 
             chunks.Add(chunkIndex, chunk);          
         }
