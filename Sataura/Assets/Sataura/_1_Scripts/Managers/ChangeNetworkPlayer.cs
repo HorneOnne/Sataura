@@ -27,7 +27,6 @@ namespace Sataura
 
             switch (_playerType)
             { 
- 
                 case PlayerType.IngamePlayer:
                     var ingamePlayer = Instantiate(GameDataManager.Instance.ingamePlayerPrefab);
                     ingamePlayer.NetObject.SpawnAsPlayerObject(NetworkManager.Singleton.LocalClientId);

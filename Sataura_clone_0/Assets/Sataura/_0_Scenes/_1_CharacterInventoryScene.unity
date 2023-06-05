@@ -1556,7 +1556,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6960e84d07fb87f47956e7a81d71c4e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_ProtocolType: 1
+  m_ProtocolType: 0
   m_MaxPacketQueueSize: 128
   m_MaxPayloadSize: 6144
   m_HeartbeatTimeoutMS: 500
@@ -3917,7 +3917,7 @@ GameObject:
   - component: {fileID: 764515912}
   - component: {fileID: 764515915}
   m_Layer: 5
-  m_Name: Back_Btn
+  m_Name: BackBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4035,7 +4035,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 764515910}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 253a8ca0e610a0349b2b27bb035eee91, type: 3}
+  m_Script: {fileID: 11500000, guid: 9496606785611ba479efd7502a37bf43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &768453934
@@ -5778,6 +5778,7 @@ GameObject:
   - component: {fileID: 1045139156}
   - component: {fileID: 1045139155}
   - component: {fileID: 1045139154}
+  - component: {fileID: 1045139158}
   m_Layer: 5
   m_Name: Canvas_GameNavigation
   m_TagString: Untagged
@@ -5867,6 +5868,21 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1045139158
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1045139153}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36ab17dbdb24ff34c9b9e6dd20d42110, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _canvas: {fileID: 1045139156}
+  gameBtn: {fileID: 1623253393}
+  backBtn: {fileID: 764515915}
 --- !u!1 &1073800928
 GameObject:
   m_ObjectHideFlags: 0
@@ -8215,8 +8231,9 @@ GameObject:
   - component: {fileID: 1623253392}
   - component: {fileID: 1623253391}
   - component: {fileID: 1623253390}
+  - component: {fileID: 1623253393}
   m_Layer: 5
-  m_Name: GotoGame_Button
+  m_Name: GameBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8286,19 +8303,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1623253391}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1460764981}
-        m_TargetAssemblyTypeName: Sataura.GameManager, Assembly-CSharp
-        m_MethodName: GotoGameScene
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1623253391
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8337,6 +8342,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1623253388}
   m_CullTransparentMesh: 1
+--- !u!114 &1623253393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1623253388}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9496606785611ba479efd7502a37bf43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1632062202
 GameObject:
   m_ObjectHideFlags: 0

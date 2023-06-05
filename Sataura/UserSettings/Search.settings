@@ -10,7 +10,7 @@ scopes = {
 	"last_search.2138236A" = "sound"
 	"OpenInspectorPreview.2138236A" = "0"
 	"currentGroup.2138236A" = "asset"
-	"last_search.DA949528" = "BackToMainmenu"
+	"last_search.DA949528" = "GameManager"
 	"OpenInspectorPreview.DA949528" = "0"
 	"currentGroup.DA949528" = "all"
 }
@@ -59,6 +59,8 @@ providers = {
 objectSelectors = {
 }
 recentSearches = [
+	"sa"
+	"In"
 	"so"
 	"B"
 	"Character*"

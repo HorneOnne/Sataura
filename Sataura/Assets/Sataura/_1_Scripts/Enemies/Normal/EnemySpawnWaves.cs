@@ -12,8 +12,11 @@ namespace Sataura
         public static int waveIndex = 1;
         public static int currentWaveIndex = 1;
 
+
+        [Header("References")]
+        private SatauraGameManager satauraGameManager;
+
         private NetworkObjectPool networkObjectPool;
-        [SerializeField] private List<Transform> players = new List<Transform>();
         [Header("Spawner points")]
         [SerializeField] private List<Transform> spawnerPointsLeft = new List<Transform>();
         [SerializeField] private List<Transform> spawnerPointsRight = new List<Transform>();
@@ -33,7 +36,6 @@ namespace Sataura
         private Golem _golemPrefab;
 
 
-
         // Boss
         private bool _isSummonKingSlime = false;
         private KingSlime _kingSlime;
@@ -41,13 +43,10 @@ namespace Sataura
         public override void OnNetworkSpawn()
         {
             networkObjectPool = NetworkObjectPool.Singleton;
-            NetworkManager.OnClientConnectedCallback += AddClient;
+            satauraGameManager = SatauraGameManager.Instance;
 
             if (IsServer)
             {
-                if (players.Contains(NetworkManager.Singleton.LocalClient.PlayerObject.transform) == false)
-                    players.Add(NetworkManager.Singleton.LocalClient.PlayerObject.transform);
-
                 IngameInformationManager.Instance.currentTotalEnemiesIngame = 0;
             }
         }
@@ -78,21 +77,6 @@ namespace Sataura
                     return null;
             }
 
-        }
-
-        public override void OnNetworkDespawn()
-        {
-            NetworkManager.OnClientConnectedCallback -= AddClient;
-        }
-
-        private void AddClient(ulong clientId)
-        {
-            if (!IsServer) return;
-
-            //Debug.Log($"Client id: {clientId} is connected.");
-
-            if (players.Contains(NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.transform) == false)
-                players.Add(NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.transform);
         }
 
 
@@ -167,7 +151,7 @@ namespace Sataura
 
                     if (Random.Range(0f, 1f) < 0.15f)
                     {
-                        SpawnFilledCircleEnemy((Vector2)players[0].position + Random.insideUnitCircle.normalized * 50f, EnemyType.BlackBat);
+                        SpawnFilledCircleEnemy((Vector2)satauraGameManager.players[0].position + Random.insideUnitCircle.normalized * 50f, EnemyType.BlackBat);
                     }
                 }
             }
@@ -183,7 +167,7 @@ namespace Sataura
 
                     if (Random.Range(0f, 1f) < 0.3f)
                     {
-                        SpawnFilledCircleEnemy((Vector2)players[0].position + Random.insideUnitCircle.normalized * 50f, EnemyType.BlackBat, 9, 9);
+                        SpawnFilledCircleEnemy((Vector2)satauraGameManager.players[0].position + Random.insideUnitCircle.normalized * 50f, EnemyType.BlackBat, 9, 9);
                     }
                 }
             }
@@ -200,7 +184,7 @@ namespace Sataura
 
                     if (Random.Range(0f, 1f) < 0.3f)
                     {
-                        SpawnFilledCircleEnemy((Vector2)players[0].position + Random.insideUnitCircle.normalized * 50f, EnemyType.BlackBat, 9, 9);
+                        SpawnFilledCircleEnemy((Vector2)satauraGameManager.players[0].position + Random.insideUnitCircle.normalized * 50f, EnemyType.BlackBat, 9, 9);
                     }
                 }
             }
@@ -217,11 +201,11 @@ namespace Sataura
 
                     if (Random.Range(0f, 1f) < 0.5f)
                     {
-                        SpawnFilledCircleEnemy((Vector2)players[0].position + Random.insideUnitCircle.normalized * 50f, EnemyType.BlackBat, 5, 5);
+                        SpawnFilledCircleEnemy((Vector2)satauraGameManager.players[0].position + Random.insideUnitCircle.normalized * 50f, EnemyType.BlackBat, 5, 5);
 
                         StartCoroutine(WaitAfter(0.3f, () =>
                         {
-                            SpawnFilledCircleEnemy((Vector2)players[0].position + Random.insideUnitCircle.normalized * 50f, EnemyType.BlackBat, 5, 5);
+                            SpawnFilledCircleEnemy((Vector2)satauraGameManager.players[0].position + Random.insideUnitCircle.normalized * 50f, EnemyType.BlackBat, 5, 5);
                         }));
                     }
                 }
@@ -239,17 +223,17 @@ namespace Sataura
 
                     if (Random.Range(0f, 1f) < 0.5f)
                     {
-                        SpawnFilledCircleEnemy((Vector2)players[0].position + Random.insideUnitCircle.normalized * 50f, EnemyType.BlackBat, 10, 10);
+                        SpawnFilledCircleEnemy((Vector2)satauraGameManager.players[0].position + Random.insideUnitCircle.normalized * 50f, EnemyType.BlackBat, 10, 10);
 
                         StartCoroutine(WaitAfter(0.3f, () =>
                         {
-                            SpawnFilledCircleEnemy((Vector2)players[0].position + Random.insideUnitCircle.normalized * 50f, EnemyType.BlackBat, 10, 10);
+                            SpawnFilledCircleEnemy((Vector2)satauraGameManager.players[0].position + Random.insideUnitCircle.normalized * 50f, EnemyType.BlackBat, 10, 10);
                         }));
                     }
 
                     if (Random.Range(0f, 1f) < 0.3f)
                     {
-                        SpawnEnemiesInCircle(players[0].position, EnemyType.Bat, 30, 30);
+                        SpawnEnemiesInCircle(satauraGameManager.players[0].position, EnemyType.Bat, 30, 30);
                     }
                 }
             }
@@ -266,23 +250,23 @@ namespace Sataura
 
                     if (Random.Range(0f, 1f) < 0.5f)
                     {
-                        SpawnFilledCircleEnemy((Vector2)players[0].position + Random.insideUnitCircle.normalized * 50f, EnemyType.BlackBat, 10, 10);
+                        SpawnFilledCircleEnemy((Vector2)satauraGameManager.players[0].position + Random.insideUnitCircle.normalized * 50f, EnemyType.BlackBat, 10, 10);
 
                         StartCoroutine(WaitAfter(0.3f, () =>
                         {
-                            SpawnFilledCircleEnemy((Vector2)players[0].position + Random.insideUnitCircle.normalized * 50f, EnemyType.BlackBat, 10, 10);
+                            SpawnFilledCircleEnemy((Vector2)satauraGameManager.players[0].position + Random.insideUnitCircle.normalized * 50f, EnemyType.BlackBat, 10, 10);
                         }));
 
                         StartCoroutine(WaitAfter(0.6f, () =>
                         {
-                            SpawnFilledCircleEnemy((Vector2)players[0].position + Random.insideUnitCircle.normalized * 50f, EnemyType.BlackBat, 10, 10);
+                            SpawnFilledCircleEnemy((Vector2)satauraGameManager.players[0].position + Random.insideUnitCircle.normalized * 50f, EnemyType.BlackBat, 10, 10);
                         }));
 
                     }
 
                     if (Random.Range(0f, 1f) < 0.3f)
                     {
-                        SpawnEnemiesInCircle(players[0].position, EnemyType.Bat, 30, 30);
+                        SpawnEnemiesInCircle(satauraGameManager.players[0].position, EnemyType.Bat, 30, 30);
                     }
                 }
             }
@@ -299,17 +283,17 @@ namespace Sataura
 
                     if (Random.Range(0f, 1f) < 0.75f)
                     {
-                        SpawnFilledCircleEnemy((Vector2)players[0].position + Random.insideUnitCircle.normalized * 50f, EnemyType.BlackBat, 10, 10);
+                        SpawnFilledCircleEnemy((Vector2)satauraGameManager.players[0].position + Random.insideUnitCircle.normalized * 50f, EnemyType.BlackBat, 10, 10);
 
                         StartCoroutine(WaitAfter(0.3f, () =>
                         {
-                            SpawnFilledCircleEnemy((Vector2)players[0].position + Random.insideUnitCircle.normalized * 50f, EnemyType.BlackBat, 10, 10);
+                            SpawnFilledCircleEnemy((Vector2)satauraGameManager.players[0].position + Random.insideUnitCircle.normalized * 50f, EnemyType.BlackBat, 10, 10);
                         }));
                     }
 
                     if (Random.Range(0f, 1f) < 0.6f)
                     {
-                        SpawnEnemiesInCircle(players[0].position, EnemyType.Bat, 30, 30);
+                        SpawnEnemiesInCircle(satauraGameManager.players[0].position, EnemyType.Bat, 30, 30);
                     }
                 }
             }
@@ -326,10 +310,10 @@ namespace Sataura
 
                     if (Random.Range(0f, 1f) < 0.5f)
                     {
-                        SpawnEnemiesInCircle(players[0].position, EnemyType.Bat, 20, 30);
+                        SpawnEnemiesInCircle(satauraGameManager.players[0].position, EnemyType.Bat, 20, 30);
                         StartCoroutine(WaitAfter(0.5f, () =>
                         {
-                            SpawnEnemiesInCircle(players[0].position, EnemyType.Bat, 30, 50);
+                            SpawnEnemiesInCircle(satauraGameManager.players[0].position, EnemyType.Bat, 30, 50);
                         }));
                     }
                 }
@@ -337,7 +321,7 @@ namespace Sataura
             else
             {
                 _isSummonKingSlime = true;
-                Vector2 aroundPlayerPosition = (Vector2)players[0].position + (Random.insideUnitCircle.normalized * 50f);
+                Vector2 aroundPlayerPosition = (Vector2)satauraGameManager.players[0].position + (Random.insideUnitCircle.normalized * 50f);
                 if (aroundPlayerPosition.y < 15)
                 {
                     aroundPlayerPosition = new Vector2(aroundPlayerPosition.x, 15);
@@ -351,106 +335,106 @@ namespace Sataura
 
         private void Wave01(int quantityLeft = 7, int quantityRight = 7)
         {
-            GenerateLeftWaveEnemies(players[0].position, EnemyType.PinkSlime, quantityLeft);
-            GenerateRightWaveEnemies(players[0].position, EnemyType.PinkSlime, quantityRight);
+            GenerateLeftWaveEnemies(satauraGameManager.players[0].position, EnemyType.PinkSlime, quantityLeft);
+            GenerateRightWaveEnemies(satauraGameManager.players[0].position, EnemyType.PinkSlime, quantityRight);
         }
 
         private void Wave02()
         {
-            GenerateLeftWaveEnemies(players[0].position, EnemyType.PinkSlime);
-            GenerateRightWaveEnemies(players[0].position, EnemyType.PinkSlime);
+            GenerateLeftWaveEnemies(satauraGameManager.players[0].position, EnemyType.PinkSlime);
+            GenerateRightWaveEnemies(satauraGameManager.players[0].position, EnemyType.PinkSlime);
 
             if (Random.Range(0f, 1f) < 0.33f)
             {
-                GenerateLeftWaveEnemies(players[0].position + new Vector3(-3, 0, 0), EnemyType.BlueSlime);
-                GenerateRightWaveEnemies(players[0].position + new Vector3(3, 0, 0), EnemyType.BlueSlime);
+                GenerateLeftWaveEnemies(satauraGameManager.players[0].position + new Vector3(-3, 0, 0), EnemyType.BlueSlime);
+                GenerateRightWaveEnemies(satauraGameManager.players[0].position + new Vector3(3, 0, 0), EnemyType.BlueSlime);
             }
         }
 
         private void Wave03()
         {
-            GenerateLeftWaveEnemies(players[0].position, EnemyType.BlueSlime);
-            GenerateRightWaveEnemies(players[0].position, EnemyType.BlueSlime);
+            GenerateLeftWaveEnemies(satauraGameManager.players[0].position, EnemyType.BlueSlime);
+            GenerateRightWaveEnemies(satauraGameManager.players[0].position, EnemyType.BlueSlime);
 
             if (Random.Range(0f, 1f) < 0.33f)
             {
-                GenerateLeftWaveEnemies(players[0].position + new Vector3(-3, 0, 0), EnemyType.MotherSlime, Random.Range(0, 2));
-                GenerateRightWaveEnemies(players[0].position + new Vector3(3, 0, 0), EnemyType.MotherSlime, Random.Range(0, 2));
+                GenerateLeftWaveEnemies(satauraGameManager.players[0].position + new Vector3(-3, 0, 0), EnemyType.MotherSlime, Random.Range(0, 2));
+                GenerateRightWaveEnemies(satauraGameManager.players[0].position + new Vector3(3, 0, 0), EnemyType.MotherSlime, Random.Range(0, 2));
             }
         }
 
         private void Wave04()
         {
-            GenerateLeftWaveEnemies(players[0].position, EnemyType.BlueSlime);
-            GenerateRightWaveEnemies(players[0].position, EnemyType.BlueSlime);
+            GenerateLeftWaveEnemies(satauraGameManager.players[0].position, EnemyType.BlueSlime);
+            GenerateRightWaveEnemies(satauraGameManager.players[0].position, EnemyType.BlueSlime);
 
             if (Random.Range(0f, 1f) < 0.33f)
             {
-                GenerateLeftWaveEnemies(players[0].position + new Vector3(-3, 0, 0), EnemyType.MotherSlime, Random.Range(3, 5));
-                GenerateRightWaveEnemies(players[0].position + new Vector3(3, 0, 0), EnemyType.MotherSlime, Random.Range(3, 5));
+                GenerateLeftWaveEnemies(satauraGameManager.players[0].position + new Vector3(-3, 0, 0), EnemyType.MotherSlime, Random.Range(3, 5));
+                GenerateRightWaveEnemies(satauraGameManager.players[0].position + new Vector3(3, 0, 0), EnemyType.MotherSlime, Random.Range(3, 5));
             }
         }
 
         private void Wave05()
         {
-            GenerateLeftWaveEnemies(players[0].position, EnemyType.Bonehead, Random.Range(2, 5));
-            GenerateRightWaveEnemies(players[0].position, EnemyType.Bonehead, Random.Range(2, 5));
+            GenerateLeftWaveEnemies(satauraGameManager.players[0].position, EnemyType.Bonehead, Random.Range(2, 5));
+            GenerateRightWaveEnemies(satauraGameManager.players[0].position, EnemyType.Bonehead, Random.Range(2, 5));
 
             if (Random.Range(0f, 1f) < 0.33f)
             {
-                GenerateLeftWaveEnemies(players[0].position + new Vector3(-3, 0, 0), EnemyType.Cursedwraith, Random.Range(0, 2));
-                GenerateRightWaveEnemies(players[0].position + new Vector3(3, 0, 0), EnemyType.Cursedwraith, Random.Range(0, 2));
+                GenerateLeftWaveEnemies(satauraGameManager.players[0].position + new Vector3(-3, 0, 0), EnemyType.Cursedwraith, Random.Range(0, 2));
+                GenerateRightWaveEnemies(satauraGameManager.players[0].position + new Vector3(3, 0, 0), EnemyType.Cursedwraith, Random.Range(0, 2));
             }
         }
 
         private void Wave06()
         {
-            GenerateLeftWaveEnemies(players[0].position, EnemyType.Bonehead, Random.Range(4, 7));
-            GenerateRightWaveEnemies(players[0].position, EnemyType.Bonehead, Random.Range(4, 7));
+            GenerateLeftWaveEnemies(satauraGameManager.players[0].position, EnemyType.Bonehead, Random.Range(4, 7));
+            GenerateRightWaveEnemies(satauraGameManager.players[0].position, EnemyType.Bonehead, Random.Range(4, 7));
 
             if (Random.Range(0f, 1f) < 0.5f)
             {
-                GenerateLeftWaveEnemies(players[0].position + new Vector3(-3, 0, 0), EnemyType.Cursedwraith, Random.Range(1, 3));
-                GenerateRightWaveEnemies(players[0].position + new Vector3(3, 0, 0), EnemyType.Cursedwraith, Random.Range(1, 3));
+                GenerateLeftWaveEnemies(satauraGameManager.players[0].position + new Vector3(-3, 0, 0), EnemyType.Cursedwraith, Random.Range(1, 3));
+                GenerateRightWaveEnemies(satauraGameManager.players[0].position + new Vector3(3, 0, 0), EnemyType.Cursedwraith, Random.Range(1, 3));
             }
 
             if (Random.Range(0f, 1f) < 0.33f)
             {
-                GenerateLeftWaveEnemies(players[0].position + new Vector3(-3, 0, 0), EnemyType.ObsidianMaw, Random.Range(2, 3));
-                GenerateRightWaveEnemies(players[0].position + new Vector3(3, 0, 0), EnemyType.ObsidianMaw, Random.Range(2, 3));
+                GenerateLeftWaveEnemies(satauraGameManager.players[0].position + new Vector3(-3, 0, 0), EnemyType.ObsidianMaw, Random.Range(2, 3));
+                GenerateRightWaveEnemies(satauraGameManager.players[0].position + new Vector3(3, 0, 0), EnemyType.ObsidianMaw, Random.Range(2, 3));
             }
         }
 
         private void Wave07()
         {
-            GenerateLeftWaveEnemies(players[0].position, EnemyType.Bonehead, Random.Range(4, 7));
-            GenerateRightWaveEnemies(players[0].position, EnemyType.Bonehead, Random.Range(4, 7));
+            GenerateLeftWaveEnemies(satauraGameManager.players[0].position, EnemyType.Bonehead, Random.Range(4, 7));
+            GenerateRightWaveEnemies(satauraGameManager.players[0].position, EnemyType.Bonehead, Random.Range(4, 7));
 
             if (Random.Range(0f, 1f) < 0.5f)
             {
-                GenerateLeftWaveEnemies(players[0].position + new Vector3(-3, 0, 0), EnemyType.Cursedwraith, Random.Range(1, 3));
-                GenerateRightWaveEnemies(players[0].position + new Vector3(3, 0, 0), EnemyType.Cursedwraith, Random.Range(1, 3));
+                GenerateLeftWaveEnemies(satauraGameManager.players[0].position + new Vector3(-3, 0, 0), EnemyType.Cursedwraith, Random.Range(1, 3));
+                GenerateRightWaveEnemies(satauraGameManager.players[0].position + new Vector3(3, 0, 0), EnemyType.Cursedwraith, Random.Range(1, 3));
             }
 
             if (Random.Range(0f, 1f) < 0.5f)
             {
-                GenerateLeftWaveEnemies(players[0].position + new Vector3(-3, 0, 0), EnemyType.ObsidianMaw, Random.Range(4, 7));
-                GenerateRightWaveEnemies(players[0].position + new Vector3(3, 0, 0), EnemyType.ObsidianMaw, Random.Range(4, 7));
+                GenerateLeftWaveEnemies(satauraGameManager.players[0].position + new Vector3(-3, 0, 0), EnemyType.ObsidianMaw, Random.Range(4, 7));
+                GenerateRightWaveEnemies(satauraGameManager.players[0].position + new Vector3(3, 0, 0), EnemyType.ObsidianMaw, Random.Range(4, 7));
             }
         }
 
         private void Wave08()
         {
-            GenerateLeftWaveEnemies(players[0].position, EnemyType.ObsidianMaw);
-            GenerateRightWaveEnemies(players[0].position, EnemyType.ObsidianMaw);
+            GenerateLeftWaveEnemies(satauraGameManager.players[0].position, EnemyType.ObsidianMaw);
+            GenerateRightWaveEnemies(satauraGameManager.players[0].position, EnemyType.ObsidianMaw);
 
-            GenerateLeftWaveEnemies(players[0].position, EnemyType.Bonehead);
-            GenerateRightWaveEnemies(players[0].position, EnemyType.Bonehead);
+            GenerateLeftWaveEnemies(satauraGameManager.players[0].position, EnemyType.Bonehead);
+            GenerateRightWaveEnemies(satauraGameManager.players[0].position, EnemyType.Bonehead);
 
             if (Random.Range(0f, 1f) < 0.7f)
             {
-                GenerateLeftWaveEnemies(players[0].position + new Vector3(-3, 0, 0), EnemyType.Cursedwraith, Random.Range(2, 3));
-                GenerateRightWaveEnemies(players[0].position + new Vector3(3, 0, 0), EnemyType.Cursedwraith, Random.Range(2, 3));
+                GenerateLeftWaveEnemies(satauraGameManager.players[0].position + new Vector3(-3, 0, 0), EnemyType.Cursedwraith, Random.Range(2, 3));
+                GenerateRightWaveEnemies(satauraGameManager.players[0].position + new Vector3(3, 0, 0), EnemyType.Cursedwraith, Random.Range(2, 3));
             }
         }
 
@@ -467,7 +451,7 @@ namespace Sataura
             var enemyPrefab = GetEnemyPrefabByType(enemyType);
             var enemyObject = Instantiate(enemyPrefab, position, rotation);
 
-            enemyObject.GetComponent<BaseEnemy>().SetFollowTarget(players[0]);
+            enemyObject.GetComponent<BaseEnemy>().SetFollowTarget(satauraGameManager.players[0]);
 
             var enemyNetworkObject = enemyObject.GetComponent<NetworkObject>();
             enemyNetworkObject.Spawn();
@@ -491,7 +475,7 @@ namespace Sataura
             var bossPrefab = GameDataManager.Instance.GetBossPrefab(bossType);
             var bossObject = Instantiate(bossPrefab, position, rotation);
 
-            bossObject.GetComponent<BaseEnemy>().SetFollowTarget(players[0]);
+            bossObject.GetComponent<BaseEnemy>().SetFollowTarget(satauraGameManager.players[0]);
 
             var enemyNetworkObject = bossObject.GetComponent<NetworkObject>();
             enemyNetworkObject.Spawn();

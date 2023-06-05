@@ -50,8 +50,13 @@ namespace Sataura
             _helmetObject = Instantiate(_helmetPrefab);
             _chestplateObject = Instantiate(_chestplatePrefab);
             _leggingObject = Instantiate(_leggingPrefab);
+
+
             _bootsObject = Instantiate(_bootsPrefab);
-            _hookObject = Instantiate(_hookPrefab);          
+            _bootsObject.SetOwner(_player);
+
+            _hookObject = Instantiate(_hookPrefab);
+            _hookObject.SetOwner(_player);
         }
 
         private IEnumerator LoadEquipmentData()
@@ -84,6 +89,12 @@ namespace Sataura
             _leggingObject._networkObject.TrySetParent(equipmentObjectsParent);
             _bootsObject._networkObject.TrySetParent(equipmentObjectsParent);
             _hookObject._networkObject.TrySetParent(equipmentObjectsParent);
+
+            _helmetObject.transform.localPosition = Vector3.zero;
+            _chestplateObject.transform.localPosition = Vector3.zero;
+            _leggingObject.transform.localPosition = Vector3.zero;
+            _bootsObject.transform.localPosition = Vector3.zero;
+            _hookObject.transform.localPosition = Vector3.zero;
         }    
     }
 }

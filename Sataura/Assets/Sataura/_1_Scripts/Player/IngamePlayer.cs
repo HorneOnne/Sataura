@@ -54,28 +54,22 @@ namespace Sataura
 
             if (IsOwner)
             {
+                Debug.Log("isOwner");
+
                 // Camera
                 if(GameManager.Instance.CinemachineVirtualCamera != null)
                     GameManager.Instance.CinemachineVirtualCamera.Follow = this.transform;
 
                 ingameInformationManager = IngameInformationManager.Instance;
 
-                UIPlayerInGameSkills.Instance.SetPlayer(this.gameObject);
+                UIPlayerInGameSkills.Instance.SetPlayer(this);
 
                 // Update inventory data.
                 playerIngameSkills.UpdateCharacterData();
             }
 
 
-            // Temp
-            // ===========================================
-            if (IsServer)
-            {
-                clientID.Value = NetworkManager.Singleton.ConnectedClientsIds.Count - 1;
-            }
-            // ===========================================
-
-
+ 
 
             if (IsServer)
             {
