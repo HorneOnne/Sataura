@@ -20,9 +20,7 @@ namespace Sataura
         public override void OnNetworkSpawn()
         {
             _bootsData = ((BootData)ItemData);
-            _player = GameDataManager.Instance.ingamePlayer;          
-            _rb2D = _player.playerMovement.Rb2D; 
-
+            
             if (IsServer)
             {
                 int itemID = GameDataManager.Instance.GetItemID(_bootsData);
@@ -67,6 +65,13 @@ namespace Sataura
                     lastTapTimeAKey = Time.time; // Record the time of the first tap
                 }
             }
+        }
+
+
+        public void SetOwner(IngamePlayer ingamePlayer)
+        {
+            _player = ingamePlayer;
+            _rb2D = _player.playerMovement.Rb2D;
         }
 
         private void Dash()

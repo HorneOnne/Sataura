@@ -17,7 +17,7 @@ namespace Sataura
         public List<GameObject> accessorySlotList;
 
 
-        private void Start()
+        private void Awake()
         {
             Instance = this;
         }
@@ -43,9 +43,9 @@ namespace Sataura
             UpdateUI();
         }
 
-        public void SetPlayer(GameObject playerObject)
+        public void SetPlayer(IngamePlayer player)
         {
-            this.player = playerObject.GetComponent<IngamePlayer>();
+            this.player = player;
         }
 
   

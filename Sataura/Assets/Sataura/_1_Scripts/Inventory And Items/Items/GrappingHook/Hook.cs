@@ -1,5 +1,4 @@
-﻿using TMPro;
-using Unity.Netcode;
+﻿using Unity.Netcode;
 using UnityEngine;
 
 namespace Sataura
@@ -41,20 +40,15 @@ namespace Sataura
         [Header("Runtime References")]
         [SerializeField] private HookData _hookData;
 
-        private void Start()
-        {
-           
-        }
+  
+
 
         public override void OnNetworkSpawn()
         {
             _hookData = ((HookData)ItemData);
             m_camera = Camera.main;
             grappleRope.enabled = false;
-            var ingamePlayer = GameDataManager.Instance.ingamePlayer;
-            characterTransform = ingamePlayer.transform;
-            characterRb2D = ingamePlayer.playerMovement.Rb2D;
-
+            
             if (IsServer)
             {
                 int itemID = GameDataManager.Instance.GetItemID(_hookData);
@@ -63,6 +57,11 @@ namespace Sataura
         }
 
    
+        public void SetOwner(IngamePlayer ingamePlayer)
+        {
+            characterTransform = ingamePlayer.transform;
+            characterRb2D = ingamePlayer.playerMovement.Rb2D;           
+        }
 
         private void Update()
         {
