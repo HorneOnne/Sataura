@@ -5,12 +5,31 @@ The goal is to last for a set amount of time, typically 15 minutes before the fi
 
 During gameplay, players can unlock a variety of weapons, each with a unique attack pattern and effects can be found. Players can combine these with different
 upgrades to create powerful synergies.
-### Contents
+
+## Features
+- Item & Inventory
+- Save/Load system (player data, inventory, equipment,...)
+- Auto attack
+- Weapon Variety and Upgrades
+- Item equipment
+- Experience and Leveling Up
+- Boss battles
+- Optimize (Object Pool, limit entities, reduce update frequency for coins, experiments,..)
+
+## Contents
 #### Inventory & Equipment
 ![image6](https://github.com/HorneOnne/Sataura/assets/65548001/d868a990-2336-4ff5-acb7-a27934ce9024)
 ![image7](https://github.com/HorneOnne/Sataura/assets/65548001/7687a94b-9179-4486-803a-81a223c3268c)
 
 #### Items & Skills
+##### Accessories
+![image](https://github.com/HorneOnne/Sataura/assets/65548001/686942bc-9b1d-46f5-bf1b-06c914bd83d3)
+
+##### Skill & Upgrade
+![image](https://github.com/HorneOnne/Sataura/assets/65548001/acc2dfd2-3fed-4f21-894d-4057f81935c7)
+
+![image](https://github.com/HorneOnne/Sataura/assets/65548001/0b3bace2-cfd0-452d-8022-4587fd8c8d93)
+
 ##### Wooden Sword
 ![image22](https://github.com/HorneOnne/Sataura/assets/65548001/2c894bd3-52a1-44fb-a0ea-8d54f34b0ee1)
 ##### Wooden Sword upgrade
@@ -43,6 +62,8 @@ upgrades to create powerful synergies.
 ![image62](https://github.com/HorneOnne/Sataura/assets/65548001/e20a3d0d-71d9-4b4c-9cae-40e596960984)
 
 #### Entities
+![image](https://github.com/HorneOnne/Sataura/assets/65548001/46417bd8-1a82-4b68-9f50-3a41602ec0ee)
+
 ![image52](https://github.com/HorneOnne/Sataura/assets/65548001/dd65d5bf-4c79-46eb-aa82-23ba7228e904)
 ![image53](https://github.com/HorneOnne/Sataura/assets/65548001/00330d8b-c1ed-4e64-a57a-921f86d576fe)
 ![image54](https://github.com/HorneOnne/Sataura/assets/65548001/5688b51d-3d36-4b16-86e9-ca24e5711959)
