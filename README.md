@@ -31,6 +31,7 @@ upgrades to create powerful synergies.
 ![image](https://github.com/HorneOnne/Sataura/assets/65548001/0b3bace2-cfd0-452d-8022-4587fd8c8d93)
 
 ##### Wooden Sword
+Creates a slash horizontally that frontally originates from the character's torso, damaging all enemies in the area.
 ![image22](https://github.com/HorneOnne/Sataura/assets/65548001/2c894bd3-52a1-44fb-a0ea-8d54f34b0ee1)
 ##### Wooden Sword upgrade
 ![image38](https://github.com/HorneOnne/Sataura/assets/65548001/3ffd3e5a-5052-4f5d-9e64-04ec6c4672d1)
