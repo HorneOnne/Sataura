@@ -1,8 +1,43 @@
 # Sataura
-## Description
-My VTC-Academy second project was inspired by Vampire Vurvivors.
+## Overview
+My VTC-Academy second project was inspired by Vampire Survivors. The idea of this game is player must survive waves of enemies for as long as possible.
+The goal is to last for a set amount of time, typically 15 minutes before the final boss appears. When you defeat the boss, the game will finish.
+
+During gameplay, players can unlock a variety of weapons, each with a unique attack pattern and effects can be found. Players can combine these with different
+upgrades to create powerful synergies.
 ### Contents
-#### Mechanics
+#### Inventory & Equipment
+![image6](https://github.com/HorneOnne/Sataura/assets/65548001/d868a990-2336-4ff5-acb7-a27934ce9024)
+![image7](https://github.com/HorneOnne/Sataura/assets/65548001/7687a94b-9179-4486-803a-81a223c3268c)
+
+#### Items & Skills
+##### Wooden Sword
+![image22](https://github.com/HorneOnne/Sataura/assets/65548001/2c894bd3-52a1-44fb-a0ea-8d54f34b0ee1)
+##### Wooden Sword upgrade
+![image38](https://github.com/HorneOnne/Sataura/assets/65548001/3ffd3e5a-5052-4f5d-9e64-04ec6c4672d1)
+
+##### Wooden Bow
+![image23](https://github.com/HorneOnne/Sataura/assets/65548001/a4d27200-50fd-4231-9731-35b79c95b979)
+##### Wooden Bow upgrade
+![image39](https://github.com/HorneOnne/Sataura/assets/65548001/7e2ef760-c0c0-4943-b2ea-6a5396bb04a4)
+
+##### Iron Hammer
+![image24](https://github.com/HorneOnne/Sataura/assets/65548001/053f56c9-baab-42f8-b9c5-e115e3e3eeef)
+##### Iron Hammer upgade
+![image40](https://github.com/HorneOnne/Sataura/assets/65548001/8d274ad2-f731-4764-89da-00c1d7c1fe79)
+
+##### Lightning Staff
+![image25](https://github.com/HorneOnne/Sataura/assets/65548001/556ee77e-1a07-4eb0-a5b4-c3b093eed2a1)
+##### Lightning Staff upgrade
+![image41](https://github.com/HorneOnne/Sataura/assets/65548001/1d7b356f-8983-49fc-9970-d90be85b2652)
+
+##### Whispering Gale
+![image26](https://github.com/HorneOnne/Sataura/assets/65548001/b2dbc718-2080-4dc1-9843-8d688d46720e)
+##### Whispering Gale upgrade
+![image42](https://github.com/HorneOnne/Sataura/assets/65548001/7ddc9ea7-9ab1-49a4-bea8-00f0f2cdb051)
+
+
+#### Player control
 ![image15](https://github.com/HorneOnne/Sataura/assets/65548001/73e3bc9a-a60b-4e75-9837-52ca09e7045a)
 ![image16](https://github.com/HorneOnne/Sataura/assets/65548001/9ab1049f-859d-463d-ba1c-3ddcefd4fcc1)
 ![image62](https://github.com/HorneOnne/Sataura/assets/65548001/e20a3d0d-71d9-4b4c-9cae-40e596960984)
