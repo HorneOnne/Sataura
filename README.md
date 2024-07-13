@@ -6,6 +6,8 @@ The goal is to last for a set amount of time, typically 15 minutes before the fi
 During gameplay, players can unlock a variety of weapons, each with a unique attack pattern and effects can be found. Players can combine these with different
 upgrades to create powerful synergies.
 
+Gameplay: https://youtu.be/UxyaLsIdE08
+
 ## Features
 - Item & Inventory
 - Save/Load system (player data, inventory, equipment,...)
